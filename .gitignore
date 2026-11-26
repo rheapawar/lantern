@@ -1,0 +1,4 @@
+synthea-with-dependencies.jar
+output/
+.env
+__pycache__/

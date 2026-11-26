@@ -1,0 +1,46 @@
+== Rule matches ==
+diagnosed-later candidates: afib                             1
+diagnosed-later candidates: cad_mi                           32
+diagnosed-later candidates: heart_failure                    13
+eligible charts                                              517
+fits: abnormal_ecg                                           517
+fits: chest_pain                                             243
+fits: hard_to_control_bp_chol                                179
+fits: heart_failure_symptoms                                 179
+fits: palpitations_afib                                      517
+has: afib                                                    5
+has: amlodipine                                              99
+has: anticoagulant                                           5
+has: cad_mi                                                  170
+has: ckd                                                     105
+has: diabetes                                                105
+has: heart_failure                                           16
+has: hyperlipidemia                                          136
+has: hypertension                                            189
+has: nsaid                                                   43
+has: statin                                                  98
+has: tsh_abnormal                                            4
+has: valve                                                   19
+hook: abnormal_ecg / prior_mi_or_cad                         170
+hook: chest_pain / kidney_disease                            61
+hook: chest_pain / prior_mi_or_cad                           108
+hook: hard_to_control_bp_chol / kidney_disease               44
+hook: hard_to_control_bp_chol / regular_nsaid                13
+hook: heart_failure_symptoms / kidney_disease                57
+hook: heart_failure_symptoms / on_amlodipine                 54
+hook: palpitations_afib / abnormal_tsh                       4
+not eligible (age, visits, labs, or too many conditions)     119
+patients read                                                636
+skipped: no birth date or no primary care visits             1
+
+== Picked 40 cases ==
+abnormal_ecg                                                 8
+chest_pain                                                   8
+diagnosed later                                              7
+hard_to_control_bp_chol                                      8
+heart_failure_symptoms                                       8
+held out                                                     10
+palpitations_afib                                            8
+sex: female                                                  16
+sex: male                                                    24
+with a hook                                                  15
