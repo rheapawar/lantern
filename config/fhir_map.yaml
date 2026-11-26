@@ -38,14 +38,7 @@ tests:
   ambulatory_monitor: {procedure_sct: ["710839006"]}
   stress_or_ccta: {procedure_sct: ["76746007"]}
 
-# Numeric chart values used by threshold rules (chart_obs) in the pathway.
-observations:
-  systolic_bp: {loinc: ["8480-6"]}
-  diastolic_bp: {loinc: ["8462-4"]}
-  nt_probnp: {loinc: ["33762-6", "71425-3"]}
-  potassium: {loinc: ["2823-3", "6298-4"]}
-
-# Where to find each fact the pathway lists under decision_facts.
+# Where to find each fact. The pathway uses these ids in decision_facts and in threshold rules (chart_obs).
 facts:
   age: {age: true}
   sex: {sex: true}

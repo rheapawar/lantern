@@ -1,7 +1,7 @@
 {
   "specialty": "cardiology",
   "version": "0.3-draft",
-  "lookup_file": "config/fhir_map.yaml says how to find each test, fact and chart observation in FHIR. This file names them by id only.",
+  "lookup_file": "config/fhir_map.yaml says how to find each test and fact in FHIR. This file names them by id only.",
   "review_status": "DRAFT - written using guidelines listed in 'sources', from memory (the guideline sites blocked automated reading). Items marked 'verify' must be checked against the guideline text. Every flag, test, option and threshold needs cardiologist review before use.",
   "reviewed_by": [],
 
@@ -237,14 +237,14 @@
       ],
       "urgent_flags": [
         {"id": "hf_ntprobnp_over_2000", "text": "NT-proBNP over 2,000 ng/L (NICE: specialist + echo within 2 weeks)",
-         "match": {"any": [{"chart_obs": {"obs": "nt_probnp", "op": ">", "value": 2000, "within_days": 90}},
+         "match": {"any": [{"chart_obs": {"fact": "nt_probnp", "op": ">", "value": 2000, "within_days": 90}},
                            {"text_regex": "(nt-?pro-?bnp|probnp|bnp)\\D{0,15}([2-9],?\\d{3}|\\d{2},?\\d{3})"}]}},
         {"id": "hf_rapid_weight_gain", "text": "Fast weight gain or worsening swelling",
          "match": {"text_any": ["gained", "weight gain", "lbs in", "pounds in", "kg in", "worsening swelling", "swelling getting worse", "more swollen"]}}
       ],
       "soon_hints": [
         {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)",
-         "match": {"chart_obs": {"obs": "nt_probnp", "op": "between", "value": [400, 2000], "within_days": 90}}}
+         "match": {"chart_obs": {"fact": "nt_probnp", "op": "between", "value": [400, 2000], "within_days": 90}}}
       ],
       "decision_facts": [
         {"group": "NT-proBNP value and date", "why": "NICE uses it to set urgency; below 400 ng/L in an untreated patient makes heart failure less likely - verify",
@@ -325,18 +325,18 @@
          "match": {"all": [
            {"any": [{"text_regex": "\\b(1[89]\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
                     {"text_regex": "\\b\\d{2,3}\\s*/\\s*(1[2-9]\\d)\\b"},
-                    {"chart_obs": {"obs": "systolic_bp", "op": ">=", "value": 180, "within_days": 14}},
-                    {"chart_obs": {"obs": "diastolic_bp", "op": ">=", "value": 120, "within_days": 14}}]},
+                    {"chart_obs": {"fact": "systolic_bp", "op": ">=", "value": 180, "within_days": 14}},
+                    {"chart_obs": {"fact": "diastolic_bp", "op": ">=", "value": 120, "within_days": 14}}]},
            {"text_any": ["chest pain", "confusion", "confused", "vision change", "blurred vision", "vision loss", "severe headache", "weakness", "slurred", "short of breath", "shortness of breath"]}]}}
       ],
       "urgent_flags": [
         {"id": "bp_severe_no_symptoms", "text": "BP over 180/120 without signs of organ damage (severe hypertension - not an ER visit; outpatient medicine adjustment)",
          "match": {"any": [{"text_regex": "\\b(1[89]\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
                            {"text_regex": "\\b\\d{2,3}\\s*/\\s*(1[2-9]\\d)\\b"},
-                           {"chart_obs": {"obs": "systolic_bp", "op": ">=", "value": 180, "within_days": 14}},
-                           {"chart_obs": {"obs": "diastolic_bp", "op": ">=", "value": 120, "within_days": 14}}]}},
+                           {"chart_obs": {"fact": "systolic_bp", "op": ">=", "value": 180, "within_days": 14}},
+                           {"chart_obs": {"fact": "diastolic_bp", "op": ">=", "value": 120, "within_days": 14}}]}},
         {"id": "bp_low_potassium", "text": "High BP with low potassium (possible primary aldosteronism)",
-         "match": {"chart_obs": {"obs": "potassium", "op": "<", "value": 3.5, "within_days": 180}}}
+         "match": {"chart_obs": {"fact": "potassium", "op": "<", "value": 3.5, "within_days": 180}}}
       ],
       "decision_facts": [
         {"group": "Recent BP readings (trend, not one value)", "why": "Confirms BP is truly uncontrolled; goal is generally under 130/80 - verify",
