@@ -45,38 +45,57 @@ observations:
   nt_probnp: {loinc: ["33762-6", "71425-3"]}
   potassium: {loinc: ["2823-3", "6298-4"]}
 
-# Where to look for each look_at item (step 2 merges these and observations into one 'facts' section).
-look_at:
-  known_cad: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary", "bypass"]}
-  risk_factors: {conditions: ["hypertension", "diabetes", "hyperlipidemia", "hypercholesterolemia"], smoking: true}
-  kidney_function: {loinc: ["33914-3", "2160-0", "38483-4"], conditions: ["chronic kidney disease"]}
-  lipids_a1c: {loinc: ["18262-6", "2093-3", "4548-4"]}
-  accompanying_symptoms: {referral_text: true}
-  prior_testing: {procedure_sct: ["29303009", "268400002", "76746007", "33367005"]}
-  stroke_risk_components: {conditions: ["heart failure", "hypertension", "diabetes", "stroke", "ischemic attack", "embolism", "myocardial infarction", "peripheral arterial", "peripheral vascular"], age: true, sex: true}
-  bleeding_risk: {conditions: ["bleeding", "hemorrhage", "alcohol", "chronic kidney disease", "cirrhosis"], meds: ["ibuprofen", "naproxen", "aspirin", "clopidogrel"], loinc: ["718-7", "1742-6", "1920-8"]}
-  current_anticoag: {meds: ["warfarin", "apixaban", "rivaroxaban", "dabigatran", "edoxaban"], loinc: ["6301-6"]}
-  thyroid: {loinc: ["3016-3"], conditions: ["hyperthyroidism", "hypothyroidism"]}
-  kidney_liver: {loinc: ["33914-3", "2160-0", "38483-4", "1742-6", "1920-8"]}
-  af_risk_factors: {conditions: ["sleep apnea", "obes", "alcohol", "hypertension"], loinc: ["39156-5"]}
-  rate_meds: {meds: ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin"]}
-  ntprobnp_value: {loinc: ["33762-6", "71425-3"]}
-  np_raised_by: {conditions: ["atrial fibrillation", "chronic kidney disease", "chronic obstructive", "diabetes", "cirrhosis"], loinc: ["33914-3"], age: true}
-  np_lowered_by: {loinc: ["39156-5"], meds: ["furosemide", "hydrochlorothiazide", "lisinopril", "losartan", "valsartan", "metoprolol", "carvedilol", "spironolactone"]}
-  cardiac_history: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary", "valve", "hypertension", "atrial fibrillation"]}
-  swelling_other_causes: {conditions: ["chronic kidney disease", "cirrhosis"], meds: ["amlodipine", "nifedipine"], loinc: ["33914-3", "1751-7"]}
-  worsening_meds: {meds: ["ibuprofen", "naproxen", "pioglitazone", "diltiazem", "verapamil"]}
-  anemia_iron_thyroid: {loinc: ["718-7", "2276-4", "2502-3", "3016-3"]}
-  prior_ecg: {procedure_sct: ["29303009", "268400002"]}
-  prior_mi_cad: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary"]}
+# Where to find each fact the pathway lists under decision_facts.
+facts:
+  age: {age: true}
+  sex: {sex: true}
+  smoking: {smoking: true}
+  family_history: {referral_text: true}
+  hypertension: {conditions: ["hypertension"]}
+  diabetes: {conditions: ["diabetes"]}
+  hyperlipidemia: {conditions: ["hyperlipidemia", "hypercholesterolemia"]}
+  heart_failure: {conditions: ["heart failure"]}
+  atrial_fibrillation: {conditions: ["atrial fibrillation"]}
+  prior_mi_cad: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary", "bypass"]}
+  valve_disease: {conditions: ["valve"]}
+  prior_stroke_tia: {conditions: ["stroke", "ischemic attack", "embolism"]}
+  vascular_disease: {conditions: ["myocardial infarction", "peripheral arterial", "peripheral vascular"]}
+  ckd: {conditions: ["chronic kidney disease"]}
+  copd: {conditions: ["chronic obstructive"]}
+  liver_disease: {conditions: ["cirrhosis"]}
+  sleep_apnea: {conditions: ["sleep apnea"]}
+  obesity: {conditions: ["obes"], loinc: ["39156-5"]}
+  alcohol_use: {conditions: ["alcohol"]}
+  bleeding_history: {conditions: ["bleeding", "hemorrhage"]}
+  thyroid_disease: {conditions: ["hyperthyroidism", "hypothyroidism"]}
+  egfr: {loinc: ["33914-3", "2160-0", "38483-4"]}
+  potassium: {loinc: ["2823-3", "6298-4"]}
+  magnesium: {loinc: ["19123-9", "21377-7"]}
+  calcium: {loinc: ["17861-6", "49765-1"]}
+  tsh: {loinc: ["3016-3"]}
+  nt_probnp: {loinc: ["33762-6", "71425-3"]}
+  hemoglobin: {loinc: ["718-7"]}
+  iron: {loinc: ["2276-4", "2502-3"]}
+  albumin: {loinc: ["1751-7"]}
+  ldl: {loinc: ["18262-6", "2093-3"]}
+  a1c: {loinc: ["4548-4"]}
+  liver_tests: {loinc: ["1742-6", "1920-8"]}
+  urine_albumin: {loinc: ["14959-1"]}
+  inr: {loinc: ["6301-6"]}
+  systolic_bp: {loinc: ["8480-6"]}
+  diastolic_bp: {loinc: ["8462-4"]}
+  current_anticoagulant: {meds: ["warfarin", "apixaban", "rivaroxaban", "dabigatran", "edoxaban"]}
+  current_antiplatelet: {meds: ["aspirin", "clopidogrel"]}
+  nsaid: {meds: ["ibuprofen", "naproxen"]}
+  bp_meds: {meds: ["amlodipine", "lisinopril", "losartan", "valsartan", "hydrochlorothiazide", "chlorthalidone", "metoprolol", "atenolol", "carvedilol", "nifedipine", "spironolactone"]}
+  statin: {meds: ["statin", "ezetimibe"]}
+  rate_control_meds: {meds: ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin"]}
   av_nodal_meds: {meds: ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin", "amiodarone"]}
   qt_meds: {meds: ["citalopram", "escitalopram", "ondansetron", "azithromycin", "levofloxacin", "ciprofloxacin", "haloperidol", "methadone", "sotalol", "amiodarone"]}
-  electrolytes_thyroid: {loinc: ["2823-3", "6298-4", "19123-9", "21377-7", "17861-6", "49765-1", "3016-3"]}
-  sleep_apnea: {conditions: ["sleep apnea"]}
-  bp_readings: {loinc: ["8480-6", "8462-4"]}
-  bp_med_count: {meds: ["amlodipine", "lisinopril", "losartan", "valsartan", "hydrochlorothiazide", "chlorthalidone", "metoprolol", "atenolol", "carvedilol", "nifedipine", "spironolactone"]}
-  interfering_substances: {meds: ["ibuprofen", "naproxen", "pseudoephedrine", "prednisone", "methylphenidate", "amphetamine", "ethinyl estradiol"], conditions: ["alcohol"]}
-  secondary_causes: {loinc: ["2823-3", "6298-4", "33914-3"], conditions: ["sleep apnea", "chronic kidney disease"], age: true}
-  organ_damage: {loinc: ["33914-3", "14959-1"], conditions: ["stroke", "chronic kidney disease", "heart failure", "myocardial infarction"]}
-  ldl_and_statin: {loinc: ["18262-6", "2093-3"], meds: ["statin", "ezetimibe"]}
-  ascvd_status: {conditions: ["myocardial infarction", "ischemic heart disease", "stroke", "diabetes", "peripheral arterial"]}
+  amlodipine: {meds: ["amlodipine", "nifedipine"]}
+  hf_worsening_meds: {meds: ["ibuprofen", "naproxen", "pioglitazone", "diltiazem", "verapamil"]}
+  bp_raising_meds: {meds: ["pseudoephedrine", "prednisone", "methylphenidate", "amphetamine", "ethinyl estradiol"]}
+  np_lowering_meds: {meds: ["furosemide", "hydrochlorothiazide", "lisinopril", "losartan", "valsartan", "metoprolol", "carvedilol", "spironolactone"]}
+  prior_ecg: {procedure_sct: ["29303009", "268400002"]}
+  prior_cardiac_testing: {procedure_sct: ["76746007", "33367005"]}
+  accompanying_symptoms: {referral_text: true}
