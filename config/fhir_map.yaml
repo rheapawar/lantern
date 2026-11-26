@@ -92,3 +92,6 @@ facts:
   prior_ecg: {procedure_sct: ["29303009", "268400002"]}
   prior_cardiac_testing: {procedure_sct: ["76746007", "33367005"]}
   accompanying_symptoms: {referral_text: true}
+  heart_rate: {loinc: ["8867-4"]}
+  weight: {loinc: ["29463-7"]}
+  diuretic: {meds: ["hydrochlorothiazide", "chlorthalidone", "furosemide", "spironolactone"]}

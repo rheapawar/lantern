@@ -61,10 +61,13 @@
     "inr": {"text": "INR (warfarin level)"},
     "systolic_bp": {"text": "Systolic blood pressure"},
     "diastolic_bp": {"text": "Diastolic blood pressure"},
+    "heart_rate": {"text": "Recent heart rate"},
+    "weight": {"text": "Weight trend"},
     "current_anticoagulant": {"text": "On a blood thinner"},
     "current_antiplatelet": {"text": "On aspirin or clopidogrel"},
     "nsaid": {"text": "Regular NSAID (ibuprofen, naproxen)"},
     "bp_meds": {"text": "Blood pressure medicines (number and classes)"},
+    "diuretic": {"text": "On a diuretic (water pill)"},
     "statin": {"text": "Statin or ezetimibe"},
     "rate_control_meds": {"text": "Heart-rate medicines"},
     "av_nodal_meds": {"text": "Medicines that slow the heart or conduction"},
@@ -103,21 +106,74 @@
   },
 
   "options": {
-    "er_precautions":        {"text": "Give clear 'call 911 / go to the ER if...' instructions", "kind": "advice"},
-    "review_bp_lipid_meds":  {"text": "Review blood pressure and cholesterol medicines", "kind": "med_review"},
-    "cut_caffeine_alcohol":  {"text": "Cut back caffeine and alcohol", "kind": "advice"},
-    "risk_factor_modification": {"text": "Address weight, alcohol, sleep apnea and activity (AFib risk factors)", "kind": "advice"},
-    "anticoag_decision":     {"text": "Blood-thinner (stroke prevention) decision - for the specialist", "kind": "specialist_decision"},
-    "rate_control_decision": {"text": "Heart-rate control medicine decision - for the specialist", "kind": "specialist_decision"},
-    "daily_weights":         {"text": "Weigh daily and report fast gain", "kind": "advice"},
-    "limit_salt":            {"text": "Limit salt", "kind": "advice"},
-    "diuretic_by_specialist": {"text": "Any water-pill (diuretic) change - by the specialist only", "kind": "specialist_decision"},
-    "review_hf_worsening_meds": {"text": "Review medicines that can worsen heart failure or cause swelling (NSAIDs, pioglitazone, diltiazem/verapamil, amlodipine)", "kind": "med_review"},
-    "review_qt_meds":        {"text": "Review medicines that can prolong the QT interval", "kind": "med_review"},
-    "review_av_nodal_meds":  {"text": "Review medicines that slow the heart (beta blockers, diltiazem, verapamil, digoxin, amiodarone)", "kind": "med_review"},
-    "home_bp_log":           {"text": "Keep a home blood pressure log", "kind": "advice"},
-    "adherence_check":       {"text": "Check whether medicines are being taken as prescribed", "kind": "advice"},
-    "review_interfering_meds": {"text": "Review things that raise BP (NSAIDs, decongestants, stimulants, steroids, oral contraceptives, alcohol)", "kind": "med_review"}
+    "er_precautions":        {"text": "Give clear 'call 911 / go to the ER if...' instructions", "kind": "advice",
+      "decision_facts": [
+        {"group": "Heart-attack risk and symptoms", "facts": ["prior_mi_cad", "diabetes", "age", "accompanying_symptoms"]}
+      ]},
+    "review_bp_lipid_meds":  {"text": "Review blood pressure and cholesterol medicines", "kind": "med_review",
+      "decision_facts": [
+        {"group": "Blood pressure", "facts": ["systolic_bp", "diastolic_bp", "bp_meds"]},
+        {"group": "Cholesterol", "facts": ["ldl", "statin"]}
+      ]},
+    "cut_caffeine_alcohol":  {"text": "Cut back caffeine and alcohol", "kind": "advice",
+      "decision_facts": [
+        {"group": "Alcohol use", "facts": ["alcohol_use"]}
+      ]},
+    "risk_factor_modification": {"text": "Address weight, alcohol, sleep apnea and activity (AFib risk factors)", "kind": "advice",
+      "decision_facts": [
+        {"group": "AFib drivers", "facts": ["obesity", "sleep_apnea", "alcohol_use", "hypertension"]}
+      ]},
+    "anticoag_decision":     {"text": "Blood-thinner (stroke prevention) decision - for the specialist", "kind": "specialist_decision",
+      "decision_facts": [
+        {"group": "Is AFib confirmed?", "facts": ["atrial_fibrillation"]},
+        {"group": "Stroke risk (CHA2DS2-VASc parts)", "facts": ["age", "sex", "heart_failure", "hypertension", "diabetes", "prior_stroke_tia", "vascular_disease"]},
+        {"group": "Bleeding risk", "facts": ["bleeding_history", "alcohol_use", "nsaid", "current_antiplatelet", "hemoglobin"]},
+        {"group": "Dosing (kidney and liver)", "facts": ["egfr", "liver_tests"]},
+        {"group": "Current treatment", "facts": ["current_anticoagulant", "inr"]}
+      ]},
+    "rate_control_decision": {"text": "Heart-rate control medicine decision - for the specialist", "kind": "specialist_decision",
+      "decision_facts": [
+        {"group": "Current rate and treatment", "facts": ["heart_rate", "rate_control_meds"]},
+        {"group": "Limits on rate medicines", "facts": ["heart_failure", "systolic_bp", "copd"]}
+      ]},
+    "daily_weights":         {"text": "Weigh daily and report fast gain", "kind": "advice",
+      "decision_facts": [
+        {"group": "Baseline", "facts": ["weight", "heart_failure"]}
+      ]},
+    "limit_salt":            {"text": "Limit salt", "kind": "advice",
+      "decision_facts": [
+        {"group": "BP and kidneys", "facts": ["systolic_bp", "ckd"]}
+      ]},
+    "diuretic_by_specialist": {"text": "Any water-pill (diuretic) change - by the specialist only", "kind": "specialist_decision",
+      "decision_facts": [
+        {"group": "Current diuretic", "facts": ["diuretic"]},
+        {"group": "What a change would affect", "facts": ["egfr", "potassium", "systolic_bp"]}
+      ]},
+    "review_hf_worsening_meds": {"text": "Review medicines that can worsen heart failure or cause swelling (NSAIDs, pioglitazone, diltiazem/verapamil, amlodipine)", "kind": "med_review",
+      "decision_facts": [
+        {"group": "Medicines to review", "facts": ["hf_worsening_meds", "amlodipine"]}
+      ]},
+    "review_qt_meds":        {"text": "Review medicines that can prolong the QT interval", "kind": "med_review",
+      "decision_facts": [
+        {"group": "QT-prolonging medicines", "facts": ["qt_meds"]},
+        {"group": "Salts that worsen QT", "facts": ["potassium", "magnesium", "calcium"]}
+      ]},
+    "review_av_nodal_meds":  {"text": "Review medicines that slow the heart (beta blockers, diltiazem, verapamil, digoxin, amiodarone)", "kind": "med_review",
+      "decision_facts": [
+        {"group": "Medicines and current rate", "facts": ["av_nodal_meds", "heart_rate"]}
+      ]},
+    "home_bp_log":           {"text": "Keep a home blood pressure log", "kind": "advice",
+      "decision_facts": [
+        {"group": "Recent BP", "facts": ["systolic_bp", "diastolic_bp"]}
+      ]},
+    "adherence_check":       {"text": "Check whether medicines are being taken as prescribed", "kind": "advice",
+      "decision_facts": [
+        {"group": "Medicines to check", "facts": ["bp_meds", "statin"]}
+      ]},
+    "review_interfering_meds": {"text": "Review things that raise BP (NSAIDs, decongestants, stimulants, steroids, oral contraceptives, alcohol)", "kind": "med_review",
+      "decision_facts": [
+        {"group": "Things that raise BP", "facts": ["nsaid", "bp_raising_meds", "alcohol_use"]}
+      ]}
   },
 
   "fits": {
@@ -164,7 +220,9 @@
         {"group": "Accompanying symptoms, especially in women: nausea, fatigue, breathlessness, jaw/arm/back pain", "why": "Guideline drops 'atypical'; women more often have these, and they should not lower concern",
          "facts": ["accompanying_symptoms"]},
         {"group": "Previous ECG, stress test, coronary CT or angiogram", "why": "Recent normal testing may change what is needed; abnormal testing raises concern",
-         "facts": ["prior_ecg", "prior_cardiac_testing"]}
+         "facts": ["prior_ecg", "prior_cardiac_testing"]},
+        {"group": "Current BP and cholesterol treatment", "why": "Shows whether prevention is on track before the visit",
+         "facts": ["systolic_bp", "diastolic_bp", "bp_meds", "statin"]}
       ],
       "tests_first": ["ecg", "lipids", "a1c", "kidney_panel", "stress_or_ccta"],
       "tests_not_prechecked": ["stress_or_ccta"],
@@ -212,7 +270,9 @@
         {"group": "AFib drivers: obesity, sleep apnea, alcohol, high BP", "why": "2023 guideline makes risk-factor treatment a core part of AFib care",
          "facts": ["obesity", "sleep_apnea", "alcohol_use", "hypertension"]},
         {"group": "Current heart-rate medicines (beta blocker, diltiazem, verapamil, digoxin)", "why": "Shows whether rate control has been tried",
-         "facts": ["rate_control_meds"]}
+         "facts": ["rate_control_meds"]},
+        {"group": "Known AFib and rate-control considerations: heart rate, BP, lung disease", "why": "Tells a new diagnosis from known AFib; low BP or lung disease limits which rate medicines are safe (clinician to confirm: beta-blocker caution is mainly about asthma)",
+         "facts": ["atrial_fibrillation", "heart_rate", "systolic_bp", "copd"]}
       ],
       "tests_first": ["ecg", "tsh", "electrolytes", "kidney_panel", "liver_panel", "cbc", "ambulatory_monitor", "echo"],
       "tests_not_prechecked": [],
@@ -260,7 +320,9 @@
         {"group": "Medicines that can worsen heart failure: NSAIDs, pioglitazone, diltiazem, verapamil", "why": "Stopping them may help while waiting - specialist decides",
          "facts": ["hf_worsening_meds"]},
         {"group": "Hemoglobin, iron studies, thyroid", "why": "Anemia, iron deficiency and thyroid disease cause or worsen breathlessness; 2022 US guideline recommends iron studies",
-         "facts": ["hemoglobin", "iron", "tsh"]}
+         "facts": ["hemoglobin", "iron", "tsh"]},
+        {"group": "Current status: weight, BP, potassium, diuretic, known heart failure", "why": "Baseline for daily weights and for any diuretic change",
+         "facts": ["weight", "systolic_bp", "potassium", "diuretic", "heart_failure"]}
       ],
       "tests_first": ["nt_probnp", "ecg", "echo", "kidney_panel", "electrolytes", "cbc", "tsh", "liver_panel", "iron_studies", "lipids", "a1c", "urinalysis", "chest_xray"],
       "tests_not_prechecked": [],
@@ -305,7 +367,9 @@
         {"group": "Potassium, magnesium, calcium, thyroid", "why": "Low potassium/magnesium/calcium prolong QT; thyroid and potassium affect slow rhythms",
          "facts": ["potassium", "magnesium", "calcium", "tsh"]},
         {"group": "Sleep apnea", "why": "Can cause slow heart rates and pauses at night",
-         "facts": ["sleep_apnea"]}
+         "facts": ["sleep_apnea"]},
+        {"group": "Current heart rate", "why": "A slow rate points to a conduction problem or a medicine effect",
+         "facts": ["heart_rate"]}
       ],
       "low_concern_findings": ["First-degree AV block alone", "Mobitz I (Wenckebach) without symptoms", "Isolated right bundle branch block without symptoms"],
       "tests_first": ["ecg_compare_prior", "electrolytes", "calcium", "tsh", "echo", "ambulatory_monitor"],
