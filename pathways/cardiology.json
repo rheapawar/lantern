@@ -6,15 +6,17 @@
   "reviewed_by": [],
 
   "sources": {
-    "aha_chest_pain_2021": "2021 AHA/ACC/ASE/CHEST/SAEM/SCCT/SCMR Guideline for the Evaluation and Diagnosis of Chest Pain",
-    "acc_afib_2023":       "2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation",
-    "nice_ng106":          "NICE NG106 Chronic heart failure in adults: diagnosis and management (2018)",
-    "nice_qs9":            "NICE QS9 Chronic heart failure in adults (quality standard)",
-    "aha_hf_2022":         "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
-    "aha_bp_2017_2025":    "ACC/AHA Guideline for High Blood Pressure in Adults (2017; updated 2025)",
-    "acc_brady_2018":      "2018 ACC/AHA/HRS Guideline on Bradycardia and Cardiac Conduction Delay",
-    "aha_chol_2018":       "2018 AHA/ACC Guideline on the Management of Blood Cholesterol (NOT in Rhea's source list - added for the cholesterol half of reason 5)",
-    "aha_qt_2010":         "2010 AHA/ACCF Scientific Statement on Prevention of Torsade de Pointes in Hospital Settings (NOT in Rhea's source list - added for long QT)"
+    "aha_chest_pain_2021": {"title": "2021 AHA/ACC/ASE/CHEST/SAEM/SCCT/SCMR Guideline for the Evaluation and Diagnosis of Chest Pain", "region": "US", "year": 2021, "checked": false},
+    "acc_afib_2023": {"title": "2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation", "region": "US", "year": 2023, "checked": false},
+    "nice_ng106": {"title": "NICE NG106 Chronic heart failure in adults: diagnosis and management", "region": "UK", "year": 2018, "updated": "2025-09-03", "checked": true, "checked_note": "Recommendations section read in full (pasted by Rhea), 2026-11-26"},
+    "nice_qs9": {"title": "NICE QS9 Chronic heart failure in adults (quality standard)", "region": "UK", "checked": false},
+    "aha_hf_2022": {"title": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure", "region": "US", "year": 2022, "checked": false},
+    "aha_bp_2025": {"title": "2025 AHA/ACC/AANP/AAPA/ABC/ACCP/ACPM/AGS/AMA/ASPC/NMA/PCNA/SGIM Guideline for the Prevention, Detection, Evaluation and Management of High Blood Pressure in Adults", "region": "US", "year": 2025, "doi": "10.1161/CIR.0000000000001356", "checked": true, "checked_note": "Full PDF read (provided by Rhea), 2026-11-26. Retires and replaces the 2017 guideline."},
+    "acc_brady_2018": {"title": "2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Patients With Bradycardia and Cardiac Conduction Delay", "region": "US", "year": 2018, "checked": false},
+    "aha_chol_2018": {"title": "2018 AHA/ACC Guideline on the Management of Blood Cholesterol (not in Rhea's original source list)", "region": "US", "year": 2018, "checked": false},
+    "aha_qt_2010": {"title": "2010 AHA/ACCF Scientific Statement on Prevention of Torsade de Pointes in Hospital Settings (not in Rhea's original source list)", "region": "US", "year": 2010, "checked": false},
+    "lantern_claude_md": {"title": "Lantern CLAUDE.md pathway table (Rhea's draft from interviews) - no guideline found that backs it yet", "kind": "internal", "checked": false},
+    "draft": {"title": "Added by Claude without a guideline source - unconfirmed guess", "kind": "internal", "checked": false}
   },
 
   "tiers": {
@@ -136,20 +138,20 @@
         {"group": "Current rate and treatment", "facts": ["heart_rate", "rate_control_meds"]},
         {"group": "Limits on rate medicines", "facts": ["heart_failure", "systolic_bp", "copd"]}
       ]},
-    "daily_weights":         {"text": "Weigh daily and report fast gain", "kind": "advice",
+    "daily_weights":         {"text": "Weigh daily and report fast gain", "kind": "advice", "source": "lantern_claude_md",
       "decision_facts": [
         {"group": "Baseline", "facts": ["weight", "heart_failure"]}
       ]},
-    "limit_salt":            {"text": "Limit salt", "kind": "advice",
+    "limit_salt":            {"text": "Limit salt", "kind": "advice", "source": "nice_ng106", "ref": "1.9.10",
       "decision_facts": [
         {"group": "BP and kidneys", "facts": ["systolic_bp", "ckd"]}
       ]},
-    "diuretic_by_specialist": {"text": "Any water-pill (diuretic) change - by the specialist only", "kind": "specialist_decision",
+    "diuretic_by_specialist": {"text": "Any water-pill (diuretic) change - by the specialist only", "kind": "specialist_decision", "source": "lantern_claude_md",
       "decision_facts": [
         {"group": "Current diuretic", "facts": ["diuretic"]},
         {"group": "What a change would affect", "facts": ["egfr", "potassium", "systolic_bp"]}
       ]},
-    "review_hf_worsening_meds": {"text": "Review medicines that can worsen heart failure or cause swelling (NSAIDs, pioglitazone, diltiazem/verapamil, amlodipine)", "kind": "med_review",
+    "review_hf_worsening_meds": {"text": "Review medicines that can worsen heart failure or cause swelling (NSAIDs, pioglitazone, diltiazem/verapamil, amlodipine)", "kind": "med_review", "source": "aha_hf_2022",
       "decision_facts": [
         {"group": "Medicines to review", "facts": ["hf_worsening_meds", "amlodipine"]}
       ]},
@@ -162,15 +164,15 @@
       "decision_facts": [
         {"group": "Medicines and current rate", "facts": ["av_nodal_meds", "heart_rate"]}
       ]},
-    "home_bp_log":           {"text": "Keep a home blood pressure log", "kind": "advice",
+    "home_bp_log":           {"text": "Keep a home blood pressure log", "kind": "advice", "source": "aha_bp_2025", "ref": "3.1.4",
       "decision_facts": [
         {"group": "Recent BP", "facts": ["systolic_bp", "diastolic_bp"]}
       ]},
-    "adherence_check":       {"text": "Check whether medicines are being taken as prescribed", "kind": "advice",
+    "adherence_check":       {"text": "Check whether medicines are being taken as prescribed", "kind": "advice", "source": "aha_bp_2025", "ref": "5.2.5",
       "decision_facts": [
         {"group": "Medicines to check", "facts": ["bp_meds", "statin"]}
       ]},
-    "review_interfering_meds": {"text": "Review things that raise BP (NSAIDs, decongestants, stimulants, steroids, oral contraceptives, alcohol)", "kind": "med_review",
+    "review_interfering_meds": {"text": "Review things that raise BP (NSAIDs, decongestants, stimulants, steroids, oral contraceptives, alcohol)", "kind": "med_review", "source": "aha_bp_2025", "ref": "5.6, Table 11",
       "decision_facts": [
         {"group": "Things that raise BP", "facts": ["nsaid", "bp_raising_meds", "alcohol_use"]}
       ]}
@@ -224,7 +226,13 @@
         {"group": "Current BP and cholesterol treatment", "why": "Shows whether prevention is on track before the visit",
          "facts": ["systolic_bp", "diastolic_bp", "bp_meds", "statin"]}
       ],
-      "tests_first": ["ecg", "lipids", "a1c", "kidney_panel", "stress_or_ccta"],
+      "tests_first": [
+        {"test": "ecg"},
+        {"test": "lipids"},
+        {"test": "a1c"},
+        {"test": "kidney_panel"},
+        {"test": "stress_or_ccta"}
+      ],
       "tests_not_prechecked": ["stress_or_ccta"],
       "interim_options": ["er_precautions", "review_bp_lipid_meds"],
       "subspecialty": "general_cardiology",
@@ -274,7 +282,16 @@
         {"group": "Known AFib and rate-control considerations: heart rate, BP, lung disease", "why": "Tells a new diagnosis from known AFib; low BP or lung disease limits which rate medicines are safe (clinician to confirm: beta-blocker caution is mainly about asthma)",
          "facts": ["atrial_fibrillation", "heart_rate", "systolic_bp", "copd"]}
       ],
-      "tests_first": ["ecg", "tsh", "electrolytes", "kidney_panel", "liver_panel", "cbc", "ambulatory_monitor", "echo"],
+      "tests_first": [
+        {"test": "ecg"},
+        {"test": "tsh"},
+        {"test": "electrolytes"},
+        {"test": "kidney_panel"},
+        {"test": "liver_panel"},
+        {"test": "cbc"},
+        {"test": "ambulatory_monitor"},
+        {"test": "echo"}
+      ],
       "tests_not_prechecked": [],
       "interim_options": ["cut_caffeine_alcohol", "risk_factor_modification", "anticoag_decision", "rate_control_decision"],
       "subspecialty": "electrophysiology",
@@ -287,44 +304,58 @@
       "label": "Heart failure symptoms",
       "sources": ["nice_ng106", "nice_qs9", "aha_hf_2022"],
       "red_flags": [
-        {"id": "hf_breathless_rest", "text": "Breathless at rest or can't lie flat",
+        {"id": "hf_breathless_rest", "text": "Breathless at rest or can't lie flat", "source": "lantern_claude_md",
          "match": {"all": [{"text_any": ["short of breath", "shortness of breath", "breathless", "dyspnea", "dyspnoea"]},
                            {"text_any": ["at rest", "while resting", "sitting still", "can't lie flat", "cannot lie flat", "talking"]}]}},
-        {"id": "hf_chest_pain", "text": "Chest pain",
+        {"id": "hf_chest_pain", "text": "Chest pain", "source": "lantern_claude_md",
          "match": {"text_any": ["chest pain", "chest pressure", "chest tightness"]}},
-        {"id": "hf_syncope", "text": "Fainting",
+        {"id": "hf_syncope", "text": "Fainting", "source": "lantern_claude_md",
          "match": {"text_any": ["fainted", "syncope", "passed out"]}}
       ],
       "urgent_flags": [
-        {"id": "hf_ntprobnp_over_2000", "text": "NT-proBNP over 2,000 ng/L (NICE: specialist + echo within 2 weeks)",
+        {"id": "hf_ntprobnp_over_2000", "text": "NT-proBNP over 2,000 ng/L (NICE: specialist + echo within 2 weeks)", "source": "nice_ng106", "ref": "1.2.3",
          "match": {"any": [{"chart_obs": {"fact": "nt_probnp", "op": ">", "value": 2000, "within_days": 90}},
                            {"text_regex": "(nt-?pro-?bnp|probnp|bnp)\\D{0,15}([2-9],?\\d{3}|\\d{2},?\\d{3})"}]}},
-        {"id": "hf_rapid_weight_gain", "text": "Fast weight gain or worsening swelling",
+        {"id": "hf_rapid_weight_gain", "text": "Fast weight gain or worsening swelling", "source": "lantern_claude_md",
          "match": {"text_any": ["gained", "weight gain", "lbs in", "pounds in", "kg in", "worsening swelling", "swelling getting worse", "more swollen"]}}
       ],
       "soon_hints": [
-        {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)",
+        {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)", "source": "nice_ng106", "ref": "1.2.4",
          "match": {"chart_obs": {"fact": "nt_probnp", "op": "between", "value": [400, 2000], "within_days": 90}}}
       ],
       "decision_facts": [
-        {"group": "NT-proBNP value and date", "why": "NICE uses it to set urgency; below 400 ng/L in an untreated patient makes heart failure less likely - verify",
+        {"group": "NT-proBNP value and date", "why": "NICE uses it to set urgency; below 400 ng/L in an untreated patient makes heart failure less likely - verify", "source": "nice_ng106", "ref": "1.2.2-1.2.5",
          "facts": ["nt_probnp"]},
-        {"group": "Things that push NT-proBNP up: age over 70, AFib, eGFR under 60, lung disease, diabetes", "why": "A high value may partly reflect these rather than heart failure - verify full NICE list",
+        {"group": "Things that push NT-proBNP up: age over 70, AFib, eGFR under 60, lung disease, diabetes", "why": "A high value may partly reflect these rather than heart failure - verify full NICE list", "source": "nice_ng106", "ref": "1.2.7",
          "facts": ["age", "atrial_fibrillation", "ckd", "egfr", "copd", "diabetes", "liver_disease"]},
-        {"group": "Things that push NT-proBNP down: obesity (BMI over 35), already on diuretic / ACE inhibitor / ARB / beta blocker / MRA", "why": "A 'normal' value can be falsely reassuring in these patients - verify",
+        {"group": "Things that push NT-proBNP down: obesity (BMI over 35), already on diuretic / ACE inhibitor / ARB / beta blocker / MRA", "why": "A 'normal' value can be falsely reassuring in these patients. NICE (1.2.7) also notes levels run lower on average in people of African or African-Caribbean background, so a low value is less reassuring; the cause is not established. Context for the specialist only - Lantern never uses race as an input.", "source": "nice_ng106", "ref": "1.2.7",
          "facts": ["obesity", "np_lowering_meds"]},
-        {"group": "Prior heart attack, coronary disease, valve disease, high BP, AFib", "why": "The common causes of heart failure",
+        {"group": "Prior heart attack, coronary disease, valve disease, high BP, AFib", "why": "The common causes of heart failure", "source": "aha_hf_2022",
          "facts": ["prior_mi_cad", "valve_disease", "hypertension", "atrial_fibrillation"]},
-        {"group": "Other causes of swelling: kidney disease, amlodipine, liver disease, low albumin", "why": "Ankle swelling may not be the heart at all",
+        {"group": "Other causes of swelling: kidney disease, amlodipine, liver disease, low albumin", "why": "Ankle swelling may not be the heart at all", "source": "draft",
          "facts": ["ckd", "egfr", "amlodipine", "liver_disease", "albumin"]},
-        {"group": "Medicines that can worsen heart failure: NSAIDs, pioglitazone, diltiazem, verapamil", "why": "Stopping them may help while waiting - specialist decides",
+        {"group": "Medicines that can worsen heart failure: NSAIDs, pioglitazone, diltiazem, verapamil", "why": "Stopping them may help while waiting - specialist decides", "source": "aha_hf_2022",
          "facts": ["hf_worsening_meds"]},
-        {"group": "Hemoglobin, iron studies, thyroid", "why": "Anemia, iron deficiency and thyroid disease cause or worsen breathlessness; 2022 US guideline recommends iron studies",
+        {"group": "Hemoglobin, iron studies, thyroid", "why": "Anemia, iron deficiency and thyroid disease cause or worsen breathlessness; 2022 US guideline recommends iron studies", "source": "nice_ng106", "ref": "1.2.12, 1.4.5",
          "facts": ["hemoglobin", "iron", "tsh"]},
-        {"group": "Current status: weight, BP, potassium, diuretic, known heart failure", "why": "Baseline for daily weights and for any diuretic change",
+        {"group": "Current status: weight, BP, potassium, diuretic, known heart failure", "why": "Baseline for daily weights and for any diuretic change", "source": "draft",
          "facts": ["weight", "systolic_bp", "potassium", "diuretic", "heart_failure"]}
       ],
-      "tests_first": ["nt_probnp", "ecg", "echo", "kidney_panel", "electrolytes", "cbc", "tsh", "liver_panel", "iron_studies", "lipids", "a1c", "urinalysis", "chest_xray"],
+      "tests_first": [
+        {"test": "nt_probnp", "source": "nice_ng106", "ref": "1.2.2"},
+        {"test": "ecg", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "echo", "source": "nice_ng106", "ref": "1.2.8"},
+        {"test": "kidney_panel", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "electrolytes", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "cbc", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "tsh", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "liver_panel", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "iron_studies", "source": "nice_ng106", "ref": "1.4.5"},
+        {"test": "lipids", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "a1c", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "urinalysis", "source": "nice_ng106", "ref": "1.2.12"},
+        {"test": "chest_xray", "source": "nice_ng106", "ref": "1.2.12"}
+      ],
       "tests_not_prechecked": [],
       "interim_options": ["daily_weights", "limit_salt", "diuretic_by_specialist", "review_hf_worsening_meds"],
       "subspecialty": "heart_failure",
@@ -372,7 +403,14 @@
          "facts": ["heart_rate"]}
       ],
       "low_concern_findings": ["First-degree AV block alone", "Mobitz I (Wenckebach) without symptoms", "Isolated right bundle branch block without symptoms"],
-      "tests_first": ["ecg_compare_prior", "electrolytes", "calcium", "tsh", "echo", "ambulatory_monitor"],
+      "tests_first": [
+        {"test": "ecg_compare_prior"},
+        {"test": "electrolytes"},
+        {"test": "calcium"},
+        {"test": "tsh"},
+        {"test": "echo"},
+        {"test": "ambulatory_monitor"}
+      ],
       "tests_not_prechecked": ["ambulatory_monitor"],
       "interim_options": ["review_qt_meds", "review_av_nodal_meds"],
       "subspecialty": "general_cardiology",
@@ -383,9 +421,9 @@
 
     "hard_to_control_bp_chol": {
       "label": "Hard-to-control blood pressure or cholesterol",
-      "sources": ["aha_bp_2017_2025", "aha_chol_2018"],
+      "sources": ["aha_bp_2025", "aha_chol_2018"],
       "red_flags": [
-        {"id": "bp_emergency", "text": "BP over 180/120 with signs of organ damage: chest pain, confusion, vision change, severe headache, weakness, breathlessness (hypertensive emergency - ER)",
+        {"id": "bp_emergency", "text": "BP over 180/120 with signs of organ damage: chest pain, confusion, vision change, severe headache, weakness, breathlessness (hypertensive emergency - ER)", "source": "aha_bp_2025", "ref": "6.2, Fig 9",
          "match": {"all": [
            {"any": [{"text_regex": "\\b(1[89]\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
                     {"text_regex": "\\b\\d{2,3}\\s*/\\s*(1[2-9]\\d)\\b"},
@@ -394,31 +432,45 @@
            {"text_any": ["chest pain", "confusion", "confused", "vision change", "blurred vision", "vision loss", "severe headache", "weakness", "slurred", "short of breath", "shortness of breath"]}]}}
       ],
       "urgent_flags": [
-        {"id": "bp_severe_no_symptoms", "text": "BP over 180/120 without signs of organ damage (severe hypertension - not an ER visit; outpatient medicine adjustment)",
+        {"id": "bp_severe_no_symptoms", "text": "BP over 180/120 without signs of organ damage (severe hypertension - not an ER visit; outpatient medicine adjustment)", "source": "lantern_claude_md", "source_note": "Severe hypertension is defined in 2025 BP guideline 6.2 / Fig 9, which says treat in the outpatient setting with close follow-up within 4 weeks and no ED referral. The guideline gives no specialist-referral urgency, so the 'urgent' tier here is not guideline-backed (it came from the CLAUDE.md table and the old term 'hypertensive urgency').",
          "match": {"any": [{"text_regex": "\\b(1[89]\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
                            {"text_regex": "\\b\\d{2,3}\\s*/\\s*(1[2-9]\\d)\\b"},
                            {"chart_obs": {"fact": "systolic_bp", "op": ">=", "value": 180, "within_days": 14}},
                            {"chart_obs": {"fact": "diastolic_bp", "op": ">=", "value": 120, "within_days": 14}}]}},
-        {"id": "bp_low_potassium", "text": "High BP with low potassium (possible primary aldosteronism)",
+        {"id": "bp_low_potassium", "text": "High BP with low potassium (possible primary aldosteronism)", "source": "draft", "source_note": "2025 BP guideline 3.2.3.1 lists hypokalemia as a trigger to SCREEN for primary aldosteronism, not as an urgency criterion. Marked urgent because a missed aldosteronism case causes more organ damage; not guideline-backed.",
          "match": {"chart_obs": {"fact": "potassium", "op": "<", "value": 3.5, "within_days": 180}}}
       ],
       "decision_facts": [
-        {"group": "Recent BP readings (trend, not one value)", "why": "Confirms BP is truly uncontrolled; goal is generally under 130/80 - verify",
+        {"group": "Recent BP readings (trend, not one value)", "why": "Confirms BP is truly uncontrolled; goal is generally under 130/80 - verify", "source": "aha_bp_2025", "ref": "5.2.7",
          "facts": ["systolic_bp", "diastolic_bp"]},
-        {"group": "Number and classes of BP medicines, including whether one is a diuretic", "why": "Resistant hypertension = above goal on 3 medicines (one a diuretic) at good doses, or needing 4+",
+        {"group": "Number and classes of BP medicines, including whether one is a diuretic", "why": "Resistant hypertension = above goal on 3 medicines (one a diuretic) at good doses, or needing 4+", "source": "aha_bp_2025", "ref": "5.6",
          "facts": ["bp_meds"]},
-        {"group": "Things that raise BP: NSAIDs, decongestants, stimulants, steroids, oral contraceptives, heavy alcohol", "why": "A common, fixable cause of 'resistant' BP",
+        {"group": "Things that raise BP: NSAIDs, decongestants, stimulants, steroids, oral contraceptives, heavy alcohol", "why": "A common, fixable cause of 'resistant' BP", "source": "aha_bp_2025", "ref": "3.2.3, Table 11",
          "facts": ["nsaid", "bp_raising_meds", "alcohol_use"]},
-        {"group": "Clues to a secondary cause: low potassium, sleep apnea, kidney disease, young age", "why": "Guideline recommends screening resistant hypertension for primary aldosteronism and other causes - verify 2025 scope",
+        {"group": "Clues to a secondary cause: low potassium, sleep apnea, kidney disease, young age", "why": "Guideline recommends screening resistant hypertension for primary aldosteronism and other causes - verify 2025 scope", "source": "aha_bp_2025", "ref": "3.2.3, Table 10",
          "facts": ["potassium", "sleep_apnea", "ckd", "egfr", "age"]},
-        {"group": "Signs of damage from BP: kidney function, urine albumin, prior stroke or heart disease", "why": "Raises urgency and the strength of treatment",
+        {"group": "Signs of damage from BP: kidney function, urine albumin, prior stroke or heart disease", "why": "Raises urgency and the strength of treatment", "source": "aha_bp_2025", "ref": "3.1.2, 5.3",
          "facts": ["egfr", "ckd", "urine_albumin", "prior_stroke_tia", "heart_failure", "prior_mi_cad"]},
-        {"group": "LDL trend, statin dose, and any statin intolerance", "why": "LDL 190+ suggests inherited high cholesterol; on-statin LDL above goal may need added therapy",
+        {"group": "LDL trend, statin dose, and any statin intolerance", "why": "LDL 190+ suggests inherited high cholesterol; on-statin LDL above goal may need added therapy", "source": "aha_chol_2018",
          "facts": ["ldl", "statin"]},
-        {"group": "Existing heart disease, stroke or diabetes", "why": "Sets how low LDL and BP should go",
+        {"group": "Existing heart disease, stroke or diabetes", "why": "Sets how low LDL and BP should go", "source": "aha_chol_2018",
          "facts": ["prior_mi_cad", "prior_stroke_tia", "diabetes", "vascular_disease"]}
       ],
-      "tests_first": ["kidney_panel", "electrolytes", "calcium", "glucose", "a1c", "lipids", "cbc", "tsh", "urinalysis", "urine_albumin", "ecg", "out_of_office_bp", "aldosterone_renin"],
+      "tests_first": [
+        {"test": "kidney_panel", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "electrolytes", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "calcium", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "glucose", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "a1c", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "lipids", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "cbc", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "tsh", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "urinalysis", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "urine_albumin", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "ecg", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "out_of_office_bp", "source": "aha_bp_2025", "ref": "3.1.4"},
+        {"test": "aldosterone_renin", "source": "aha_bp_2025", "ref": "3.2.3.1"}
+      ],
       "tests_not_prechecked": ["aldosterone_renin"],
       "interim_options": ["home_bp_log", "adherence_check", "review_interfering_meds"],
       "subspecialty": "hypertension_preventive",
