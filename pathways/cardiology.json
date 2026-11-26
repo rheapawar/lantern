@@ -1,0 +1,291 @@
+{
+  "specialty": "cardiology",
+  "version": "0.2-draft",
+  "review_status": "DRAFT - written by a non-clinician from the guidelines listed in 'sources', from memory (the guideline sites blocked automated reading). Items marked 'verify' must be checked against the guideline text. Every flag, test, option and threshold needs cardiologist review before use.",
+  "reviewed_by": [],
+
+  "sources": {
+    "aha_chest_pain_2021": "2021 AHA/ACC/ASE/CHEST/SAEM/SCCT/SCMR Guideline for the Evaluation and Diagnosis of Chest Pain",
+    "acc_afib_2023":       "2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation",
+    "nice_ng106":          "NICE NG106 Chronic heart failure in adults: diagnosis and management (2018)",
+    "nice_qs9":            "NICE QS9 Chronic heart failure in adults (quality standard)",
+    "aha_hf_2022":         "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+    "aha_bp_2017_2025":    "ACC/AHA Guideline for High Blood Pressure in Adults (2017; updated 2025)",
+    "acc_brady_2018":      "2018 ACC/AHA/HRS Guideline on Bradycardia and Cardiac Conduction Delay",
+    "aha_chol_2018":       "2018 AHA/ACC Guideline on the Management of Blood Cholesterol (NOT in Rhea's source list - added for the cholesterol half of reason 5)",
+    "aha_qt_2010":         "2010 AHA/ACCF Scientific Statement on Prevention of Torsade de Pointes in Hospital Settings (NOT in Rhea's source list - added for long QT)"
+  },
+
+  "tiers": {
+    "emergent": "Needs the ER now - not a referral. Card says 'advise ER now'.",
+    "urgent":   "Specialist within about 2 weeks (matches NICE's 2-week heart failure rule).",
+    "routine":  "Normal queue. Some routine cases have a 'soon' hint (e.g. NICE 6-week heart failure rule) shown on the card but not a separate tier."
+  },
+
+  "tests": {
+    "ecg":                {"name": "12-lead ECG",                        "done_if": {"procedure_sct": ["29303009", "268400002"]}},
+    "ecg_compare_prior":  {"name": "Compare with a prior ECG",           "done_if": {"procedure_sct": ["29303009", "268400002"]}, "note": "'done' means an earlier ECG exists to compare against"},
+    "lipids":             {"name": "Lipid panel",                        "done_if": {"loinc": ["57698-3", "2093-3", "18262-6"]}},
+    "a1c":                {"name": "Hemoglobin A1c",                     "done_if": {"loinc": ["4548-4"]}},
+    "kidney_panel":       {"name": "Kidney panel (creatinine, eGFR, BUN, sodium)", "done_if": {"loinc": ["33914-3", "2160-0", "38483-4", "3094-0", "6299-2"]}},
+    "electrolytes":       {"name": "Potassium and magnesium",            "done_if": {"loinc": ["2823-3", "6298-4", "19123-9", "21377-7"]}},
+    "calcium":            {"name": "Calcium",                            "done_if": {"loinc": ["17861-6", "49765-1"]}},
+    "glucose":            {"name": "Glucose",                            "done_if": {"loinc": ["2345-7", "2339-0"]}},
+    "cbc":                {"name": "Complete blood count",               "done_if": {"loinc": ["718-7", "6690-2", "777-3"], "procedure_sct": ["104091002"]}},
+    "liver_panel":        {"name": "Liver tests (ALT, AST, bilirubin)",  "done_if": {"loinc": ["1742-6", "1920-8", "1975-2"]}},
+    "tsh":                {"name": "Thyroid (TSH)",                      "done_if": {"loinc": ["3016-3"]}},
+    "nt_probnp":          {"name": "NT-proBNP / BNP",                    "done_if": {"loinc": ["33762-6", "71425-3"]}},
+    "iron_studies":       {"name": "Iron studies (ferritin, transferrin saturation)", "done_if": {"loinc": ["2276-4", "2502-3"]}},
+    "urinalysis":         {"name": "Urinalysis",                         "done_if": {"loinc": ["5794-3", "5799-2", "5792-7"]}},
+    "urine_albumin":      {"name": "Urine albumin/creatinine ratio",     "done_if": {"loinc": ["14959-1"]}},
+    "aldosterone_renin":  {"name": "Aldosterone/renin ratio (screen for primary aldosteronism)", "done_if": {}, "note": "Synthea never records this, so it will never show as done"},
+    "out_of_office_bp":   {"name": "Home or ambulatory BP monitoring to confirm readings", "done_if": {}},
+    "echo":               {"name": "Echocardiogram",                     "done_if": {"procedure_sct": ["40701008", "433236007"]}},
+    "chest_xray":         {"name": "Chest X-ray",                        "done_if": {"procedure_sct": ["399208008"]}},
+    "ambulatory_monitor": {"name": "Holter / event monitor",             "done_if": {"procedure_sct": ["710839006"]}},
+    "stress_or_ccta":     {"name": "Stress test or coronary CT (type chosen by cardiology)", "done_if": {"procedure_sct": ["76746007"]}}
+  },
+
+  "options": {
+    "er_precautions":        {"text": "Give clear 'call 911 / go to the ER if...' instructions", "kind": "advice"},
+    "review_bp_lipid_meds":  {"text": "Review blood pressure and cholesterol medicines", "kind": "med_review"},
+    "cut_caffeine_alcohol":  {"text": "Cut back caffeine and alcohol", "kind": "advice"},
+    "risk_factor_modification": {"text": "Address weight, alcohol, sleep apnea and activity (AFib risk factors)", "kind": "advice"},
+    "anticoag_decision":     {"text": "Blood-thinner (stroke prevention) decision - for the specialist", "kind": "specialist_decision"},
+    "rate_control_decision": {"text": "Heart-rate control medicine decision - for the specialist", "kind": "specialist_decision"},
+    "daily_weights":         {"text": "Weigh daily and report fast gain", "kind": "advice"},
+    "limit_salt":            {"text": "Limit salt", "kind": "advice"},
+    "diuretic_by_specialist": {"text": "Any water-pill (diuretic) change - by the specialist only", "kind": "specialist_decision"},
+    "review_hf_worsening_meds": {"text": "Review medicines that can worsen heart failure or cause swelling (NSAIDs, pioglitazone, diltiazem/verapamil, amlodipine)", "kind": "med_review"},
+    "review_qt_meds":        {"text": "Review medicines that can prolong the QT interval", "kind": "med_review"},
+    "review_av_nodal_meds":  {"text": "Review medicines that slow the heart (beta blockers, diltiazem, verapamil, digoxin, amiodarone)", "kind": "med_review"},
+    "home_bp_log":           {"text": "Keep a home blood pressure log", "kind": "advice"},
+    "adherence_check":       {"text": "Check whether medicines are being taken as prescribed", "kind": "advice"},
+    "review_interfering_meds": {"text": "Review things that raise BP (NSAIDs, decongestants, stimulants, steroids, oral contraceptives, alcohol)", "kind": "med_review"}
+  },
+
+  "fits": {
+    "general_cardiology":     "General cardiology",
+    "interventional":         "Interventional cardiology",
+    "electrophysiology":      "Electrophysiology (heart rhythm)",
+    "heart_failure":          "Heart failure clinic",
+    "hypertension_preventive": "Hypertension / preventive cardiology",
+    "econsult_enough":        "eConsult answer is enough - no visit needed",
+    "other_specialty":        "A different specialty (say which)"
+  },
+
+  "reasons": {
+
+    "chest_pain": {
+      "label": "Chest pain",
+      "sources": ["aha_chest_pain_2021"],
+      "red_flags": [
+        {"id": "cp_rest_or_ongoing", "text": "Chest pain at rest or ongoing (possible heart attack - ER by ambulance, don't wait for office tests)",
+         "match": {"all": [{"text_any": ["chest pain", "chest pressure", "chest tightness", "chest discomfort", "chest heaviness"]},
+                           {"text_any": ["at rest", "ongoing", "constant", "won't go away", "not going away", "woke him", "woke her", "woke them", "while resting", "right now", "currently"]}]}},
+        {"id": "cp_with_alarm_symptoms", "text": "Chest pain with sweating, fainting or breathlessness",
+         "match": {"all": [{"text_any": ["chest pain", "chest pressure", "chest tightness", "chest discomfort", "chest heaviness"]},
+                           {"text_any": ["sweating", "diaphoretic", "diaphoresis", "fainted", "syncope", "passed out", "short of breath", "shortness of breath", "breathless"]}]}},
+        {"id": "cp_ecg_ischemia", "text": "Recent chest pain with new ischemic ECG changes",
+         "match": {"text_any": ["st elevation", "st depression", "new t wave inversion", "new t-wave inversion", "stemi"]}},
+        {"id": "cp_dissection_pe", "text": "Sudden tearing pain to the back, or sudden breathlessness / coughing blood (aortic dissection or blood clot in lung)",
+         "match": {"text_any": ["tearing", "ripping", "radiating to the back", "radiates to back", "coughing blood", "hemoptysis", "sudden shortness of breath"]}}
+      ],
+      "urgent_flags": [
+        {"id": "cp_new_or_worsening_exertional", "text": "New or worsening chest pain with exertion",
+         "match": {"all": [{"text_any": ["chest pain", "chest pressure", "chest tightness", "chest discomfort", "chest heaviness"]},
+                           {"text_any": ["new", "worsening", "getting worse", "more often", "less exertion", "crescendo", "recent onset"]}]}}
+      ],
+      "look_at": [
+        {"id": "known_cad", "text": "Known coronary disease: prior heart attack, stent or bypass", "why": "Known coronary disease changes the testing pathway and raises concern for a new blockage", "find": {"conditions": ["myocardial infarction", "ischemic heart disease", "coronary", "bypass"]}},
+        {"id": "risk_factors", "text": "Heart risk factors: age, sex, high BP, diabetes, high cholesterol, smoking, family history", "why": "Guideline sorts patients into low / intermediate / high risk to decide whether testing is needed at all", "find": {"conditions": ["hypertension", "diabetes", "hyperlipidemia", "hypercholesterolemia"], "smoking": true}},
+        {"id": "kidney_function", "text": "Kidney function (eGFR)", "why": "Coronary CT and some tests use contrast dye, which can harm weak kidneys", "find": {"loinc": ["33914-3", "2160-0", "38483-4"], "conditions": ["chronic kidney disease"]}},
+        {"id": "lipids_a1c", "text": "Most recent cholesterol and A1c", "why": "Used for risk scoring and to see whether prevention is on track", "find": {"loinc": ["18262-6", "2093-3", "4548-4"]}},
+        {"id": "accompanying_symptoms", "text": "Accompanying symptoms, especially in women: nausea, fatigue, breathlessness, jaw/arm/back pain", "why": "Guideline drops 'atypical'; women more often have these, and they should not lower concern", "find": {"referral_text": true}},
+        {"id": "prior_testing", "text": "Previous ECG, stress test, coronary CT or angiogram", "why": "Recent normal testing may change what is needed; abnormal testing raises concern", "find": {"procedure_sct": ["29303009", "268400002", "76746007", "33367005"]}}
+      ],
+      "tests_first": ["ecg", "lipids", "a1c", "kidney_panel", "stress_or_ccta"],
+      "tests_not_prechecked": ["stress_or_ccta"],
+      "interim_options": ["er_precautions", "review_bp_lipid_meds"],
+      "subspecialty": "general_cardiology",
+      "fit_choices": ["general_cardiology", "interventional", "econsult_enough", "other_specialty"],
+      "not_seen": ["Pain clearly reproduced by pressing on the chest wall (musculoskeletal)", "Reflux-type symptoms with low cardiac risk (GI)", "Low-risk patient - guideline says further testing may not be needed (eConsult may be enough)"],
+      "review_notes": ["Guideline uses 'cardiac / possible cardiac / noncardiac', not 'typical/atypical' - verify wording", "Whether cp_ecg_ischemia should be emergent or urgent when pain is not current"]
+    },
+
+    "palpitations_afib": {
+      "label": "Palpitations / suspected atrial fibrillation",
+      "sources": ["acc_afib_2023"],
+      "red_flags": [
+        {"id": "palp_syncope", "text": "Palpitations with fainting",
+         "match": {"text_any": ["fainted", "syncope", "passed out", "lost consciousness"]}},
+        {"id": "palp_chest_pain", "text": "Palpitations with chest pain",
+         "match": {"text_any": ["chest pain", "chest pressure", "chest tightness"]}},
+        {"id": "palp_fast_low_bp", "text": "Very fast heart rate with low blood pressure or near-fainting (unstable)",
+         "match": {"all": [{"text_any": ["very fast", "racing", "rate 150", "rate of 150", "hr 150", "rapid ventricular"]},
+                           {"text_any": ["low blood pressure", "hypotension", "hypotensive", "lightheaded", "dizzy", "near faint"]}]}},
+        {"id": "palp_stroke_symptoms", "text": "Stroke symptoms (face droop, arm weakness, speech trouble)",
+         "match": {"text_any": ["face droop", "facial droop", "arm weakness", "slurred speech", "trouble speaking", "stroke symptoms", "tia"]}},
+        {"id": "palp_preexcitation", "text": "AFib with pre-excitation (WPW) on ECG",
+         "match": {"text_any": ["wpw", "wolff", "pre-excitation", "preexcitation", "delta wave"]}}
+      ],
+      "urgent_flags": [
+        {"id": "palp_new_af_rvr", "text": "New AFib with a fast rate",
+         "match": {"all": [{"text_any": ["atrial fibrillation", "afib", "a-fib", "a fib", "irregularly irregular"]},
+                           {"text_any": ["fast", "rapid", "rvr", "racing", "rate 1"]}]}},
+        {"id": "palp_heart_failure_signs", "text": "Palpitations with new swelling or breathlessness",
+         "match": {"text_any": ["swelling", "edema", "short of breath", "shortness of breath", "breathless"]}}
+      ],
+      "look_at": [
+        {"id": "stroke_risk_components", "text": "Stroke-risk factors (CHA2DS2-VASc parts): heart failure, high BP, age 65-74 / 75+, diabetes, prior stroke/TIA/clot, vascular disease (prior heart attack, PAD), female sex",
+         "why": "Drives the blood-thinner decision. Guideline recommends a blood thinner when yearly stroke risk is about 2%+ (roughly score 2+ in men, 3+ in women) - verify. Lantern shows the parts; the specialist decides.",
+         "find": {"conditions": ["heart failure", "hypertension", "diabetes", "stroke", "ischemic attack", "embolism", "myocardial infarction", "peripheral arterial", "peripheral vascular"], "age": true, "sex": true}},
+        {"id": "bleeding_risk", "text": "Bleeding-risk factors: prior bleeding, heavy alcohol, NSAID or antiplatelet use, kidney or liver disease, anemia",
+         "why": "Weighed against stroke risk; modifiable ones should be fixed rather than used as a reason to withhold a blood thinner",
+         "find": {"conditions": ["bleeding", "hemorrhage", "alcohol", "chronic kidney disease", "cirrhosis"], "meds": ["ibuprofen", "naproxen", "aspirin", "clopidogrel"], "loinc": ["718-7", "1742-6", "1920-8"]}},
+        {"id": "current_anticoag", "text": "Already on a blood thinner? (warfarin INR if so)", "why": "Changes the decision from 'whether' to 'is it working'", "find": {"meds": ["warfarin", "apixaban", "rivaroxaban", "dabigatran", "edoxaban"], "loinc": ["6301-6"]}},
+        {"id": "thyroid", "text": "Thyroid (TSH)", "why": "Overactive thyroid causes AFib and should be treated first", "find": {"loinc": ["3016-3"], "conditions": ["hyperthyroidism", "hypothyroidism"]}},
+        {"id": "kidney_liver", "text": "Kidney and liver function", "why": "Needed to choose and dose blood thinners", "find": {"loinc": ["33914-3", "2160-0", "38483-4", "1742-6", "1920-8"]}},
+        {"id": "af_risk_factors", "text": "AFib drivers: obesity, sleep apnea, alcohol, high BP", "why": "2023 guideline makes risk-factor treatment a core part of AFib care", "find": {"conditions": ["sleep apnea", "obes", "alcohol", "hypertension"], "loinc": ["39156-5"]}},
+        {"id": "rate_meds", "text": "Current heart-rate medicines (beta blocker, diltiazem, verapamil, digoxin)", "why": "Shows whether rate control has been tried", "find": {"meds": ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin"]}}
+      ],
+      "tests_first": ["ecg", "tsh", "electrolytes", "kidney_panel", "liver_panel", "cbc", "ambulatory_monitor", "echo"],
+      "tests_not_prechecked": [],
+      "interim_options": ["cut_caffeine_alcohol", "risk_factor_modification", "anticoag_decision", "rate_control_decision"],
+      "subspecialty": "electrophysiology",
+      "fit_choices": ["electrophysiology", "general_cardiology", "econsult_enough", "other_specialty"],
+      "not_seen": ["Palpitations from an overactive thyroid - may go to endocrinology first", "Occasional skipped beats with a normal ECG and no heart disease - often eConsult"],
+      "review_notes": ["Exact CHA2DS2-VASc thresholds in the 2023 guideline - verify", "Whether Lantern should compute the score or only list the parts"]
+    },
+
+    "heart_failure_symptoms": {
+      "label": "Heart failure symptoms",
+      "sources": ["nice_ng106", "nice_qs9", "aha_hf_2022"],
+      "red_flags": [
+        {"id": "hf_breathless_rest", "text": "Breathless at rest or can't lie flat",
+         "match": {"all": [{"text_any": ["short of breath", "shortness of breath", "breathless", "dyspnea", "dyspnoea"]},
+                           {"text_any": ["at rest", "while resting", "sitting still", "can't lie flat", "cannot lie flat", "talking"]}]}},
+        {"id": "hf_chest_pain", "text": "Chest pain",
+         "match": {"text_any": ["chest pain", "chest pressure", "chest tightness"]}},
+        {"id": "hf_syncope", "text": "Fainting",
+         "match": {"text_any": ["fainted", "syncope", "passed out"]}}
+      ],
+      "urgent_flags": [
+        {"id": "hf_ntprobnp_over_2000", "text": "NT-proBNP over 2,000 ng/L (NICE: specialist + echo within 2 weeks)",
+         "match": {"any": [{"chart_obs": {"loinc": ["33762-6", "71425-3"], "op": ">", "value": 2000, "within_days": 90}},
+                           {"text_regex": "(nt-?pro-?bnp|probnp|bnp)\\D{0,15}([2-9],?\\d{3}|\\d{2},?\\d{3})"}]}},
+        {"id": "hf_rapid_weight_gain", "text": "Fast weight gain or worsening swelling",
+         "match": {"text_any": ["gained", "weight gain", "lbs in", "pounds in", "kg in", "worsening swelling", "swelling getting worse", "more swollen"]}}
+      ],
+      "soon_hints": [
+        {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)",
+         "match": {"chart_obs": {"loinc": ["33762-6", "71425-3"], "op": "between", "value": [400, 2000], "within_days": 90}}}
+      ],
+      "look_at": [
+        {"id": "ntprobnp_value", "text": "NT-proBNP value and date", "why": "NICE uses it to set urgency; below 400 ng/L in an untreated patient makes heart failure less likely - verify", "find": {"loinc": ["33762-6", "71425-3"]}},
+        {"id": "np_raised_by", "text": "Things that push NT-proBNP up: age over 70, AFib, eGFR under 60, lung disease, diabetes", "why": "A high value may partly reflect these rather than heart failure - verify full NICE list", "find": {"conditions": ["atrial fibrillation", "chronic kidney disease", "chronic obstructive", "diabetes", "cirrhosis"], "loinc": ["33914-3"], "age": true}},
+        {"id": "np_lowered_by", "text": "Things that push NT-proBNP down: obesity (BMI over 35), already on diuretic / ACE inhibitor / ARB / beta blocker / MRA", "why": "A 'normal' value can be falsely reassuring in these patients - verify", "find": {"loinc": ["39156-5"], "meds": ["furosemide", "hydrochlorothiazide", "lisinopril", "losartan", "valsartan", "metoprolol", "carvedilol", "spironolactone"]}},
+        {"id": "cardiac_history", "text": "Prior heart attack, coronary disease, valve disease, high BP, AFib", "why": "The common causes of heart failure", "find": {"conditions": ["myocardial infarction", "ischemic heart disease", "coronary", "valve", "hypertension", "atrial fibrillation"]}},
+        {"id": "swelling_other_causes", "text": "Other causes of swelling: kidney disease, amlodipine, liver disease, low albumin", "why": "Ankle swelling may not be the heart at all", "find": {"conditions": ["chronic kidney disease", "cirrhosis"], "meds": ["amlodipine", "nifedipine"], "loinc": ["33914-3", "1751-7"]}},
+        {"id": "worsening_meds", "text": "Medicines that can worsen heart failure: NSAIDs, pioglitazone, diltiazem, verapamil", "why": "Stopping them may help while waiting - specialist decides", "find": {"meds": ["ibuprofen", "naproxen", "pioglitazone", "diltiazem", "verapamil"]}},
+        {"id": "anemia_iron_thyroid", "text": "Hemoglobin, iron studies, thyroid", "why": "Anemia, iron deficiency and thyroid disease cause or worsen breathlessness; 2022 US guideline recommends iron studies", "find": {"loinc": ["718-7", "2276-4", "2502-3", "3016-3"]}}
+      ],
+      "tests_first": ["nt_probnp", "ecg", "echo", "kidney_panel", "electrolytes", "cbc", "tsh", "liver_panel", "iron_studies", "lipids", "a1c", "urinalysis", "chest_xray"],
+      "tests_not_prechecked": [],
+      "interim_options": ["daily_weights", "limit_salt", "diuretic_by_specialist", "review_hf_worsening_meds"],
+      "subspecialty": "heart_failure",
+      "fit_choices": ["heart_failure", "general_cardiology", "econsult_enough", "other_specialty"],
+      "not_seen": ["Swelling from kidney disease (nephrology)", "Ankle swelling from a medicine such as amlodipine (PCP med change may be enough)", "Breathlessness from lung disease (pulmonology)"],
+      "review_notes": ["NICE thresholds are for NT-proBNP in ng/L (= pg/mL); BNP uses different cutoffs - verify", "Older NICE guidance (CG108) also fast-tracked patients with a prior heart attack; check whether NG106 kept this", "Is 2-week = 'urgent' the right mapping for a US clinic?"]
+    },
+
+    "abnormal_ecg": {
+      "label": "Abnormal ECG",
+      "sources": ["acc_brady_2018", "aha_qt_2010"],
+      "red_flags": [
+        {"id": "ecg_active_mi", "text": "Signs of an ongoing heart attack",
+         "match": {"text_any": ["st elevation", "stemi", "st-elevation", "acute mi", "ongoing chest pain"]}},
+        {"id": "ecg_high_grade_block_symptomatic", "text": "Complete or high-grade heart block with symptoms (fainting, dizziness, breathlessness)",
+         "match": {"all": [{"text_any": ["complete heart block", "third degree", "third-degree", "3rd degree", "chb", "mobitz ii", "mobitz 2", "mobitz type 2", "high grade block", "high-grade block", "2:1 block", "bifascicular", "trifascicular"]},
+                           {"text_any": ["dizzy", "lightheaded", "fainted", "syncope", "passed out", "near faint", "short of breath"]}]}},
+        {"id": "ecg_very_slow_symptomatic", "text": "Very slow heart rate with fainting",
+         "match": {"all": [{"text_any": ["bradycardia", "slow heart rate", "heart rate 3", "heart rate 4", "hr 3", "hr 4", "pause"]},
+                           {"text_any": ["fainted", "syncope", "passed out"]}]}}
+      ],
+      "urgent_flags": [
+        {"id": "ecg_high_grade_block", "text": "Mobitz II, 2:1, high-grade or complete heart block - even without symptoms (pacemaker usually indicated)",
+         "match": {"text_any": ["mobitz ii", "mobitz 2", "mobitz type 2", "second degree type 2", "second-degree type ii", "2:1 block", "high grade block", "high-grade block", "complete heart block", "third degree", "third-degree"]}},
+        {"id": "ecg_new_lbbb", "text": "New left bundle branch block",
+         "match": {"all": [{"text_any": ["left bundle branch block", "lbbb"]}, {"text_any": ["new"]}]}},
+        {"id": "ecg_long_qt", "text": "Long QT (QTc 500 or more is high risk)",
+         "match": {"any": [{"text_any": ["long qt", "prolonged qt", "qt prolongation"]},
+                           {"text_regex": "qtc?\\s*(of|=|:)?\\s*(5\\d\\d|[6-9]\\d\\d)"}]}}
+      ],
+      "look_at": [
+        {"id": "prior_ecg", "text": "Earlier ECGs", "why": "The first question is whether the finding is new or old", "find": {"procedure_sct": ["29303009", "268400002"]}},
+        {"id": "prior_mi_cad", "text": "Prior heart attack or coronary disease", "why": "Old heart attacks leave lasting ECG changes", "find": {"conditions": ["myocardial infarction", "ischemic heart disease", "coronary"]}},
+        {"id": "av_nodal_meds", "text": "Medicines that slow the heart or conduction: beta blockers, diltiazem, verapamil, digoxin, amiodarone", "why": "A reversible cause of slow rhythms and blocks", "find": {"meds": ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin", "amiodarone"]}},
+        {"id": "qt_meds", "text": "QT-prolonging medicines (e.g. citalopram, ondansetron, azithromycin, fluoroquinolones, haloperidol, methadone, sotalol, amiodarone)", "why": "Common, fixable cause of long QT", "find": {"meds": ["citalopram", "escitalopram", "ondansetron", "azithromycin", "levofloxacin", "ciprofloxacin", "haloperidol", "methadone", "sotalol", "amiodarone"]}},
+        {"id": "electrolytes_thyroid", "text": "Potassium, magnesium, calcium, thyroid", "why": "Low potassium/magnesium/calcium prolong QT; thyroid and potassium affect slow rhythms", "find": {"loinc": ["2823-3", "6298-4", "19123-9", "21377-7", "17861-6", "49765-1", "3016-3"]}},
+        {"id": "sleep_apnea", "text": "Sleep apnea", "why": "Can cause slow heart rates and pauses at night", "find": {"conditions": ["sleep apnea"]}}
+      ],
+      "low_concern_findings": ["First-degree AV block alone", "Mobitz I (Wenckebach) without symptoms", "Isolated right bundle branch block without symptoms"],
+      "tests_first": ["ecg_compare_prior", "electrolytes", "calcium", "tsh", "echo", "ambulatory_monitor"],
+      "tests_not_prechecked": ["ambulatory_monitor"],
+      "interim_options": ["review_qt_meds", "review_av_nodal_meds"],
+      "subspecialty": "general_cardiology",
+      "fit_choices": ["general_cardiology", "electrophysiology", "econsult_enough", "other_specialty"],
+      "not_seen": ["Unchanged old findings in a patient with no symptoms - often an eConsult answer", "Low-concern findings listed in low_concern_findings - usually eConsult"],
+      "review_notes": ["Long QT is not covered by the 2018 bradycardia guideline - source and 500 ms cutoff need confirming", "How to treat a bundle branch block when no prior ECG exists to show it is new", "Echo recommendation for new LBBB - verify in 2018 guideline"]
+    },
+
+    "hard_to_control_bp_chol": {
+      "label": "Hard-to-control blood pressure or cholesterol",
+      "sources": ["aha_bp_2017_2025", "aha_chol_2018"],
+      "red_flags": [
+        {"id": "bp_emergency", "text": "BP over 180/120 with signs of organ damage: chest pain, confusion, vision change, severe headache, weakness, breathlessness (hypertensive emergency - ER)",
+         "match": {"all": [
+           {"any": [{"text_regex": "\\b(1[89]\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
+                    {"text_regex": "\\b\\d{2,3}\\s*/\\s*(1[2-9]\\d)\\b"},
+                    {"chart_obs": {"loinc": "8480-6", "op": ">=", "value": 180, "within_days": 14}},
+                    {"chart_obs": {"loinc": "8462-4", "op": ">=", "value": 120, "within_days": 14}}]},
+           {"text_any": ["chest pain", "confusion", "confused", "vision change", "blurred vision", "vision loss", "severe headache", "weakness", "slurred", "short of breath", "shortness of breath"]}]}}
+      ],
+      "urgent_flags": [
+        {"id": "bp_severe_no_symptoms", "text": "BP over 180/120 without signs of organ damage (severe hypertension - not an ER visit; outpatient medicine adjustment)",
+         "match": {"any": [{"text_regex": "\\b(1[89]\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
+                           {"text_regex": "\\b\\d{2,3}\\s*/\\s*(1[2-9]\\d)\\b"},
+                           {"chart_obs": {"loinc": "8480-6", "op": ">=", "value": 180, "within_days": 14}},
+                           {"chart_obs": {"loinc": "8462-4", "op": ">=", "value": 120, "within_days": 14}}]}},
+        {"id": "bp_low_potassium", "text": "High BP with low potassium (possible primary aldosteronism)",
+         "match": {"chart_obs": {"loinc": ["2823-3", "6298-4"], "op": "<", "value": 3.5, "within_days": 180}}}
+      ],
+      "look_at": [
+        {"id": "bp_readings", "text": "Recent BP readings (trend, not one value)", "why": "Confirms BP is truly uncontrolled; goal is generally under 130/80 - verify", "find": {"loinc": ["8480-6", "8462-4"]}},
+        {"id": "bp_med_count", "text": "Number and classes of BP medicines, including whether one is a diuretic", "why": "Resistant hypertension = above goal on 3 medicines (one a diuretic) at good doses, or needing 4+", "find": {"meds": ["amlodipine", "lisinopril", "losartan", "valsartan", "hydrochlorothiazide", "chlorthalidone", "metoprolol", "atenolol", "carvedilol", "nifedipine", "spironolactone"]}},
+        {"id": "interfering_substances", "text": "Things that raise BP: NSAIDs, decongestants, stimulants, steroids, oral contraceptives, heavy alcohol", "why": "A common, fixable cause of 'resistant' BP", "find": {"meds": ["ibuprofen", "naproxen", "pseudoephedrine", "prednisone", "methylphenidate", "amphetamine", "ethinyl estradiol"], "conditions": ["alcohol"]}},
+        {"id": "secondary_causes", "text": "Clues to a secondary cause: low potassium, sleep apnea, kidney disease, young age", "why": "Guideline recommends screening resistant hypertension for primary aldosteronism and other causes - verify 2025 scope", "find": {"loinc": ["2823-3", "6298-4", "33914-3"], "conditions": ["sleep apnea", "chronic kidney disease"], "age": true}},
+        {"id": "organ_damage", "text": "Signs of damage from BP: kidney function, urine albumin, prior stroke or heart disease", "why": "Raises urgency and the strength of treatment", "find": {"loinc": ["33914-3", "14959-1"], "conditions": ["stroke", "chronic kidney disease", "heart failure", "myocardial infarction"]}},
+        {"id": "ldl_and_statin", "text": "LDL trend, statin dose, and any statin intolerance", "why": "LDL 190+ suggests inherited high cholesterol; on-statin LDL above goal may need added therapy", "find": {"loinc": ["18262-6", "2093-3"], "meds": ["statin", "ezetimibe"]}},
+        {"id": "ascvd_status", "text": "Existing heart disease, stroke or diabetes", "why": "Sets how low LDL and BP should go", "find": {"conditions": ["myocardial infarction", "ischemic heart disease", "stroke", "diabetes", "peripheral arterial"]}}
+      ],
+      "tests_first": ["kidney_panel", "electrolytes", "calcium", "glucose", "a1c", "lipids", "cbc", "tsh", "urinalysis", "urine_albumin", "ecg", "out_of_office_bp", "aldosterone_renin"],
+      "tests_not_prechecked": ["aldosterone_renin"],
+      "interim_options": ["home_bp_log", "adherence_check", "review_interfering_meds"],
+      "subspecialty": "hypertension_preventive",
+      "fit_choices": ["hypertension_preventive", "general_cardiology", "econsult_enough", "other_specialty"],
+      "not_seen": ["Often answerable by eConsult (medicine adjustment advice) without a visit", "Suspected primary aldosteronism or other hormone cause (endocrinology)", "BP driven by kidney disease (nephrology)"],
+      "review_notes": ["2025 update: confirm 'severe hypertension' replaced 'hypertensive urgency' and that it is handled outpatient", "2025 update: who should be screened for primary aldosteronism (all resistant HTN? broader?)", "Whether bp_severe_no_symptoms belongs in 'urgent' (2 weeks) or is too high", "Cholesterol source is not in the original list"]
+    }
+  },
+
+  "review_questions": [
+    "Are these the right red flags, and is anything emergent missing?",
+    "Should a stress test / coronary CT be pre-checked for chest pain, or always left to cardiology?",
+    "Is new AFib with a fast rate urgent, or emergent above some rate?",
+    "Do NICE's 2-week / 6-week heart failure rules map well onto urgent / routine in a US clinic?",
+    "BP: should the chart's own BP readings (last 14 days) count, or only what the PCP wrote?",
+    "For abnormal ECG, how should Lantern treat a bundle branch block when no prior ECG shows it is new?",
+    "Which reasons are most often fully answerable by eConsult?"
+  ]
+}

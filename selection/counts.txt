@@ -1,7 +1,7 @@
 == Rule matches ==
 diagnosed-later candidates: afib                             1
-diagnosed-later candidates: cad_mi                           32
-diagnosed-later candidates: heart_failure                    13
+diagnosed-later candidates: cad_mi                           21
+diagnosed-later candidates: heart_failure                    6
 eligible charts                                              517
 fits: abnormal_ecg                                           517
 fits: chest_pain                                             243
@@ -41,6 +41,6 @@ hard_to_control_bp_chol                                      8
 heart_failure_symptoms                                       8
 held out                                                     10
 palpitations_afib                                            8
-sex: female                                                  16
-sex: male                                                    24
-with a hook                                                  15
+sex: female                                                  20
+sex: male                                                    20
+with a hook                                                  17

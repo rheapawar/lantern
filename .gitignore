@@ -2,3 +2,4 @@ synthea-with-dependencies.jar
 output/
 .env
 __pycache__/
+CLAUDE.md

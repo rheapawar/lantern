@@ -45,6 +45,7 @@ CASES_PER_REASON = 8
 HOLDOUT_PER_REASON = 2
 MIN_HOOK_CASES_PER_REASON = 2  # try to include this many hook cases per reason
 MAX_LATER_DX_PER_REASON = 3
+MAX_SAME_SEX_PER_REASON = 4    # 4 of 8 = even split; relaxed only if a reason would come up short
 
 # Primary care visit types (Synthea ambulatory encounter type names)
 PCP_VISIT_TYPES = [
@@ -323,8 +324,9 @@ def main():
         if ld:
             key, dx, visit = ld
             t = tag(p, visit)
-            if eligible(t, p) and not t[key]:       # must NOT already have that diagnosis
-                reason = LATER_DX_TO_REASON[key]
+            reason = LATER_DX_TO_REASON[key]
+            # must NOT already have that diagnosis, and the referral must still be believable
+            if eligible(t, p) and not t[key] and fits(reason, t):
                 t.update(later_dx=key, later_dx_date=dx.isoformat(), reason=reason, hooks=hooks(reason, t))
                 pool[reason].append(t)
                 counts[f"diagnosed-later candidates: {key}"] += 1
@@ -355,20 +357,30 @@ def main():
         cands = pool[reason][:]
         rng.shuffle(cands)
         chosen = []
-        def take(filter_fn, limit):
+        def take(filter_fn, limit, sex_cap=MAX_SAME_SEX_PER_REASON):
             for c in cands:
                 if len(chosen) >= CASES_PER_REASON or limit <= 0:
                     break
                 if c["patient_id"] in used or not filter_fn(c):
                     continue
-                # keep sexes roughly balanced
-                sexes = Counter(x["sex"] for x in chosen)
-                if sexes[c["sex"]] >= (CASES_PER_REASON // 2) + 1:
+                if Counter(x["sex"] for x in chosen)[c["sex"]] >= sex_cap:
                     continue
                 chosen.append(c); used.add(c["patient_id"]); limit -= 1
         take(lambda c: c["later_dx"], MAX_LATER_DX_PER_REASON)
-        take(lambda c: c["hooks"] and not c["later_dx"], MIN_HOOK_CASES_PER_REASON)
+        # at least one case per hook type this reason has, then top up to the minimum
+        hook_types = sorted({h for c in cands for h in c["hooks"]})
+        for ht in hook_types:
+            if not any(ht in c["hooks"] for c in chosen):
+                take(lambda c, ht=ht: ht in c["hooks"] and not c["later_dx"], 1)
+        n_hook = sum(bool(c["hooks"]) for c in chosen)
+        take(lambda c: c["hooks"] and not c["later_dx"], MIN_HOOK_CASES_PER_REASON - n_hook)
         take(lambda c: not c["later_dx"], CASES_PER_REASON)
+        if len(chosen) < CASES_PER_REASON:      # not enough of one sex: relax the cap rather than come up short
+            counts[f"sex cap relaxed: {reason}"] += 1
+            take(lambda c: not c["later_dx"], CASES_PER_REASON, sex_cap=CASES_PER_REASON)
+        for ht in hook_types:
+            if not any(ht in c["hooks"] for c in chosen):
+                counts[f"MISSING HOOK: {reason} / {ht}"] += 1
         if len(chosen) < CASES_PER_REASON:
             counts[f"SHORT: {reason} only has {len(chosen)} cases"] += 1
         # hold out: 2 per reason, prefer one hook case and one plain
