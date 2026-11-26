@@ -87,8 +87,8 @@ facts:
   qt_meds: {meds: ["citalopram", "escitalopram", "ondansetron", "azithromycin", "levofloxacin", "ciprofloxacin", "haloperidol", "methadone", "sotalol", "amiodarone"]}
   amlodipine: {meds: ["amlodipine", "nifedipine"]}
   hf_worsening_meds: {meds: ["ibuprofen", "naproxen", "pioglitazone", "diltiazem", "verapamil"]}
-  bp_raising_meds: {meds: ["pseudoephedrine", "prednisone", "methylphenidate", "amphetamine", "ethinyl estradiol"]}
-  np_lowering_meds: {meds: ["furosemide", "hydrochlorothiazide", "lisinopril", "losartan", "valsartan", "metoprolol", "carvedilol", "spironolactone"]}
+  bp_raising_meds: {meds: ["pseudoephedrine", "phenylephrine", "prednisone", "prednisolone", "methylprednisolone", "dexamethasone", "methylphenidate", "amphetamine", "lisdexamfetamine", "ethinyl estradiol", "venlafaxine", "desvenlafaxine", "duloxetine", "amitriptyline", "nortriptyline", "cyclosporine", "tacrolimus", "olanzapine", "risperidone"]}
+  np_lowering_meds: {meds: ["furosemide", "bumetanide", "torsemide", "hydrochlorothiazide", "lisinopril", "enalapril", "ramipril", "losartan", "valsartan", "sacubitril", "metoprolol", "carvedilol", "bisoprolol", "spironolactone", "eplerenone"]}
   prior_ecg: {procedure_sct: ["29303009", "268400002"]}
   prior_cardiac_testing: {procedure_sct: ["76746007", "33367005"]}
   accompanying_symptoms: {referral_text: true}
