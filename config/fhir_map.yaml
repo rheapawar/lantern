@@ -1,0 +1,82 @@
+# Lantern FHIR lookup map: HOW to find things in a FHIR chart.
+# pathways/<specialty>.json holds the clinical rules and refers to these entries by id only.
+# This file changes when the data source changes (Synthea currently, Epic later); 
+#
+# Lookup kinds:
+#   loinc          Observation codes
+#   procedure_sct  Procedure SNOMED codes
+#   conditions     lowercase fragments matched against Condition display text
+#   meds           lowercase fragments matched against MedicationRequest names
+#   age / sex      from Patient;  smoking: smoking-status Observation
+#   referral_text  look in the referral note itself
+# All lookups run on the chart AFTER it is cut at the referral date.
+
+version: 0.1
+source_system: synthea_fhir_r4
+
+# Tests: a test counts as done if any of these records exists (recency rules come later).
+tests:
+  ecg: {procedure_sct: ["29303009", "268400002"]}
+  ecg_compare_prior: {procedure_sct: ["29303009", "268400002"]}
+  lipids: {loinc: ["57698-3", "2093-3", "18262-6"]}
+  a1c: {loinc: ["4548-4"]}
+  kidney_panel: {loinc: ["33914-3", "2160-0", "38483-4", "3094-0", "6299-2"]}
+  electrolytes: {loinc: ["2823-3", "6298-4", "19123-9", "21377-7"]}
+  calcium: {loinc: ["17861-6", "49765-1"]}
+  glucose: {loinc: ["2345-7", "2339-0"]}
+  cbc: {loinc: ["718-7", "6690-2", "777-3"], procedure_sct: ["104091002"]}
+  liver_panel: {loinc: ["1742-6", "1920-8", "1975-2"]}
+  tsh: {loinc: ["3016-3"]}
+  nt_probnp: {loinc: ["33762-6", "71425-3"]}
+  iron_studies: {loinc: ["2276-4", "2502-3"]}
+  urinalysis: {loinc: ["5794-3", "5799-2", "5792-7"]}
+  urine_albumin: {loinc: ["14959-1"]}
+  aldosterone_renin: {}   # not recorded in Synthea, so never shows as done
+  out_of_office_bp: {}   # not recorded in Synthea, so never shows as done
+  echo: {procedure_sct: ["40701008", "433236007"]}
+  chest_xray: {procedure_sct: ["399208008"]}
+  ambulatory_monitor: {procedure_sct: ["710839006"]}
+  stress_or_ccta: {procedure_sct: ["76746007"]}
+
+# Numeric chart values used by threshold rules (chart_obs) in the pathway.
+observations:
+  systolic_bp: {loinc: ["8480-6"]}
+  diastolic_bp: {loinc: ["8462-4"]}
+  nt_probnp: {loinc: ["33762-6", "71425-3"]}
+  potassium: {loinc: ["2823-3", "6298-4"]}
+
+# Where to look for each look_at item (step 2 merges these and observations into one 'facts' section).
+look_at:
+  known_cad: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary", "bypass"]}
+  risk_factors: {conditions: ["hypertension", "diabetes", "hyperlipidemia", "hypercholesterolemia"], smoking: true}
+  kidney_function: {loinc: ["33914-3", "2160-0", "38483-4"], conditions: ["chronic kidney disease"]}
+  lipids_a1c: {loinc: ["18262-6", "2093-3", "4548-4"]}
+  accompanying_symptoms: {referral_text: true}
+  prior_testing: {procedure_sct: ["29303009", "268400002", "76746007", "33367005"]}
+  stroke_risk_components: {conditions: ["heart failure", "hypertension", "diabetes", "stroke", "ischemic attack", "embolism", "myocardial infarction", "peripheral arterial", "peripheral vascular"], age: true, sex: true}
+  bleeding_risk: {conditions: ["bleeding", "hemorrhage", "alcohol", "chronic kidney disease", "cirrhosis"], meds: ["ibuprofen", "naproxen", "aspirin", "clopidogrel"], loinc: ["718-7", "1742-6", "1920-8"]}
+  current_anticoag: {meds: ["warfarin", "apixaban", "rivaroxaban", "dabigatran", "edoxaban"], loinc: ["6301-6"]}
+  thyroid: {loinc: ["3016-3"], conditions: ["hyperthyroidism", "hypothyroidism"]}
+  kidney_liver: {loinc: ["33914-3", "2160-0", "38483-4", "1742-6", "1920-8"]}
+  af_risk_factors: {conditions: ["sleep apnea", "obes", "alcohol", "hypertension"], loinc: ["39156-5"]}
+  rate_meds: {meds: ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin"]}
+  ntprobnp_value: {loinc: ["33762-6", "71425-3"]}
+  np_raised_by: {conditions: ["atrial fibrillation", "chronic kidney disease", "chronic obstructive", "diabetes", "cirrhosis"], loinc: ["33914-3"], age: true}
+  np_lowered_by: {loinc: ["39156-5"], meds: ["furosemide", "hydrochlorothiazide", "lisinopril", "losartan", "valsartan", "metoprolol", "carvedilol", "spironolactone"]}
+  cardiac_history: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary", "valve", "hypertension", "atrial fibrillation"]}
+  swelling_other_causes: {conditions: ["chronic kidney disease", "cirrhosis"], meds: ["amlodipine", "nifedipine"], loinc: ["33914-3", "1751-7"]}
+  worsening_meds: {meds: ["ibuprofen", "naproxen", "pioglitazone", "diltiazem", "verapamil"]}
+  anemia_iron_thyroid: {loinc: ["718-7", "2276-4", "2502-3", "3016-3"]}
+  prior_ecg: {procedure_sct: ["29303009", "268400002"]}
+  prior_mi_cad: {conditions: ["myocardial infarction", "ischemic heart disease", "coronary"]}
+  av_nodal_meds: {meds: ["metoprolol", "atenolol", "carvedilol", "diltiazem", "verapamil", "digoxin", "amiodarone"]}
+  qt_meds: {meds: ["citalopram", "escitalopram", "ondansetron", "azithromycin", "levofloxacin", "ciprofloxacin", "haloperidol", "methadone", "sotalol", "amiodarone"]}
+  electrolytes_thyroid: {loinc: ["2823-3", "6298-4", "19123-9", "21377-7", "17861-6", "49765-1", "3016-3"]}
+  sleep_apnea: {conditions: ["sleep apnea"]}
+  bp_readings: {loinc: ["8480-6", "8462-4"]}
+  bp_med_count: {meds: ["amlodipine", "lisinopril", "losartan", "valsartan", "hydrochlorothiazide", "chlorthalidone", "metoprolol", "atenolol", "carvedilol", "nifedipine", "spironolactone"]}
+  interfering_substances: {meds: ["ibuprofen", "naproxen", "pseudoephedrine", "prednisone", "methylphenidate", "amphetamine", "ethinyl estradiol"], conditions: ["alcohol"]}
+  secondary_causes: {loinc: ["2823-3", "6298-4", "33914-3"], conditions: ["sleep apnea", "chronic kidney disease"], age: true}
+  organ_damage: {loinc: ["33914-3", "14959-1"], conditions: ["stroke", "chronic kidney disease", "heart failure", "myocardial infarction"]}
+  ldl_and_statin: {loinc: ["18262-6", "2093-3"], meds: ["statin", "ezetimibe"]}
+  ascvd_status: {conditions: ["myocardial infarction", "ischemic heart disease", "stroke", "diabetes", "peripheral arterial"]}
