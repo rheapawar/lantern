@@ -1,0 +1,9 @@
+{
+  "case_id": "c020",
+  "specialty": "cardiology",
+  "reason": "heart_failure_symptoms",
+  "referral_date": "2026-10-19",
+  "patient_id": "fa14931f-ccde-4988-79be-e368c9b2c698",
+  "referral_visit_id": "fa14931f-ccde-4988-57c3-0f6bf28fbebb",
+  "referral_note_written": false
+}

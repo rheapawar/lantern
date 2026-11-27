@@ -1,0 +1,50 @@
+{
+  "case_id": "c019",
+  "status": "todo",
+  "reason": "heart_failure_symptoms",
+  "heldout": true,
+  "planned_tier": "soon",
+  "planned_question_type": "test_interpretation",
+  "answer_key_only": {
+    "hooks": [
+      "on_amlodipine"
+    ],
+    "later_dx": {
+      "condition": "heart_failure",
+      "date": "2023-06-03"
+    }
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": true,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "nt_probnp": "never",
+      "ecg": "never",
+      "echo": "never",
+      "kidney_panel": "out_of_date (last 2022-11-14)",
+      "electrolytes": "out_of_date (last 2022-11-14)",
+      "calcium": "out_of_date (last 2022-11-14)",
+      "cbc": "out_of_date (last 2020-10-12)",
+      "tsh": "never",
+      "liver_panel": "done (last 2022-11-14)",
+      "iron_studies": "never",
+      "lipids": "done (last 2022-11-14)",
+      "a1c": "done (last 2022-10-24)",
+      "urinalysis": "never",
+      "chest_xray": "never"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

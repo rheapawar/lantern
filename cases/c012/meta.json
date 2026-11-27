@@ -1,0 +1,9 @@
+{
+  "case_id": "c012",
+  "specialty": "cardiology",
+  "reason": "palpitations_afib",
+  "referral_date": "2026-01-07",
+  "patient_id": "88cc3d2e-7dad-565f-835f-59f85430a38e",
+  "referral_visit_id": "88cc3d2e-7dad-565f-7fca-63423dad03cf",
+  "referral_note_written": false
+}

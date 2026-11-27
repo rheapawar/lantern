@@ -1,0 +1,40 @@
+{
+  "case_id": "c001",
+  "status": "todo",
+  "reason": "chest_pain",
+  "heldout": false,
+  "planned_tier": "urgent",
+  "planned_question_type": "new_symptom_assessment",
+  "answer_key_only": {
+    "hooks": [],
+    "later_dx": {
+      "condition": "cad_mi",
+      "date": "2025-04-26"
+    }
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": false,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "ecg": "never",
+      "lipids": "done (last 2024-04-20)",
+      "a1c": "out_of_date (last 2024-04-20)",
+      "kidney_panel": "out_of_date (last 2024-04-20)",
+      "stress_test": "never",
+      "ccta": "not_in_synthea"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

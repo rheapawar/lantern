@@ -1,0 +1,9 @@
+{
+  "case_id": "c029",
+  "specialty": "cardiology",
+  "reason": "abnormal_ecg",
+  "referral_date": "2026-11-03",
+  "patient_id": "5c8956ba-3359-155e-a6f4-0e1d5bc43a77",
+  "referral_visit_id": "5c8956ba-3359-155e-c073-69396865c7ad",
+  "referral_note_written": false
+}

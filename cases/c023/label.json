@@ -1,0 +1,45 @@
+{
+  "case_id": "c023",
+  "status": "todo",
+  "reason": "heart_failure_symptoms",
+  "heldout": false,
+  "planned_tier": "urgent",
+  "planned_question_type": "new_symptom_assessment",
+  "answer_key_only": {
+    "hooks": [],
+    "later_dx": null
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": false,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "nt_probnp": "out_of_date (last 2009-12-17)",
+      "ecg": "out_of_date (last 2009-12-17)",
+      "echo": "done (last 2010-06-30)",
+      "kidney_panel": "done (last 2010-06-30)",
+      "electrolytes": "done (last 2010-06-30)",
+      "calcium": "done (last 2010-06-30)",
+      "cbc": "out_of_date (last 2009-12-17)",
+      "tsh": "out_of_date (last 2007-06-29)",
+      "liver_panel": "out_of_date (last 2009-12-17)",
+      "iron_studies": "out_of_date (last 2009-12-17)",
+      "lipids": "done (last 2010-06-15)",
+      "a1c": "done (last 2010-06-15)",
+      "urinalysis": "out_of_date (last 2007-06-29)",
+      "chest_xray": "out_of_date (last 2009-12-17)"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

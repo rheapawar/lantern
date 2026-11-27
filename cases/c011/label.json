@@ -1,0 +1,41 @@
+{
+  "case_id": "c011",
+  "status": "todo",
+  "reason": "palpitations_afib",
+  "heldout": true,
+  "planned_tier": "routine",
+  "planned_question_type": "new_symptom_assessment",
+  "answer_key_only": {
+    "hooks": [
+      "abnormal_tsh"
+    ],
+    "later_dx": null
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": true,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "ecg": "out_of_date (last 2023-02-03)",
+      "tsh": "out_of_date (last 2023-02-01)",
+      "electrolytes": "out_of_date (last 2023-02-03)",
+      "kidney_panel": "out_of_date (last 2023-02-03)",
+      "liver_panel": "out_of_date (last 2023-02-03)",
+      "cbc": "done (last 2026-01-21)",
+      "ambulatory_monitor": "never",
+      "echo": "out_of_date (last 2023-02-01)"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

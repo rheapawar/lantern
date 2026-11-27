@@ -1,0 +1,42 @@
+{
+  "case_id": "c009",
+  "status": "todo",
+  "reason": "palpitations_afib",
+  "heldout": false,
+  "planned_tier": "urgent",
+  "planned_question_type": "new_symptom_assessment",
+  "answer_key_only": {
+    "hooks": [],
+    "later_dx": {
+      "condition": "afib",
+      "date": "2017-09-11"
+    }
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": false,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "ecg": "never",
+      "tsh": "never",
+      "electrolytes": "never",
+      "kidney_panel": "never",
+      "liver_panel": "never",
+      "cbc": "never",
+      "ambulatory_monitor": "never",
+      "echo": "never"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

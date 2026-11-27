@@ -1,0 +1,9 @@
+{
+  "case_id": "c017",
+  "specialty": "cardiology",
+  "reason": "heart_failure_symptoms",
+  "referral_date": "2007-08-13",
+  "patient_id": "b6a1cac9-8873-36a7-e726-4aad8a07d44d",
+  "referral_visit_id": "b6a1cac9-8873-36a7-6a4a-8a6d4f554fac",
+  "referral_note_written": false
+}

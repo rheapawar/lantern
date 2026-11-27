@@ -1,0 +1,48 @@
+{
+  "case_id": "c020",
+  "status": "todo",
+  "reason": "heart_failure_symptoms",
+  "heldout": false,
+  "planned_tier": "routine",
+  "planned_question_type": "new_symptom_assessment",
+  "answer_key_only": {
+    "hooks": [
+      "kidney_disease",
+      "on_amlodipine"
+    ],
+    "later_dx": null
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": true,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "nt_probnp": "never",
+      "ecg": "never",
+      "echo": "never",
+      "kidney_panel": "done (last 2026-10-19)",
+      "electrolytes": "done (last 2026-10-19)",
+      "calcium": "done (last 2026-10-19)",
+      "cbc": "out_of_date (last 2024-06-03)",
+      "tsh": "never",
+      "liver_panel": "done (last 2026-06-22)",
+      "iron_studies": "never",
+      "lipids": "done (last 2026-06-22)",
+      "a1c": "done (last 2026-10-19)",
+      "urinalysis": "done (last 2026-10-19)",
+      "chest_xray": "never"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

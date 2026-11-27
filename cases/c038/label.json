@@ -1,0 +1,44 @@
+{
+  "case_id": "c038",
+  "status": "todo",
+  "reason": "hard_to_control_bp_chol",
+  "heldout": false,
+  "planned_tier": "routine",
+  "planned_question_type": "guideline_exception",
+  "answer_key_only": {
+    "hooks": [],
+    "later_dx": null
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": false,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "kidney_panel": "done (last 2025-11-29)",
+      "electrolytes": "done (last 2025-11-29)",
+      "calcium": "done (last 2025-11-29)",
+      "glucose": "done (last 2025-11-29)",
+      "a1c": "done (last 2025-11-29)",
+      "lipids": "done (last 2025-11-29)",
+      "cbc": "out_of_date (last 2021-11-06)",
+      "tsh": "never",
+      "urinalysis": "out_of_date (last 2017-12-23)",
+      "urine_albumin": "never",
+      "ecg": "never",
+      "out_of_office_bp": "not_in_synthea",
+      "aldosterone_renin": "not_in_synthea"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

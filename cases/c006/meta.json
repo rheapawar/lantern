@@ -1,0 +1,9 @@
+{
+  "case_id": "c006",
+  "specialty": "cardiology",
+  "reason": "chest_pain",
+  "referral_date": "2026-11-24",
+  "patient_id": "44bf5b9e-e94f-fbd1-aa65-3a39cf795964",
+  "referral_visit_id": "44bf5b9e-e94f-fbd1-d237-fa751d262a35",
+  "referral_note_written": false
+}

@@ -1,0 +1,41 @@
+case_id,reason,heldout,planned_tier,question_type,note_must_convey,include_negation,do_not_mention,style
+c001,chest_pain,False,urgent,new_symptom_assessment,"Chest tightness on exertion (stairs, walking uphill), new over the last 3-4 weeks and happening more often; settles with rest.",,,standard
+c002,chest_pain,False,routine,new_symptom_assessment,"Occasional chest discomfort, unchanged for months, not clearly tied to exertion; PCP wants a cardiac opinion.",denies chest pain at rest,,terse
+c003,chest_pain,True,emergent,new_symptom_assessment,"Chest pressure that started at rest this morning and is still there, with sweating; PCP is asking for 'a quick cardiology look' (under-calls it).",,kidney disease / CKD / eGFR,rambling
+c004,chest_pain,False,urgent,new_symptom_assessment,Chest pain on exertion that is new and getting worse over 2 weeks.,,"prior heart attack, coronary disease, stents or bypass",econsult_4_fields
+c005,chest_pain,False,routine,new_symptom_assessment,"Sharp left chest pain, worse when pressing on the chest wall or twisting; ongoing for 2 months.","no shortness of breath, no sweating",,standard
+c006,chest_pain,False,routine,specific_workup_or_management,"Intermittent chest discomfort, unclear pattern; PCP asks whether a stress test or coronary CT is needed.",,kidney disease / CKD / eGFR,terse
+c007,chest_pain,True,urgent,new_symptom_assessment,"New exertional chest pain over the last 10 days, now with less activity than before.",denies pain at rest,,rambling
+c008,chest_pain,False,routine,concerns_despite_normal_tests,"Chest discomfort after meals with some heartburn; ECG in clinic was normal, but the patient is still worried it is the heart.",,kidney disease / CKD / eGFR,econsult_4_fields
+c009,palpitations_afib,False,urgent,new_symptom_assessment,Palpitations; pulse irregular and fast (about 130) in clinic; suspect new AFib.,,,standard
+c010,palpitations_afib,False,routine,new_symptom_assessment,"Intermittent fluttering for 2 months, feels well otherwise; also mentions some weight loss and feeling hot.",no fainting,thyroid or TSH,terse
+c011,palpitations_afib,True,routine,new_symptom_assessment,"Racing heart episodes a few times a week, lasting minutes; mild tremor.","no chest pain, no fainting",thyroid or TSH,rambling
+c012,palpitations_afib,False,urgent,new_symptom_assessment,"Palpitations for 3 weeks, now with new ankle swelling and getting breathless on stairs.",,,econsult_4_fields
+c013,palpitations_afib,False,routine,concerns_despite_normal_tests,"Skipped beats at night, otherwise well; ECG in clinic normal sinus rhythm.",denies fainting or chest pain,,standard
+c014,palpitations_afib,False,routine,specific_workup_or_management,Occasional palpitations after coffee; asks about a heart monitor.,,,terse
+c015,palpitations_afib,False,routine,concerns_despite_normal_tests,Palpitations with anxiety; wants reassurance testing.,no syncope,,rambling
+c016,palpitations_afib,True,emergent,new_symptom_assessment,Palpitations with an episode of passing out yesterday; PCP refers rather than sending to ER.,,,econsult_4_fields
+c017,heart_failure_symptoms,False,soon,test_interpretation,Ankle swelling and mild breathlessness on exertion for 6 weeks; NT-proBNP done last week about 900 pg/mL (write the value in the note).,no breathlessness at rest,amlodipine or any medicine that causes swelling,standard
+c018,heart_failure_symptoms,False,urgent,new_symptom_assessment,Gained about 3 kg in a week with swelling getting worse and more breathless on exertion.,,,terse
+c019,heart_failure_symptoms,True,soon,test_interpretation,"Leg swelling and tiredness; NT-proBNP last week about 1,300 pg/mL (write the value).",,amlodipine or any medicine that causes swelling,rambling
+c020,heart_failure_symptoms,False,routine,new_symptom_assessment,"Ankle swelling for a few months, otherwise feels fine; asks if this could be the heart.",no shortness of breath,kidney disease / CKD / eGFR; amlodipine or any medicine that causes swelling,econsult_4_fields
+c021,heart_failure_symptoms,False,routine,new_symptom_assessment,"Bilateral ankle swelling, worse in the evening; no breathlessness.",denies orthopnea,amlodipine or any medicine that causes swelling,standard
+c022,heart_failure_symptoms,True,emergent,new_symptom_assessment,"Breathless at rest, can't lie flat, sleeps in a chair for 3 nights; PCP asks for an appointment.",,,terse
+c023,heart_failure_symptoms,False,urgent,new_symptom_assessment,Worsening swelling over 2 weeks and new breathlessness walking one block.,,,rambling
+c024,heart_failure_symptoms,False,routine,specific_workup_or_management,"Mild exertional breathlessness, likely deconditioning; PCP wants heart failure ruled out.","no swelling, no chest pain",,econsult_4_fields
+c025,abnormal_ecg,True,routine,test_interpretation,ECG at a check-up shows Q waves in the inferior leads; patient has no symptoms. PCP unsure if new.,,"prior heart attack, coronary disease, stents or bypass",standard
+c026,abnormal_ecg,False,routine,test_interpretation,"ECG shows T-wave inversions in leads V4-V6, no symptoms.",denies chest pain,"prior heart attack, coronary disease, stents or bypass",terse
+c027,abnormal_ecg,True,urgent,test_interpretation,New left bundle branch block on routine ECG; mild tiredness.,,,rambling
+c028,abnormal_ecg,False,emergent,test_interpretation,"ECG shows complete heart block, heart rate about 38, and the patient fainted twice this week.",,,econsult_4_fields
+c029,abnormal_ecg,False,urgent,test_interpretation,ECG shows Mobitz type II second-degree AV block; patient feels fine.,no fainting,"prior heart attack, coronary disease, stents or bypass",standard
+c030,abnormal_ecg,False,routine,test_interpretation,"ECG shows first-degree AV block (PR about 230 ms), no symptoms.",,"prior heart attack, coronary disease, stents or bypass",terse
+c031,abnormal_ecg,False,urgent,noncardiac_drug_in_cardiac_patient,"PCP wants to start (or keep) an antidepressant; ECG shows QTc about 510 ms. Is it safe, and what should be done about the QT?","no palpitations, no fainting","prior heart attack, coronary disease, stents or bypass",rambling
+c032,abnormal_ecg,False,routine,test_interpretation,"Isolated right bundle branch block on a pre-op ECG, no symptoms.",,,econsult_4_fields
+c033,hard_to_control_bp_chol,False,routine,specific_workup_or_management,BP above goal (about 150/95) despite current medicines; asks what to add.,,kidney disease / CKD / eGFR,standard
+c034,hard_to_control_bp_chol,True,routine,specific_workup_or_management,BP creeping up over 6 months (about 155/95) without an obvious cause.,,"ibuprofen, naproxen or any NSAID",terse
+c035,hard_to_control_bp_chol,False,urgent,specific_workup_or_management,"BP 186/124 in clinic and similar at home, with no headache, chest pain or vision change.","no headache, no chest pain, no vision change",,rambling
+c036,hard_to_control_bp_chol,False,emergent,new_symptom_assessment,BP 210/125 today with new confusion and blurred vision; PCP asks for an urgent cardiology appointment.,,,econsult_4_fields
+c037,hard_to_control_bp_chol,False,routine,guideline_exception,LDL still above target on current treatment; the risk calculator says lower risk but the patient has several other conditions - do the usual targets apply?,,,standard
+c038,hard_to_control_bp_chol,False,routine,guideline_exception,Cholesterol above goal; patient reluctant to take statins and has several other conditions; PCP unsure the standard guideline fits.,,,terse
+c039,hard_to_control_bp_chol,False,routine,test_interpretation,BP high in clinic but normal at home; asks if this is white-coat hypertension.,,,rambling
+c040,hard_to_control_bp_chol,True,urgent,specific_workup_or_management,"BP 188/122 on two readings, no symptoms; PCP has adjusted medicines and wants a specialist soon.",denies chest pain or confusion,,econsult_4_fields

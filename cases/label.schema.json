@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lantern.local/schemas/label.schema.json",
+  "title": "Lantern case label (answer key; scorecard only - Lantern never reads it)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "status",
+    "reason",
+    "heldout",
+    "planned_tier",
+    "planned_question_type",
+    "answer_key_only",
+    "urgency",
+    "urgency_flags",
+    "urgency_rationale",
+    "question_type",
+    "tests_first",
+    "acceptable_options",
+    "decision_facts",
+    "fit",
+    "acceptable_fits",
+    "chart_dependent",
+    "chart_hook_expectation",
+    "helper",
+    "labeler",
+    "reviewed_by",
+    "notes"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^c\\d{3}$"
+    },
+    "status": {
+      "enum": [
+        "todo",
+        "done",
+        "reviewed"
+      ],
+      "description": "todo = not labelled; done = labelled; reviewed = a clinician checked it"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "heldout": {
+      "type": "boolean"
+    },
+    "planned_tier": {
+      "type": "string",
+      "description": "Tier the note was written to show (from cases/plan.csv)"
+    },
+    "planned_question_type": {
+      "enum": [
+        "test_interpretation",
+        "specific_workup_or_management",
+        "guideline_exception",
+        "noncardiac_drug_in_cardiac_patient",
+        "concerns_despite_normal_tests",
+        "family_history_screening",
+        "new_symptom_assessment"
+      ],
+      "description": "Question type the note was written as (from cases/plan.csv)"
+    },
+    "answer_key_only": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hooks",
+        "later_dx"
+      ],
+      "properties": {
+        "hooks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "later_dx": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "condition",
+                "date"
+              ],
+              "properties": {
+                "condition": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "urgency": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Correct tier: emergent / urgent / soon / routine"
+    },
+    "urgency_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Pathway flag ids that justify the tier (any reason)"
+    },
+    "urgency_rationale": {
+      "type": "string"
+    },
+    "question_type": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "enum": [
+            "test_interpretation",
+            "specific_workup_or_management",
+            "guideline_exception",
+            "noncardiac_drug_in_cardiac_patient",
+            "concerns_despite_normal_tests",
+            "family_history_screening",
+            "new_symptom_assessment"
+          ]
+        }
+      ],
+      "description": "What the PCP is actually asking. First six = the themes of Chan, Johnson, Liddy, Keely et al., Digital Health 2018 (100 Champlain BASE cardiology eConsults). 'new_symptom_assessment' is a Lantern addition for referrals about new or worsening symptoms."
+    },
+    "tests_first": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Pathway test ids that should be ordered before the visit"
+    },
+    "acceptable_options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Pathway option ids a specialist could reasonably pick"
+    },
+    "decision_facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Pathway fact ids the specialist must see for this case"
+    },
+    "fit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Best fit id from the pathway 'fits'"
+    },
+    "acceptable_fits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Other fits that are also fine"
+    },
+    "chart_dependent": {
+      "type": "boolean",
+      "description": "True if the right answer depends on a chart fact the note does not mention (a hook)"
+    },
+    "chart_hook_expectation": {
+      "type": "string",
+      "description": "What Lantern should do because of the hook, in one line"
+    },
+    "helper": {
+      "type": "object",
+      "description": "Generated by build_cases.py from the cut chart - not an answer"
+    },
+    "labeler": {
+      "type": "string"
+    },
+    "reviewed_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "done",
+              "reviewed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "urgency": {
+            "type": "string"
+          },
+          "fit": {
+            "type": "string"
+          },
+          "urgency_rationale": {
+            "minLength": 1
+          },
+          "tests_first": {
+            "minItems": 1
+          },
+          "labeler": {
+            "minLength": 1
+          },
+          "question_type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "reviewed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reviewed_by": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

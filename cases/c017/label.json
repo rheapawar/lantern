@@ -1,0 +1,50 @@
+{
+  "case_id": "c017",
+  "status": "todo",
+  "reason": "heart_failure_symptoms",
+  "heldout": false,
+  "planned_tier": "soon",
+  "planned_question_type": "test_interpretation",
+  "answer_key_only": {
+    "hooks": [
+      "on_amlodipine"
+    ],
+    "later_dx": {
+      "condition": "heart_failure",
+      "date": "2008-01-29"
+    }
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": true,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "nt_probnp": "never",
+      "ecg": "out_of_date (last 2004-08-06)",
+      "echo": "out_of_date (last 2004-07-30)",
+      "kidney_panel": "done (last 2007-07-30)",
+      "electrolytes": "done (last 2007-07-30)",
+      "calcium": "done (last 2007-07-30)",
+      "cbc": "out_of_date (last 2005-07-18)",
+      "tsh": "out_of_date (last 2004-07-30)",
+      "liver_panel": "out_of_date (last 2004-08-06)",
+      "iron_studies": "never",
+      "lipids": "out_of_date (last 2005-07-18)",
+      "a1c": "done (last 2007-07-30)",
+      "urinalysis": "out_of_date (last 2004-07-30)",
+      "chest_xray": "out_of_date (last 2004-08-06)"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}

@@ -1,0 +1,39 @@
+{
+  "case_id": "c030",
+  "status": "todo",
+  "reason": "abnormal_ecg",
+  "heldout": false,
+  "planned_tier": "routine",
+  "planned_question_type": "test_interpretation",
+  "answer_key_only": {
+    "hooks": [
+      "prior_mi_or_cad"
+    ],
+    "later_dx": null
+  },
+  "urgency": null,
+  "urgency_flags": [],
+  "urgency_rationale": "",
+  "question_type": null,
+  "tests_first": [],
+  "acceptable_options": [],
+  "decision_facts": [],
+  "fit": null,
+  "acceptable_fits": [],
+  "chart_dependent": true,
+  "chart_hook_expectation": "",
+  "helper": {
+    "note": "Generated from the cut chart to help labelling - not an answer.",
+    "tests_first_status": {
+      "ecg_compare_prior": "never",
+      "electrolytes": "done (last 2026-06-11)",
+      "calcium": "done (last 2026-06-11)",
+      "tsh": "never",
+      "echo": "never",
+      "ambulatory_monitor": "never"
+    }
+  },
+  "labeler": "",
+  "reviewed_by": [],
+  "notes": ""
+}
