@@ -20,10 +20,12 @@
     "draft": {"title": "Added by Claude without a guideline source - unconfirmed guess", "kind": "internal", "checked": false}
   },
 
+  "tier_order": ["emergent", "urgent", "soon", "routine"],
   "tiers": {
     "emergent": "Needs the ER now - not a referral. Card says 'advise ER now'.",
-    "urgent":   "Specialist within about 2 weeks (matches NICE's 2-week heart failure rule).",
-    "routine":  "Normal queue. Some routine cases have a 'soon' hint (e.g. NICE 6-week heart failure rule) shown on the card but not a separate tier."
+    "urgent": "Specialist within about 2 weeks (matches NICE's 2-week heart failure rule).",
+    "soon": "Specialist within about 4-6 weeks (matches NICE's 6-week heart failure rule; the 2025 US BP guideline's 4-week follow-up for severe hypertension would also fit here).",
+    "routine": "Normal queue."
   },
 
   "facts": {
@@ -262,6 +264,9 @@
       "interim_options": ["er_precautions", "review_bp_lipid_meds"],
       "subspecialty": "general_cardiology",
       "fit_choices": ["general_cardiology", "interventional", "econsult_enough", "other_specialty"],
+      "routing_rules": [
+        {"id": "cp_kidney_contrast", "if": {"chart_obs": {"fact": "egfr", "op": "<", "value": 30, "within_days": 365}}, "suggest_fit": null, "note": "eGFR under 30 - contrast for coronary CT or angiography carries uncertain kidney risk; cardiology chooses the test", "source": "draft", "source_note": "ACC 2025 'Contrast Media in Advanced Cardiovascular Imaging' calls eGFR <30 a relative contraindication; 2021 chest pain guideline wording not yet checked"}
+      ],
       "not_seen": ["Pain clearly reproduced by pressing on the chest wall (musculoskeletal)", "Reflux-type symptoms with low cardiac risk (GI)", "Low-risk patient - guideline says further testing may not be needed (eConsult may be enough)"],
       "review_notes": ["Guideline uses 'cardiac / possible cardiac / noncardiac', not 'typical/atypical' - verify wording", "Whether cp_ecg_ischemia should be emergent or urgent when pain is not current"]
     },
@@ -321,6 +326,9 @@
       "interim_options": ["cut_caffeine_alcohol", "risk_factor_modification", "anticoag_decision", "rate_control_decision"],
       "subspecialty": "electrophysiology",
       "fit_choices": ["electrophysiology", "general_cardiology", "econsult_enough", "other_specialty"],
+      "routing_rules": [
+        {"id": "palp_abnormal_tsh", "if": {"chart_obs": {"fact": "tsh", "op": "outside", "range": [0.4, 4.5], "within_days": 365}}, "suggest_fit": "other_specialty", "note": "TSH out of range - thyroid may explain the palpitations; consider treating thyroid / endocrinology first", "source": "draft", "source_note": "Range: ATA 2018 (lab-dependent, ~0.4-4.5). 'Thyroid first' routing has no guideline source yet."}
+      ],
       "not_seen": ["Palpitations from an overactive thyroid - may go to endocrinology first", "Occasional skipped beats with a normal ECG and no heart disease - often eConsult"],
       "review_notes": ["Exact CHA2DS2-VASc thresholds in the 2023 guideline - verify", "Whether Lantern should compute the score or only list the parts"]
     },
@@ -344,7 +352,7 @@
         {"id": "hf_rapid_weight_gain", "text": "Fast weight gain or worsening swelling", "source": "lantern_claude_md",
          "match": {"text_any": ["gained", "weight gain", "lbs in", "pounds in", "kg in", "worsening swelling", "swelling getting worse", "more swollen"]}}
       ],
-      "soon_hints": [
+      "soon_flags": [
         {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)", "source": "nice_ng106", "ref": "1.2.4",
          "match": {"chart_obs": {"fact": "nt_probnp", "op": "between", "value": [400, 2000], "within_days": 90}}}
       ],
@@ -384,6 +392,11 @@
       "interim_options": ["daily_weights", "limit_salt", "diuretic_by_specialist", "review_hf_worsening_meds"],
       "subspecialty": "heart_failure",
       "fit_choices": ["heart_failure", "general_cardiology", "econsult_enough", "other_specialty"],
+      "routing_rules": [
+        {"id": "hf_egfr_under_30", "if": {"chart_obs": {"fact": "egfr", "op": "<", "value": 30, "within_days": 365}}, "suggest_fit": null, "note": "eGFR under 30 - heart failure team should liaise with a kidney specialist", "source": "nice_ng106", "ref": "1.6.2"},
+        {"id": "hf_low_ntprobnp_untreated", "if": {"all": [{"chart_obs": {"fact": "nt_probnp", "op": "<", "value": 400, "within_days": 90}}, {"not": {"fact_present": "np_lowering_meds"}}]}, "suggest_fit": "econsult_enough", "note": "NT-proBNP under 400 without heart failure medicines - heart failure less likely; NICE suggests discussing with a heart failure specialist if still concerned", "source": "nice_ng106", "ref": "1.2.5-1.2.6"},
+        {"id": "hf_amlodipine_swelling", "if": {"all": [{"fact_present": "amlodipine"}, {"not": {"fact_present": "heart_failure"}}, {"not": {"chart_obs": {"fact": "nt_probnp", "op": ">=", "value": 400, "within_days": 90}}}]}, "suggest_fit": "econsult_enough", "note": "On amlodipine with no other sign of heart failure - ankle swelling may be the medicine (PCP medicine change)", "source": "draft", "source_note": "Amlodipine edema: 2025 BP Table 13. Routing to eConsult is a draft judgment."}
+      ],
       "not_seen": ["Swelling from kidney disease (nephrology)", "Ankle swelling from a medicine such as amlodipine (PCP med change may be enough)", "Breathlessness from lung disease (pulmonology)"],
       "review_notes": ["Is 2 weeks = 'urgent' the right mapping for a US clinic? (NICE 2-week rule is UK)", "2022 AHA/ACC/HFSA HF guideline (US, full text checked) gives no outpatient referral time-frames, so NICE NG106 timings stay; US 8.1 rec 1: timely referral to HF specialty care for ADVANCED HF (COR 1)", "Red flags (breathless at rest, chest pain, fainting) come from the CLAUDE.md table, not NG106; the 2022 US HF guideline (full text checked) also has no outpatient red-flag list - its shock criteria (9.5, Table 22) and advanced-HF indicators (8.1, Table 18) are hospital/advanced-stage", "Salt substitutes: NICE HF 1.9.11 says avoid potassium-based salt substitutes; the 2025 US BP guideline (5.1, COR 2a) says they can help lower BP except with CKD or potassium-retaining drugs. Kept NICE wording for heart failure - clinician to confirm"]
     },
@@ -439,6 +452,9 @@
       "interim_options": ["review_qt_meds", "review_av_nodal_meds"],
       "subspecialty": "general_cardiology",
       "fit_choices": ["general_cardiology", "electrophysiology", "econsult_enough", "other_specialty"],
+      "routing_rules": [
+        {"id": "ecg_prior_mi", "if": {"fact_present": "prior_mi_cad"}, "suggest_fit": null, "note": "Prior heart attack or coronary disease - Q waves or ST/T changes may be old; compare with a prior ECG", "source": "draft"}
+      ],
       "not_seen": ["Unchanged old findings in a patient with no symptoms - often an eConsult answer", "Low-concern findings listed in low_concern_findings - usually eConsult"],
       "review_notes": ["Long QT is not covered by the 2018 bradycardia guideline - source and 500 ms cutoff need confirming", "How to treat a bundle branch block when no prior ECG exists to show it is new", "Echo recommendation for new LBBB - verify in 2018 guideline"]
     },
@@ -462,7 +478,7 @@
                            {"chart_obs": {"fact": "systolic_bp", "op": ">", "value": 180, "within_days": 14}},
                            {"chart_obs": {"fact": "diastolic_bp", "op": ">", "value": 120, "within_days": 14}}]}}
       ],
-      "soon_hints": [
+      "card_hints": [
         {"id": "bp_low_potassium", "text": "High BP with low potassium - screen for primary aldosteronism (aldosterone/renin ratio)", "match": {"all": [{"fact_present": "hypertension"}, {"chart_obs": {"fact": "potassium", "op": "<", "value": 3.5, "within_days": 180}}]}, "source": "aha_bp_2025", "ref": "3.2.3.1", "source_note": "Guideline: hypokalemia (spontaneous or diuretic-induced) is a reason to screen, not an urgency criterion. 3.5 mmol/L is the usual lower limit of normal; the guideline gives no number."}
       ],
       "decision_facts": [
@@ -491,17 +507,21 @@
         {"test": "cbc", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
         {"test": "tsh", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
         {"test": "urinalysis", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
-        {"test": "urine_albumin", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
+        {"test": "urine_albumin", "source": "aha_bp_2025", "ref": "3.1.2, Table 6", "only_if": {"any": [{"fact_present": "hypertension"}, {"fact_present": "diabetes"}, {"fact_present": "ckd"}]}, "source_note": "Basic test for hypertension (3.1.2); condition keeps it off cholesterol-only referrals - draft"},
         {"test": "ecg", "source": "aha_bp_2025", "ref": "3.1.2, Table 6"},
         {"test": "out_of_office_bp", "source": "aha_bp_2025", "ref": "3.1.4"},
-        {"test": "aldosterone_renin", "source": "aha_bp_2025", "ref": "3.2.3.1"}
+        {"test": "aldosterone_renin", "source": "aha_bp_2025", "ref": "3.2.3.1", "only_if": {"any": [{"fact_count": {"fact": "bp_meds", "op": ">=", "value": 3}}, {"chart_obs": {"fact": "potassium", "op": "<", "value": 3.5, "within_days": 180}}, {"fact_present": "sleep_apnea"}]}, "source_note": "3.2.3.1 rec 1: screen in resistant hypertension (COR 1, regardless of potassium), hypokalemia, sleep apnea, adrenal incidentaloma, family history of early-onset hypertension or stroke <40. '3+ BP medicines' is a proxy for resistant; incidentaloma and family history are not in the fact list yet. Still not pre-checked."}
       ],
       "tests_not_prechecked": ["aldosterone_renin"],
       "interim_options": ["home_bp_log", "adherence_check", "review_interfering_meds"],
       "subspecialty": "hypertension_preventive",
       "fit_choices": ["hypertension_preventive", "general_cardiology", "econsult_enough", "other_specialty"],
+      "routing_rules": [
+        {"id": "bp_secondary_cause", "if": {"any": [{"fact_count": {"fact": "bp_meds", "op": ">=", "value": 3}}, {"chart_obs": {"fact": "potassium", "op": "<", "value": 3.5, "within_days": 180}}]}, "suggest_fit": "hypertension_preventive", "note": "Resistant pattern or low potassium - specialist look for a secondary cause", "source": "aha_bp_2025", "ref": "5.6, Fig 8; 3.2.3.1"},
+        {"id": "bp_nsaid_only", "if": {"all": [{"fact_present": "nsaid"}, {"not": {"fact_count": {"fact": "bp_meds", "op": ">=", "value": 3}}}, {"not": {"chart_obs": {"fact": "potassium", "op": "<", "value": 3.5, "within_days": 180}}}]}, "suggest_fit": "econsult_enough", "note": "Regular NSAID use can raise BP - a medicine review may be enough before a visit", "source": "draft", "source_note": "NSAIDs raising BP: 2025 BP Table 13 interfering medicines (verify row). eConsult routing is a draft judgment."}
+      ],
       "not_seen": ["Often answerable by eConsult (medicine adjustment advice) without a visit", "Suspected primary aldosteronism or other hormone cause (endocrinology)", "BP driven by kidney disease (nephrology)"],
-      "review_notes": ["Whether bp_severe_no_symptoms belongs in 'urgent': 2025 guideline says the PCP intensifies medicines now with follow-up within 4 weeks (Fig 9)", "The 2025 BP guideline does not cover BP management in coronary disease, heart failure, AFib, valve, aortic disease or PAD (1.4)", "Cholesterol source (2018 AHA/ACC) not yet checked"]
+      "review_notes": ["Whether bp_severe_no_symptoms belongs in 'urgent': 2025 guideline says the PCP intensifies medicines now with follow-up within 4 weeks (Fig 9)", "The 2025 BP guideline does not cover BP management in coronary disease, heart failure, AFib, valve, aortic disease or PAD (1.4)", "Cholesterol source (2018 AHA/ACC) not yet checked", "Severe hypertension without organ damage kept URGENT (option A) until NICE NG136 1.5.x is checked; the 2025 US guideline (6.2, Fig 9) would place it in 'soon' (follow-up within 4 weeks)"]
     }
   },
 
@@ -512,6 +532,7 @@
     "Do NICE's 2-week / 6-week heart failure rules map well onto urgent / routine in a US clinic?",
     "BP: should the chart's own BP readings (last 14 days) count, or only what the PCP wrote?",
     "For abnormal ECG, how should Lantern treat a bundle branch block when no prior ECG shows it is new?",
-    "Which reasons are most often fully answerable by eConsult?"
+    "Which reasons are most often fully answerable by eConsult?",
+    "Is a 'soon' tier (about 4-6 weeks) between urgent and routine useful in a US clinic, and which flags belong in it?"
   ]
 }
