@@ -1,6 +1,6 @@
 {
   "case_id": "c024",
-  "status": "todo",
+  "status": "draft",
   "reason": "heart_failure_symptoms",
   "heldout": false,
   "planned_tier": "routine",
@@ -9,15 +9,42 @@
     "hooks": [],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "Mild exertional breathlessness, likely deconditioning, no swelling.",
+  "question_type": "specific_workup_or_management",
+  "tests_first": [
+    "nt_probnp",
+    "ecg",
+    "echo",
+    "cbc",
+    "tsh",
+    "iron_studies",
+    "urinalysis",
+    "chest_xray"
+  ],
+  "acceptable_options": [
+    "review_hf_worsening_meds"
+  ],
+  "decision_facts": [
+    "egfr",
+    "obesity",
+    "np_lowering_meds",
+    "prior_mi_cad",
+    "valve_disease",
+    "hypertension",
+    "albumin",
+    "hemoglobin",
+    "weight",
+    "systolic_bp",
+    "potassium",
+    "diuretic"
+  ],
+  "fit": "econsult_enough",
+  "acceptable_fits": [
+    "heart_failure",
+    "general_cardiology"
+  ],
   "chart_dependent": false,
   "chart_hook_expectation": "",
   "helper": {
@@ -39,7 +66,7 @@
       "chest_xray": "out_of_date (last 2023-11-10)"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

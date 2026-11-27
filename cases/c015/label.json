@@ -1,6 +1,6 @@
 {
   "case_id": "c015",
-  "status": "todo",
+  "status": "draft",
   "reason": "palpitations_afib",
   "heldout": false,
   "planned_tier": "routine",
@@ -9,15 +9,33 @@
     "hooks": [],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "Stress-related palpitations, no red flags; reassurance question.",
+  "question_type": "concerns_despite_normal_tests",
+  "tests_first": [
+    "ecg",
+    "tsh",
+    "liver_panel",
+    "cbc",
+    "ambulatory_monitor",
+    "echo"
+  ],
+  "acceptable_options": [
+    "cut_caffeine_alcohol",
+    "risk_factor_modification"
+  ],
+  "decision_facts": [
+    "hemoglobin",
+    "obesity",
+    "heart_rate",
+    "systolic_bp"
+  ],
+  "fit": "econsult_enough",
+  "acceptable_fits": [
+    "electrophysiology",
+    "general_cardiology"
+  ],
   "chart_dependent": false,
   "chart_hook_expectation": "",
   "helper": {
@@ -33,7 +51,7 @@
       "echo": "never"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

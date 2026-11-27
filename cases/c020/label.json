@@ -1,6 +1,6 @@
 {
   "case_id": "c020",
-  "status": "todo",
+  "status": "draft",
   "reason": "heart_failure_symptoms",
   "heldout": false,
   "planned_tier": "routine",
@@ -12,17 +12,44 @@
     ],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "Ankle swelling only, no breathlessness, sleeps flat.",
+  "question_type": "new_symptom_assessment",
+  "tests_first": [
+    "nt_probnp",
+    "ecg",
+    "echo",
+    "cbc",
+    "tsh",
+    "iron_studies",
+    "chest_xray"
+  ],
+  "acceptable_options": [
+    "review_hf_worsening_meds"
+  ],
+  "decision_facts": [
+    "ckd",
+    "egfr",
+    "diabetes",
+    "obesity",
+    "np_lowering_meds",
+    "hypertension",
+    "amlodipine",
+    "albumin",
+    "hemoglobin",
+    "weight",
+    "systolic_bp",
+    "potassium",
+    "diuretic"
+  ],
+  "fit": "econsult_enough",
+  "acceptable_fits": [
+    "heart_failure",
+    "general_cardiology"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Surface amlodipine (dose-related ankle swelling) and kidney disease as likely non-cardiac causes; check NT-proBNP before a visit.",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -42,7 +69,7 @@
       "chest_xray": "never"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

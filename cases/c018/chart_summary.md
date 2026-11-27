@@ -21,7 +21,7 @@
 | Prior heart attack, coronary disease, stent or bypass | Acute ST segment elevation myocardial infarction (disorder); History of coronary artery bypass grafting (situation); History of myocardial infarction (situation); Ischemic heart disease (disorder) |
 | Blood pressure medicines (number and classes) | 24 HR metoprolol succinate 50 MG Extended Release Oral Tablet; lisinopril 10 MG Oral Tablet |
 | Statin or ezetimibe | atorvastatin 20 MG Oral Tablet |
-| On aspirin or clopidogrel | aspirin 325 MG Oral Tablet; aspirin 81 MG Oral Tablet; clopidogrel 300 MG Oral Tablet |
+| On aspirin or clopidogrel | aspirin 81 MG Oral Tablet |
 | Heart-rate medicines | 24 HR metoprolol succinate 50 MG Extended Release Oral Tablet |
 
 ## Latest vitals and labs
@@ -84,16 +84,12 @@
 
 ## Medicines prescribed in the last 365 days
 
-- 2 ML morphine sulfate 1 MG/ML Injection (last 2025-01-19)
 - 24 HR metoprolol succinate 50 MG Extended Release Oral Tablet (last 2025-01-19)
 - 60 ACTUAT Fluticasone propionate 0.25 MG/ACTUAT / salmeterol 0.05 MG/ACTUAT Dry Powder Inhaler (last 2025-11-13)
 - Alendronic acid 10 MG Oral Tablet (last 2025-11-13)
 - albuterol 5 MG/ML Inhalation Solution (last 2025-11-13)
-- aspirin 325 MG Oral Tablet (last 2025-01-19)
 - aspirin 81 MG Oral Tablet (last 2025-01-19)
 - atorvastatin 20 MG Oral Tablet (last 2025-01-19)
-- clopidogrel 300 MG Oral Tablet (last 2025-01-19)
-- heparin sodium, porcine 100 UNT/ML Injectable Solution (last 2025-01-19)
 - lisinopril 10 MG Oral Tablet (last 2025-11-13)
 - sodium fluoride 0.0272 MG/MG Oral Gel (last 2025-11-27)
 

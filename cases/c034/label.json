@@ -1,6 +1,6 @@
 {
   "case_id": "c034",
-  "status": "todo",
+  "status": "draft",
   "reason": "hard_to_control_bp_chol",
   "heldout": true,
   "planned_tier": "routine",
@@ -11,17 +11,43 @@
     ],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "BP creeping up on two agents, no obvious cause.",
+  "question_type": "specific_workup_or_management",
+  "tests_first": [
+    "kidney_panel",
+    "electrolytes",
+    "calcium",
+    "glucose",
+    "cbc",
+    "tsh",
+    "urinalysis",
+    "ecg",
+    "out_of_office_bp"
+  ],
+  "acceptable_options": [
+    "review_interfering_meds",
+    "home_bp_log",
+    "adherence_check"
+  ],
+  "decision_facts": [
+    "systolic_bp",
+    "diastolic_bp",
+    "bp_meds",
+    "nsaid",
+    "potassium",
+    "egfr",
+    "urine_albumin",
+    "ldl",
+    "diabetes"
+  ],
+  "fit": "econsult_enough",
+  "acceptable_fits": [
+    "hypertension_preventive"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Surface regular NSAID use from the chart - a likely cause of rising BP; medicine review first.",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -40,7 +66,7 @@
       "aldosterone_renin": "not_in_synthea"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

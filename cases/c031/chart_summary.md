@@ -23,7 +23,7 @@
 | Prior heart attack, coronary disease, stent or bypass | Ischemic heart disease (disorder) |
 | Thyroid disease | Idiopathic atrophic hypothyroidism (disorder) |
 | Blood pressure medicines (number and classes) | carvedilol 25 MG Oral Tablet; lisinopril 10 MG Oral Tablet; lisinopril 20 MG Oral Tablet |
-| On a diuretic (water pill) | 10 ML Furosemide 10 MG/ML Injection; Furosemide 40 MG Oral Tablet |
+| On a diuretic (water pill) | Furosemide 40 MG Oral Tablet |
 | Heart-rate medicines | carvedilol 25 MG Oral Tablet |
 
 ## Latest vitals and labs
@@ -80,7 +80,6 @@
 
 ## Medicines prescribed in the last 365 days
 
-- 10 ML Furosemide 10 MG/ML Injection (last 2021-07-08)
 - Furosemide 40 MG Oral Tablet (last 2022-01-20)
 - carvedilol 25 MG Oral Tablet (last 2022-01-20)
 - lisinopril 10 MG Oral Tablet (last 2022-01-20)

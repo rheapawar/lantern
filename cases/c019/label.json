@@ -1,6 +1,6 @@
 {
   "case_id": "c019",
-  "status": "todo",
+  "status": "draft",
   "reason": "heart_failure_symptoms",
   "heldout": true,
   "planned_tier": "soon",
@@ -14,17 +14,50 @@
       "date": "2023-06-03"
     }
   },
-  "urgency": null,
-  "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency": "soon",
+  "urgency_flags": [
+    "hf_ntprobnp_400_2000"
+  ],
+  "urgency_rationale": "Leg swelling and fatigue with NT-proBNP ~1,300.",
+  "question_type": "test_interpretation",
+  "tests_first": [
+    "nt_probnp",
+    "ecg",
+    "echo",
+    "kidney_panel",
+    "electrolytes",
+    "calcium",
+    "cbc",
+    "tsh",
+    "iron_studies",
+    "urinalysis",
+    "chest_xray"
+  ],
+  "acceptable_options": [
+    "daily_weights",
+    "limit_salt",
+    "diuretic_by_specialist",
+    "review_hf_worsening_meds"
+  ],
+  "decision_facts": [
+    "egfr",
+    "obesity",
+    "np_lowering_meds",
+    "prior_mi_cad",
+    "hypertension",
+    "amlodipine",
+    "albumin",
+    "hemoglobin",
+    "weight",
+    "systolic_bp",
+    "potassium"
+  ],
+  "fit": "heart_failure",
+  "acceptable_fits": [
+    "general_cardiology"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Surface amlodipine as a possible cause of leg swelling, but NT-proBNP ~1,300 still points to heart failure.",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -44,7 +77,7 @@
       "chest_xray": "never"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

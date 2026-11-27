@@ -36,10 +36,11 @@
     "status": {
       "enum": [
         "todo",
+        "draft",
         "done",
         "reviewed"
       ],
-      "description": "todo = not labelled; done = labelled; reviewed = a clinician checked it"
+      "description": "todo = not labelled; draft = filled in by Claude, needs a human to confirm; done = labelled by a person; reviewed = a clinician checked it"
     },
     "reason": {
       "type": "string"
@@ -205,6 +206,7 @@
         "properties": {
           "status": {
             "enum": [
+              "draft",
               "done",
               "reviewed"
             ]

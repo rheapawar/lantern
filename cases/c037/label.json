@@ -1,6 +1,6 @@
 {
   "case_id": "c037",
-  "status": "todo",
+  "status": "draft",
   "reason": "hard_to_control_bp_chol",
   "heldout": false,
   "planned_tier": "routine",
@@ -9,15 +9,33 @@
     "hooks": [],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "Statin decision with high LDL despite low calculator risk.",
+  "question_type": "guideline_exception",
+  "tests_first": [
+    "cbc",
+    "tsh",
+    "urinalysis",
+    "urine_albumin",
+    "ecg",
+    "out_of_office_bp"
+  ],
+  "acceptable_options": [
+    "adherence_check"
+  ],
+  "decision_facts": [
+    "systolic_bp",
+    "diastolic_bp",
+    "bp_meds",
+    "potassium",
+    "egfr",
+    "ldl"
+  ],
+  "fit": "econsult_enough",
+  "acceptable_fits": [
+    "hypertension_preventive"
+  ],
   "chart_dependent": false,
   "chart_hook_expectation": "",
   "helper": {
@@ -38,7 +56,7 @@
       "aldosterone_renin": "not_in_synthea"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

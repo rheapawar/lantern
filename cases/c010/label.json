@@ -1,6 +1,6 @@
 {
   "case_id": "c010",
-  "status": "todo",
+  "status": "draft",
   "reason": "palpitations_afib",
   "heldout": false,
   "planned_tier": "routine",
@@ -11,17 +11,43 @@
     ],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "Stable fluttering for 2 months, no syncope or chest pain.",
+  "question_type": "new_symptom_assessment",
+  "tests_first": [
+    "ecg",
+    "tsh",
+    "liver_panel",
+    "cbc",
+    "ambulatory_monitor",
+    "echo"
+  ],
+  "acceptable_options": [
+    "cut_caffeine_alcohol",
+    "risk_factor_modification"
+  ],
+  "decision_facts": [
+    "hypertension",
+    "diabetes",
+    "ckd",
+    "hemoglobin",
+    "liver_tests",
+    "inr",
+    "tsh",
+    "egfr",
+    "obesity",
+    "heart_rate",
+    "systolic_bp"
+  ],
+  "fit": "electrophysiology",
+  "acceptable_fits": [
+    "general_cardiology",
+    "econsult_enough",
+    "other_specialty"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Point out that the last TSH is 6 years old and borderline high (4.61); symptoms (weight loss, heat) suggest an overactive thyroid - re-check TSH first.",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -35,7 +61,7 @@
       "echo": "out_of_date (last 2019-12-17)"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

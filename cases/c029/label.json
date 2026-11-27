@@ -1,6 +1,6 @@
 {
   "case_id": "c029",
-  "status": "todo",
+  "status": "draft",
   "reason": "abnormal_ecg",
   "heldout": false,
   "planned_tier": "urgent",
@@ -11,17 +11,35 @@
     ],
     "later_dx": null
   },
-  "urgency": null,
-  "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency": "urgent",
+  "urgency_flags": [
+    "ecg_high_grade_block"
+  ],
+  "urgency_rationale": "Asymptomatic Mobitz II - pacemaker usually indicated.",
+  "question_type": "test_interpretation",
+  "tests_first": [
+    "electrolytes",
+    "calcium",
+    "tsh",
+    "echo"
+  ],
+  "acceptable_options": [
+    "review_av_nodal_meds"
+  ],
+  "decision_facts": [
+    "prior_ecg",
+    "prior_mi_cad",
+    "potassium",
+    "magnesium",
+    "calcium",
+    "heart_rate"
+  ],
+  "fit": "electrophysiology",
+  "acceptable_fits": [
+    "general_cardiology"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Surface prior heart attack / coronary disease (conduction disease context).",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -33,7 +51,7 @@
       "ambulatory_monitor": "out_of_date (last 2023-01-06)"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

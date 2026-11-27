@@ -66,8 +66,6 @@
 
 ## Medicines prescribed in the last 365 days
 
-- Acetaminophen 325 MG / HYDROcodone Bitartrate 7.5 MG Oral Tablet (last 2002-05-19)
-- Acetaminophen 325 MG Oral Tablet (last 2002-05-19)
 - amLODIPine 2.5 MG Oral Tablet (last 2002-12-23)
 - lisinopril 10 MG Oral Tablet (last 2002-12-23)
 

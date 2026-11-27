@@ -1,6 +1,6 @@
 {
   "case_id": "c028",
-  "status": "todo",
+  "status": "draft",
   "reason": "abnormal_ecg",
   "heldout": false,
   "planned_tier": "emergent",
@@ -9,15 +9,27 @@
     "hooks": [],
     "later_dx": null
   },
-  "urgency": null,
-  "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency": "emergent",
+  "urgency_flags": [
+    "ecg_high_grade_block_symptomatic"
+  ],
+  "urgency_rationale": "Complete heart block, rate 38, with two faints - ER now (pacing).",
+  "question_type": "test_interpretation",
+  "tests_first": [
+    "ecg"
+  ],
+  "acceptable_options": [
+    "review_av_nodal_meds"
+  ],
+  "decision_facts": [
+    "potassium",
+    "calcium",
+    "heart_rate"
+  ],
+  "fit": "electrophysiology",
+  "acceptable_fits": [
+    "general_cardiology"
+  ],
   "chart_dependent": false,
   "chart_hook_expectation": "",
   "helper": {
@@ -31,7 +43,7 @@
       "ambulatory_monitor": "never"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

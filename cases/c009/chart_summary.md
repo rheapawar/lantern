@@ -55,7 +55,6 @@
 
 ## Medicines prescribed in the last 365 days
 
-- Acetaminophen 325 MG Oral Tablet (last 2016-11-12)
 - Simvastatin 10 MG Oral Tablet (last 2016-09-06)
 
 ## Last 6 encounters

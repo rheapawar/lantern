@@ -18,8 +18,6 @@
 | Fact | Found |
 |---|---|
 | Diabetes | Diabetes mellitus type 2 (disorder) |
-| Regular NSAID (ibuprofen, naproxen) | Ibuprofen 200 MG Oral Tablet |
-| Medicines that can worsen heart failure | Ibuprofen 200 MG Oral Tablet |
 
 ## Latest vitals and labs
 
@@ -68,7 +66,6 @@
 ## Medicines prescribed in the last 365 days
 
 - 60 ACTUAT Fluticasone propionate 0.25 MG/ACTUAT / salmeterol 0.05 MG/ACTUAT Dry Powder Inhaler (last 2021-09-17)
-- Ibuprofen 200 MG Oral Tablet (last 2021-01-22)
 - albuterol 5 MG/ML Inhalation Solution (last 2021-09-17)
 
 ## Last 6 encounters

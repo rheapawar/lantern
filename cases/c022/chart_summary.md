@@ -20,8 +20,6 @@
 | High cholesterol | Hyperlipidemia (disorder) |
 | Prior heart attack, coronary disease, stent or bypass | History of coronary artery bypass grafting (situation); Ischemic heart disease (disorder) |
 | Statin or ezetimibe | Simvastatin 10 MG Oral Tablet |
-| Regular NSAID (ibuprofen, naproxen) | Naproxen sodium 220 MG Oral Tablet |
-| Medicines that can worsen heart failure | Naproxen sodium 220 MG Oral Tablet |
 
 ## Latest vitals and labs
 
@@ -78,7 +76,6 @@
 
 ## Medicines prescribed in the last 365 days
 
-- Naproxen sodium 220 MG Oral Tablet (last 2025-09-28)
 - Simvastatin 10 MG Oral Tablet (last 2026-06-30)
 
 ## Last 6 encounters

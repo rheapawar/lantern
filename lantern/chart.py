@@ -34,6 +34,8 @@ DATE_FIELDS = {
     "SupplyDelivery": [("occurrenceDateTime",)],
     "Device": [("manufactureDate",)],
 }
+_BY_URL = {}
+INPATIENT_CLASSES = {"IMP", "EMER", "ACUTE", "NONAC", "OBSENC", "SS"}
 KEEP_UNDATED = {"Patient", "Organization", "Practitioner", "PractitionerRole", "Location", "Medication"}
 # Provenance lists every resource (incl. future ones); Claim/EOB are billing, can be created after the
 # visit and point at later procedures. None of them is clinical information Lantern needs.
@@ -64,6 +66,8 @@ def load_bundle(path):
 def cut_at(bundle, cutoff):
     """Return (new_bundle, report). cutoff is 'YYYY-MM-DD'; records ON that date are kept."""
     out = copy.deepcopy(bundle)
+    global _BY_URL
+    _BY_URL = {e.get("fullUrl"): e["resource"] for e in bundle["entry"]}
     kept, report = [], {"dropped_future": 0, "dropped_undated": {}, "stripped": []}
     for e in out["entry"]:
         r = e["resource"]
@@ -99,8 +103,14 @@ def _strip_future(r, cutoff, report):
             "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]}
         report["stripped"].append("Condition.abatementDateTime")
     if t == "MedicationRequest" and r.get("status") in ("stopped", "completed"):
-        # Synthea sets 'stopped' if the drug ended later - that end may be after the referral.
-        r["status"] = "unknown"
+        # Synthea sets 'stopped'/'completed' when the drug ended, which may be after the referral -> 'unknown'.
+        # Exception: a one-off given during a hospital/ER stay that ended by the cutoff stays 'completed'
+        # (known on the referral date). by_url is attached by cut_at.
+        enc = _BY_URL.get((r.get("encounter") or {}).get("reference", ""), {})
+        end = ((enc.get("period") or {}).get("end") or "")[:10]
+        inpatient = (enc.get("class") or {}).get("code") in INPATIENT_CLASSES
+        if not (r["status"] == "completed" and inpatient and end and end <= cutoff):
+            r["status"] = "unknown"
     if t == "Device":
         r.pop("expirationDate", None)
     _strip_nested_ends(r, cutoff, report, t)
@@ -224,12 +234,19 @@ def active_conditions(bundle, cutoff):
     return sorted(set(out))
 
 
-def current_meds(bundle, cutoff, days=365):
+def current_meds(bundle, cutoff, days=365, outpatient_only=True):
+    """Medicines prescribed within `days` before the cutoff. By default, one-off drugs given during a
+    hospital or ER stay (status 'completed' on an inpatient encounter) are skipped; discharge
+    prescriptions from that stay are kept."""
     c = date.fromisoformat(cutoff)
     out = {}
     by_url = {e.get("fullUrl"): e["resource"] for e in bundle["entry"]}
     for r in resources(bundle, "MedicationRequest"):
         d = res_date(r)
+        if outpatient_only:
+            enc = by_url.get((r.get("encounter") or {}).get("reference", ""), {})
+            if (enc.get("class") or {}).get("code") in INPATIENT_CLASSES and r.get("status") == "completed":
+                continue
         if d and (c - date.fromisoformat(d)).days <= days:
             name = med_name(r, by_url)
             out[name] = max(out.get(name, ""), d)

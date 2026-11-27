@@ -1,6 +1,6 @@
 {
   "case_id": "c022",
-  "status": "todo",
+  "status": "draft",
   "reason": "heart_failure_symptoms",
   "heldout": true,
   "planned_tier": "emergent",
@@ -9,15 +9,31 @@
     "hooks": [],
     "later_dx": null
   },
-  "urgency": null,
-  "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
+  "urgency": "emergent",
+  "urgency_flags": [
+    "hf_breathless_rest"
+  ],
+  "urgency_rationale": "Breathless at rest, sleeping upright, crackles - decompensated heart failure; ER now.",
+  "question_type": "new_symptom_assessment",
+  "tests_first": [
+    "ecg"
+  ],
   "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "decision_facts": [
+    "egfr",
+    "obesity",
+    "prior_mi_cad",
+    "albumin",
+    "hemoglobin",
+    "tsh",
+    "weight",
+    "systolic_bp",
+    "potassium"
+  ],
+  "fit": "heart_failure",
+  "acceptable_fits": [
+    "general_cardiology"
+  ],
   "chart_dependent": false,
   "chart_hook_expectation": "",
   "helper": {
@@ -39,7 +55,7 @@
       "chest_xray": "out_of_date (last 2019-06-25)"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

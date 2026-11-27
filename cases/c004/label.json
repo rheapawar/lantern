@@ -1,6 +1,6 @@
 {
   "case_id": "c004",
-  "status": "todo",
+  "status": "draft",
   "reason": "chest_pain",
   "heldout": false,
   "planned_tier": "urgent",
@@ -11,17 +11,37 @@
     ],
     "later_dx": null
   },
-  "urgency": null,
-  "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency": "urgent",
+  "urgency_flags": [
+    "cp_new_or_worsening_exertional"
+  ],
+  "urgency_rationale": "New exertional chest pain, threshold falling week by week.",
+  "question_type": "new_symptom_assessment",
+  "tests_first": [
+    "ecg"
+  ],
+  "acceptable_options": [
+    "er_precautions",
+    "review_bp_lipid_meds"
+  ],
+  "decision_facts": [
+    "prior_mi_cad",
+    "hypertension",
+    "hyperlipidemia",
+    "egfr",
+    "ldl",
+    "a1c",
+    "systolic_bp",
+    "diastolic_bp",
+    "bp_meds",
+    "statin"
+  ],
+  "fit": "general_cardiology",
+  "acceptable_fits": [
+    "interventional"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Surface prior heart attack / coronary disease from the chart - raises the pre-test probability of angina.",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -33,7 +53,7 @@
       "ccta": "not_in_synthea"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }

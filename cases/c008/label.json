@@ -1,6 +1,6 @@
 {
   "case_id": "c008",
-  "status": "todo",
+  "status": "draft",
   "reason": "chest_pain",
   "heldout": false,
   "planned_tier": "routine",
@@ -11,17 +11,34 @@
     ],
     "later_dx": null
   },
-  "urgency": null,
+  "urgency": "routine",
   "urgency_flags": [],
-  "urgency_rationale": "",
-  "question_type": null,
-  "tests_first": [],
-  "acceptable_options": [],
-  "decision_facts": [],
-  "fit": null,
-  "acceptable_fits": [],
+  "urgency_rationale": "Post-prandial burning, antacid-responsive, normal ECG - likely reflux; reassurance question.",
+  "question_type": "concerns_despite_normal_tests",
+  "tests_first": [
+    "ecg",
+    "lipids",
+    "a1c"
+  ],
+  "acceptable_options": [
+    "review_bp_lipid_meds"
+  ],
+  "decision_facts": [
+    "hypertension",
+    "diabetes",
+    "egfr",
+    "ckd",
+    "ldl",
+    "systolic_bp",
+    "diastolic_bp",
+    "bp_meds"
+  ],
+  "fit": "econsult_enough",
+  "acceptable_fits": [
+    "general_cardiology"
+  ],
   "chart_dependent": true,
-  "chart_hook_expectation": "",
+  "chart_hook_expectation": "Surface kidney disease / eGFR before any contrast test.",
   "helper": {
     "note": "Generated from the cut chart to help labelling - not an answer.",
     "tests_first_status": {
@@ -33,7 +50,7 @@
       "ccta": "not_in_synthea"
     }
   },
-  "labeler": "",
+  "labeler": "claude-draft (unreviewed)",
   "reviewed_by": [],
-  "notes": ""
+  "notes": "DRAFT by Claude - needs a human (ideally a clinician) to confirm. Urgency, flags, fit, options and the hook expectation are judgment from the note + chart summary. tests_first and decision_facts were generated from the pathway file and the chart (pathway tests whose only_if holds, minus those done in their window; pathway decision facts found in the chart), so they partly mirror the pathway - prune or add from clinical judgment so the scorecard is not grading the pathway against itself."
 }
