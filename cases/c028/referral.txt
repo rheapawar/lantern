@@ -1,0 +1,4 @@
+Patient: 57 year old man.
+Background: Hyperlipidemia on simvastatin, otherwise no known heart history. He fainted twice this week, once at home and once getting out of his car, both brief with quick recovery.
+Question: ECG today shows complete heart block with a ventricular rate around 38. Could he be scheduled for a clinic appointment to discuss a pacemaker?
+Done so far: ECG today. Last labs (kidney function, potassium) in January were normal.

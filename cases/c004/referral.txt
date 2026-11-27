@@ -1,0 +1,4 @@
+Patient: 75 year old man.
+Background: Hypertension on lisinopril, amlodipine and hydrochlorothiazide; hyperlipidemia on simvastatin; COPD on fluticasone-salmeterol; known mitral regurgitation. For the past two weeks he gets chest pain when walking, which is new for him, and each week it comes on with less exertion.
+Question: Could you assess him for angina and advise on which test he needs first?
+Done so far: Lipids and basic labs today (LDL 98). A1c 5.9% last week. BP 99/55. No ECG yet.

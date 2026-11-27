@@ -1,0 +1,4 @@
+Patient: 55 year old man.
+Background: Hypertension on amlodipine and losartan, type 2 diabetes. For about a month he has had burning discomfort in his chest after larger meals, often with an acid taste, better with antacids. Not brought on by exertion.
+Question: ECG in clinic today was normal, but he is still worried it is his heart. Is further cardiac testing warranted, or can I reassure him and treat for reflux?
+Done so far: ECG today, normal sinus rhythm, no ischemic changes. Basic labs and CBC in April. Started a trial of a PPI.

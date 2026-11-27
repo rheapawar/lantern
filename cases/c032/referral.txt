@@ -1,0 +1,4 @@
+Patient: 48 year old man.
+Background: Obstructive sleep apnea, otherwise healthy and active. Pre-operative ECG for an upcoming elective procedure shows an isolated right bundle branch block. He has no symptoms: no chest discomfort, palpitations, or dizziness.
+Question: Is an isolated RBBB significant in an asymptomatic patient, and does he need any cardiac testing before surgery?
+Done so far: ECG only. BP 122/85, heart rate 61.

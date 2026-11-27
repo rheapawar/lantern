@@ -1,0 +1,4 @@
+Patient: 74 year old woman.
+Background: Hypertension on hydrochlorothiazide, hyperlipidemia on simvastatin. Over the past few months she gets mildly short of breath going up a flight of stairs or walking briskly. She has been much less active since the winter and I suspect deconditioning. No swelling, no chest pain.
+Question: Can you help rule out heart failure as the cause of her exertional breathlessness? Would you want a BNP and an echo first, or is a trial of graded exercise reasonable?
+Done so far: Kidney panel, potassium and A1c (5.9%) two weeks ago, all unremarkable. BP 126/77.

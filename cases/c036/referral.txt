@@ -1,0 +1,4 @@
+Patient: 42 year old man.
+Background: Hypertension on hydrochlorothiazide, amlodipine and lisinopril; hyperlipidemia on simvastatin. BP today 210/125 on repeat. Since this morning he has been confused about the date and reports blurred vision.
+Question: Can he be seen in cardiology at the earliest available appointment to get his blood pressure under control?
+Done so far: Kidney function checked today. Advised him to take all his medicines as prescribed.

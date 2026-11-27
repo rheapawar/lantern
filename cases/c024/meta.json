@@ -5,5 +5,5 @@
   "referral_date": "2026-05-01",
   "patient_id": "a5775c52-8ae5-e37c-3539-7113903ec772",
   "referral_visit_id": "a5775c52-8ae5-e37c-2b84-b6e0305b4e7d",
-  "referral_note_written": false
+  "referral_note_written": true
 }

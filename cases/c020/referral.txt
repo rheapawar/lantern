@@ -1,0 +1,4 @@
+Patient: 64 year old woman.
+Background: Hypertension, type 2 diabetes on insulin, hyperlipidemia on simvastatin, knee osteoarthritis. Swelling in both ankles for a few months; otherwise she feels well. No shortness of breath, sleeps flat.
+Question: Could this be her heart? Does she need a cardiac workup, and if so, what would you start with?
+Done so far: Labs at today's visit, potassium 5.0. BP 116/90, HR 90.

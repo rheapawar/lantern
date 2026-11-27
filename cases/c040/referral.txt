@@ -1,0 +1,4 @@
+Patient: 81 year old woman.
+Background: Hyperlipidemia on simvastatin, osteoporosis on alendronate. Came in today with a sore throat; BP was 188/122 and 186/120 on recheck. She denies chest pain or confusion, no headache or vision change, and otherwise feels well.
+Question: I started amlodipine 5 mg today. Could she be seen in cardiology within the next couple of weeks for help getting her blood pressure under control?
+Done so far: Kidney function and potassium in August were normal. Asked her to check her BP at home daily.

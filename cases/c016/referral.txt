@@ -1,0 +1,4 @@
+Patient: 83 year old woman.
+Background: Hypertension on lisinopril, ischemic heart disease, osteoporosis. Yesterday she had a spell of her heart racing and passed out briefly in her kitchen; her daughter found her on the floor and she came to within a minute. She has had a few shorter episodes of palpitations over the past month.
+Question: Could she be booked into cardiology for a rhythm assessment? Happy to arrange a monitor in the meantime if that helps.
+Done so far: Annual exam today. BP 127/70, HR 69. Electrolytes and kidney function today normal.

@@ -1,0 +1,4 @@
+Patient: 80 year old man.
+Background: Asthma on fluticasone and albuterol, no known heart problems. Three weeks of palpitations, and over the last week new swelling in both ankles and he gets breathless going up stairs, which he managed fine before.
+Question: Could he be evaluated for an arrhythmia and possible heart failure, and what would you like done before the visit?
+Done so far: BP 124/85, HR 77 at today's visit. ECG and bloodwork ordered today.
