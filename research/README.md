@@ -21,7 +21,7 @@ BP refs (2025 AHA/ACC BP guideline, Circulation 2025;152:e114-e218) were re-veri
 | 2025 AHA/ACC High Blood Pressure guideline | US, 2025 | Full text; ACC Ten Points; ACC journal scan; 2 Minute Medicine; NephJC; Medical Dialogues | - |
 | 2021 AHA/ACC Chest Pain guideline | US, 2021 | ACC Ten Points; AAFP 2023 summary; ACC imaging takeaways 2022; ACC contrast-media article 2025 | Full text: recommendation numbers, outpatient labs, CKD/contrast wording |
 | 2023 ACC/AHA/ACCP/HRS AF guideline | US, 2023 | ACC Ten Points; ACC Cardiology Magazine primer 2024; ACC news summary; Europace review of 2024 ESC AF | Full text: initial evaluation, unstable AF, WPW, rate control, monitoring |
-| 2022 AHA/ACC/HFSA HF guideline | US, 2022 | Abstract; ACC Key Perspectives; HelixTalk summary; ACC iron-deficiency Key Points; AHA newsroom summary | Full text: 7.3.1 sodium, drugs to avoid, initial workup, iron class, repeat-LVEF recommendation |
+| 2022 AHA/ACC/HFSA HF guideline | US, 2022 | Full text (sections 1-14, Tables 1-33) | - |
 | 2018 ACC/AHA/HRS Bradycardia guideline | US, 2018 | ACC news summary | Full text and ACC Ten Points |
 | 2010 AHA/ACCF Torsade de Pointes statement | US, 2010 | Secondary excerpts of the summary table | Full text |
 | 2018 AHA/ACC Cholesterol guideline (superseded) | US, 2018 | AAFP 2019 summary (lipid repeat intervals) | Full text |

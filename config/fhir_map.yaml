@@ -36,7 +36,8 @@ tests:
   echo: {procedure_sct: ["40701008", "433236007"]}
   chest_xray: {procedure_sct: ["399208008"]}
   ambulatory_monitor: {procedure_sct: ["710839006"]}
-  stress_or_ccta: {procedure_sct: ["76746007"]}
+  stress_test: {procedure_sct: ["76746007"]}
+  ccta: {}   # coronary CT angiography - not recorded in Synthea, so never shows as done
 
 # Where to find each fact. The pathway uses these ids in decision_facts and in threshold rules (chart_obs).
 facts:
