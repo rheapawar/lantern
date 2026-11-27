@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lantern.local/schemas/pathway.schema.json",
+  "title": "Lantern specialty pathway file",
+  "description": "Shape of pathways/<specialty>.json. Cross-references (ids that must exist elsewhere) are checked in tests/test_pathway.py",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specialty", "version", "tiers", "tier_order", "fits", "sources", "facts", "tests", "options", "reasons"],
+  "properties": {
+    "specialty": {"type": "string"},
+    "version": {"type": "string"},
+    "lookup_file": {"type": "string"},
+    "review_status": {"type": "string"},
+    "reviewed_by": {"type": "array", "items": {"type": "string"}},
+    "review_questions": {"$ref": "#/$defs/strings"},
+    "tiers": {"type": "object", "additionalProperties": {"type": "string"}},
+    "tier_order": {"$ref": "#/$defs/strings"},
+    "fits": {"type": "object", "additionalProperties": {"type": "string"}},
+    "sources": {"type": "object", "additionalProperties": {"$ref": "#/$defs/source_entry"}},
+    "facts": {"type": "object", "additionalProperties": {
+      "type": "object", "additionalProperties": false, "required": ["text"],
+      "properties": {"text": {"type": "string"}}}},
+    "tests": {"type": "object", "additionalProperties": {"$ref": "#/$defs/test_entry"}},
+    "options": {"type": "object", "additionalProperties": {"$ref": "#/$defs/option_entry"}},
+    "reasons": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/reason"}}
+  },
+  "$defs": {
+    "strings": {"type": "array", "items": {"type": "string"}},
+    "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "sourced": {
+      "required": ["source"],
+      "properties": {"source": {"type": "string"}, "ref": {"type": "string"}, "source_note": {"type": "string"}}
+    },
+    "source_entry": {
+      "type": "object", "additionalProperties": false, "required": ["title", "checked"],
+      "properties": {
+        "title": {"type": "string"}, "region": {"type": "string"}, "year": {"type": "integer"},
+        "updated": {"type": "string"}, "kind": {"type": "string"}, "doi": {"type": "string"},
+        "summary_url": {"type": "string"}, "checked": {"type": "boolean"}, "checked_note": {"type": "string"}
+      }
+    },
+    "test_entry": {
+      "type": "object", "additionalProperties": false, "required": ["name", "recency"],
+      "properties": {
+        "name": {"type": "string"}, "note": {"type": "string"},
+        "recency": {
+          "type": "object", "additionalProperties": false, "required": ["valid_days", "source", "stale_if"],
+          "properties": {
+            "valid_days": {"type": ["integer", "null"], "minimum": 1},
+            "source": {"type": "string"}, "ref": {"type": "string"}, "note": {"type": "string"},
+            "stale_if_source": {"type": "string"}, "stale_if_ref": {"type": "string"},
+            "stale_if": {"$ref": "#/$defs/strings"}
+          },
+          "dependentRequired": {"stale_if_source": ["stale_if_ref"]}
+        }
+      }
+    },
+    "fact_group": {
+      "type": "object", "additionalProperties": false, "required": ["group", "facts"],
+      "properties": {
+        "group": {"type": "string"}, "why": {"type": "string"},
+        "facts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+        "source": {"type": "string"}, "ref": {"type": "string"}, "source_note": {"type": "string"}
+      }
+    },
+    "option_entry": {
+      "type": "object", "additionalProperties": false, "$ref": "#/$defs/sourced",
+      "required": ["text", "kind", "decision_facts"],
+      "properties": {
+        "text": {"type": "string"},
+        "kind": {"enum": ["advice", "med_review", "specialist_decision"]},
+        "source": {"type": "string"}, "ref": {"type": "string"}, "source_note": {"type": "string"},
+        "decision_facts": {"type": "array", "items": {"$ref": "#/$defs/fact_group"}}
+      }
+    },
+    "flag": {
+      "type": "object", "additionalProperties": false, "$ref": "#/$defs/sourced",
+      "required": ["id", "text", "match"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "text": {"type": "string"}, "match": {"$ref": "#/$defs/cond"},
+        "source": {"type": "string"}, "ref": {"type": "string"}, "source_note": {"type": "string"}
+      }
+    },
+    "routing_rule": {
+      "type": "object", "additionalProperties": false, "$ref": "#/$defs/sourced",
+      "required": ["id", "if", "suggest_fit", "note"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "if": {"$ref": "#/$defs/cond"},
+        "suggest_fit": {"type": ["string", "null"]}, "note": {"type": "string"},
+        "source": {"type": "string"}, "ref": {"type": "string"}, "source_note": {"type": "string"}
+      }
+    },
+    "test_ref": {
+      "type": "object", "additionalProperties": false, "$ref": "#/$defs/sourced",
+      "required": ["test"],
+      "properties": {
+        "test": {"$ref": "#/$defs/id"}, "only_if": {"$ref": "#/$defs/cond"},
+        "source": {"type": "string"}, "ref": {"type": "string"}, "source_note": {"type": "string"}
+      }
+    },
+    "obs": {
+      "type": "object", "additionalProperties": false, "required": ["fact", "op"],
+      "properties": {
+        "fact": {"$ref": "#/$defs/id"},
+        "op": {"enum": ["<", "<=", ">", ">=", "between", "outside"]},
+        "value": {"type": "number"},
+        "range": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+        "within_days": {"type": "integer", "minimum": 1}
+      },
+      "if": {"properties": {"op": {"enum": ["between", "outside"]}}},
+      "then": {"required": ["range"], "not": {"required": ["value"]}},
+      "else": {"required": ["value"], "not": {"required": ["range"]}}
+    },
+    "cond": {
+      "type": "object", "minProperties": 1, "maxProperties": 1,
+      "properties": {
+        "all": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/cond"}},
+        "any": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/cond"}},
+        "not": {"$ref": "#/$defs/cond"},
+        "text_any": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "text_regex": {"type": "string", "minLength": 1},
+        "fact_present": {"$ref": "#/$defs/id"},
+        "fact_count": {
+          "type": "object", "additionalProperties": false, "required": ["fact", "op", "value"],
+          "properties": {"fact": {"$ref": "#/$defs/id"}, "op": {"enum": ["<", "<=", ">", ">=", "=="]}, "value": {"type": "integer"}}
+        },
+        "chart_obs": {"$ref": "#/$defs/obs"}
+      },
+      "additionalProperties": false
+    },
+    "reason": {
+      "type": "object", "additionalProperties": false,
+      "required": ["label", "sources", "red_flags", "urgent_flags", "decision_facts", "tests_first", "interim_options", "subspecialty", "fit_choices", "not_seen"],
+      "properties": {
+        "label": {"type": "string"},
+        "sources": {"$ref": "#/$defs/strings"},
+        "red_flags": {"type": "array", "items": {"$ref": "#/$defs/flag"}},
+        "urgent_flags": {"type": "array", "items": {"$ref": "#/$defs/flag"}},
+        "soon_flags": {"type": "array", "items": {"$ref": "#/$defs/flag"}},
+        "card_hints": {"type": "array", "items": {"$ref": "#/$defs/flag"}},
+        "decision_facts": {"type": "array", "items": {"$ref": "#/$defs/fact_group"}},
+        "tests_first": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/test_ref"}},
+        "tests_not_prechecked": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "interim_options": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "subspecialty": {"$ref": "#/$defs/id"},
+        "fit_choices": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+        "routing_rules": {"type": "array", "items": {"$ref": "#/$defs/routing_rule"}},
+        "not_seen": {"$ref": "#/$defs/strings"},
+        "low_concern_findings": {"$ref": "#/$defs/strings"},
+        "review_notes": {"$ref": "#/$defs/strings"}
+      }
+    }
+  }
+}

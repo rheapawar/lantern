@@ -354,7 +354,7 @@
       ],
       "soon_flags": [
         {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)", "source": "nice_ng106", "ref": "1.2.4",
-         "match": {"chart_obs": {"fact": "nt_probnp", "op": "between", "value": [400, 2000], "within_days": 90}}}
+         "match": {"chart_obs": {"fact": "nt_probnp", "op": "between", "range": [400, 2000], "within_days": 90}}}
       ],
       "decision_facts": [
         {"group": "NT-proBNP value and date", "why": "NICE uses it to set urgency: over 2,000 ng/L, specialist + echo within 2 weeks; 400-2,000, within 6 weeks. Under 400 in an untreated person makes heart failure less likely - review other causes, and discuss with a heart failure specialist if still concerned", "source": "nice_ng106", "ref": "1.2.2-1.2.6",

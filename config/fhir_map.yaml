@@ -14,7 +14,7 @@
 version: 0.1
 source_system: synthea_fhir_r4
 
-# Tests: a test counts as done if any of these records exists (recency rules come later).
+# Tests: a test counts as done if any of these records exists within its window (pathway tests.<id>.recency).
 tests:
   ecg: {procedure_sct: ["29303009", "268400002"]}
   ecg_compare_prior: {procedure_sct: ["29303009", "268400002"]}
