@@ -27,7 +27,7 @@ tests:
   cbc: {loinc: ["718-7", "6690-2", "777-3"], procedure_sct: ["104091002"]}
   liver_panel: {loinc: ["1742-6", "1920-8", "1975-2"]}
   tsh: {loinc: ["3016-3"]}
-  nt_probnp: {loinc: ["33762-6", "71425-3"]}
+  nt_probnp: {loinc: ["33762-6"]}   # 71425-3 dropped: Synthea values are all 1-2 "pg/mL" (implausible; would read as falsely low)
   iron_studies: {loinc: ["2276-4", "2502-3"]}
   urinalysis: {loinc: ["5794-3", "5799-2", "5792-7"]}
   urine_albumin: {loinc: ["14959-1"]}
@@ -62,12 +62,12 @@ facts:
   alcohol_use: {conditions: ["alcohol"]}
   bleeding_history: {conditions: ["bleeding", "hemorrhage"]}
   thyroid_disease: {conditions: ["hyperthyroidism", "hypothyroidism"]}
-  egfr: {loinc: ["33914-3", "2160-0", "38483-4"]}
+  egfr: {loinc: ["33914-3", "62238-1", "98979-8"]}   # eGFR only; creatinine (2160-0, 38483-4) is in kidney_panel, not here
   potassium: {loinc: ["2823-3", "6298-4"]}
   magnesium: {loinc: ["19123-9", "21377-7"]}
   calcium: {loinc: ["17861-6", "49765-1"]}
   tsh: {loinc: ["3016-3"]}
-  nt_probnp: {loinc: ["33762-6", "71425-3"]}
+  nt_probnp: {loinc: ["33762-6"]}   # 71425-3 dropped: Synthea values are all 1-2 "pg/mL" (implausible; would read as falsely low)
   hemoglobin: {loinc: ["718-7"]}
   iron: {loinc: ["2276-4", "2502-3"]}
   albumin: {loinc: ["1751-7"]}

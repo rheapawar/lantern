@@ -4,3 +4,7 @@ output/
 __pycache__/
 CLAUDE.md
 .claude/agents/guideline-research.md
+# case builder output (regenerate with build_cases.py; synthetic chart copies)
+cases/*/bundle.json
+
+writer_packet.zip
