@@ -21,6 +21,7 @@ def _load(path):
 SCHEMA = _load(os.path.join(ROOT, "pathways", "schema.json"))
 PATHWAYS = sorted(p for p in glob.glob(os.path.join(ROOT, "pathways", "*.json")) if not p.endswith("schema.json"))
 FHIR_MAP = _load(os.path.join(ROOT, "config", "fhir_map.yaml"))
+NOTE_METRICS = _load(os.path.join(ROOT, "config", "note_metrics.yaml"))
 LOOKUP_KINDS = {"loinc", "procedure_sct", "conditions", "meds", "age", "sex", "smoking", "referral_text"}
 REQUIRED_TIERS = ["emergent", "urgent", "soon", "routine"]
 FLAG_LISTS = ["red_flags", "urgent_flags", "soon_flags", "card_hints"]
@@ -159,6 +160,8 @@ class PathwayFile(unittest.TestCase):
                         self.assertIn(v["fact"], facts)
                         if v.get("range"):
                             self.assertLess(v["range"][0], v["range"][1])
+                    elif kind == "text_obs":
+                        self.assertIn(v["fact"], NOTE_METRICS["metrics"], "text_obs fact missing from config/note_metrics.yaml")
                     elif kind == "text_regex":
                         re.compile(v)
                     elif kind == "text_any":

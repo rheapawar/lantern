@@ -1,0 +1,30 @@
+# How measurements are labelled in referral notes (read by lantern/matcher.py, condition `text_obs`).
+# Only the NAMES live here. The grammar is general and lives in the matcher:
+#   values      140, 1,750, 0.52, decades like 130s / "high 30s"
+#   BP pairs    190/110, "190 over 110", 190s/110s  -> systolic_bp + diastolic_bp
+#   timing      "today", "yesterday", "last month", "3 weeks ago", "in 2019" -> age in days
+#   latest wins newest reading by age; same age -> the one written last
+# Names come from the number patterns already in pathways/cardiology.json (no new vocabulary),
+# plus SBP/systolic and DBP/diastolic for split BP readings.
+#
+#   names        words that label a reading ("hr 140", "heart rate of 118")
+#   names_regex  same, as a regex (for spellings like nt-pro-bnp / ntprobnp)
+#   units_after  units that mark a reading even without a name ("150 bpm")
+#   scale        unit -> multiplier to the stored unit ("0.52 s" -> 520 ms)
+#   range        plausible values; anything outside is not this measurement
+#   not_followed_by  words that turn a name into a different measurement ("pulse ox" is not a pulse)
+
+version: 0.1
+
+bp_pair: [systolic_bp, diastolic_bp]
+
+metrics:
+  systolic_bp:  {names: ["sbp", "systolic"], range: [60, 300]}
+  diastolic_bp: {names: ["dbp", "diastolic"], range: [30, 200]}
+  heart_rate:   {names: ["hr", "heart rate", "pulse", "ventricular rate", "rate", "rates"],
+                 units_after: ["bpm", "beats"], range: [15, 300],
+                 # "pulse ox" / "pulse oximetry" is oxygen saturation (%), not heart rate
+                 # (research/vocabulary.md, W-oximetry)
+                 not_followed_by: ["ox", "oximetry", "oximeter"]}
+  qtc:          {names: ["qtc", "qt"], scale: {s: 1000, sec: 1000, seconds: 1000}, range: [250, 800]}
+  nt_probnp:    {names_regex: "nt-?pro-?bnp|probnp", range: [1, 100000]}

@@ -21,6 +21,7 @@
   },
 
   "tier_order": ["emergent", "urgent", "soon", "routine"],
+  "explained_cue": {"tiers": ["urgent", "soon"], "own_cause_terms": ["heart", "cardiac", "chf", "hf", "af", "afib", "a-fib", "atrial fibrillation", "arrhythmia", "cardiomyopathy", "valve", "fluid", "volume overload"], "note": "A symptom the note pins on another cause in the same clause ('knee swollen from an arthritis flare', 'SOB ... from asthma') does not count toward flags in these tiers. Never applies to red flags. Hedged causes ('likely from', '? from', 'thought to be from') and causes naming the heart still count. Draft - needs clinician review."},
   "tiers": {
     "emergent": "Needs the ER now - not a referral. Card says 'advise ER now'.",
     "urgent": "Specialist within about 2 weeks (matches NICE's 2-week heart failure rule).",
@@ -287,7 +288,7 @@
       "urgent_flags": [
         {"id": "palp_new_af_rvr", "text": "New AFib with a fast rate", "source": "lantern_claude_md",
          "match": {"all": [{"text_any": ["atrial fibrillation", "afib", "a-fib", "a fib", "irregularly irregular"]},
-                           {"any": [{"text_any": ["fast", "rapid", "rvr", "racing"]}, {"text_regex": "\\b(?:hr|heart rate|pulse|ventricular rate|rates?)\\b\\s*(?:of|was|is|at|around|about|~|:|=|in the|up to|down to|as low as|as high as)?\\s*(?:11[1-9]|1[2-9]\\d|2\\d\\d)(?!\\d)|\\b(?:11[1-9]|1[2-9]\\d|2\\d\\d)(?!\\d)\\s*(?:bpm|beats)"}, {"chart_obs": {"fact": "heart_rate", "op": ">", "value": 110, "within_days": 1}}]}]}, "source_note": "Rate cutoff >110 at rest is a draft number for clinician review (not taken from a checked guideline section)."},
+                           {"any": [{"text_any": ["fast", "rapid", "rvr", "racing"]}, {"text_obs": {"fact": "heart_rate", "op": ">", "value": 110}}, {"chart_obs": {"fact": "heart_rate", "op": ">", "value": 110, "within_days": 1}}]}]}, "source_note": "Rate cutoff >110 at rest is a draft number for clinician review (not taken from a checked guideline section)."},
         {"id": "palp_heart_failure_signs", "text": "Palpitations with new swelling or breathlessness", "source": "draft",
          "match": {"all": [{"text_any": ["palpitations", "palpitation", "racing", "fluttering", "flutter", "pounding", "skipped beats", "irregular heartbeat", "heart racing"]}, {"text_any": ["swelling", "swollen", "edema", "oedema", "short of breath", "shortness of breath", "breathless", "sob", "winded", "dyspnea", "dyspnoea"]}]}}
       ],
@@ -344,14 +345,14 @@
       "urgent_flags": [
         {"id": "hf_ntprobnp_over_2000", "text": "NT-proBNP over 2,000 ng/L (NICE: specialist + echo within 2 weeks)", "source": "nice_ng106", "ref": "1.2.3",
          "match": {"any": [{"chart_obs": {"fact": "nt_probnp", "op": ">", "value": 2000, "within_days": 90}},
-                           {"text_regex": "(nt-?pro-?bnp|probnp)\\D{0,15}([2-9],?\\d{3}|\\d{2},?\\d{3})"}]}},
+                           {"text_obs": {"fact": "nt_probnp", "op": ">", "value": 2000, "within_days": 90}}]}},
         {"id": "hf_rapid_weight_gain", "text": "Fast weight gain or worsening swelling", "source": "lantern_claude_md",
          "match": {"text_any": ["gained", "weight gain", "lbs in", "pounds in", "kg in", "worsening swelling", "swelling getting worse", "more swollen"]}}
       ],
       "soon_flags": [
         {"id": "hf_ntprobnp_400_2000", "text": "NT-proBNP 400-2,000 ng/L (NICE: specialist + echo within 6 weeks)", "source": "nice_ng106", "ref": "1.2.4",
          "match": {"any": [{"chart_obs": {"fact": "nt_probnp", "op": "between", "range": [400, 2000], "within_days": 90}},
-                           {"text_regex": "(nt-?pro-?bnp|probnp)\\D{0,15}([4-9]\\d{2}|1,?\\d{3})(?!\\d)"}]}}
+                           {"text_obs": {"fact": "nt_probnp", "op": "between", "range": [400, 2000], "within_days": 90}}]}}
       ],
       "decision_facts": [
         {"group": "NT-proBNP value and date", "why": "NICE uses it to set urgency: over 2,000 ng/L, specialist + echo within 2 weeks; 400-2,000, within 6 weeks. Under 400 in an untreated person makes heart failure less likely - review other causes, and discuss with a heart failure specialist if still concerned", "source": "nice_ng106", "ref": "1.2.2-1.2.6",
@@ -407,20 +408,20 @@
         {"id": "ecg_high_grade_block_symptomatic", "text": "Complete or high-grade heart block with symptoms (fainting, dizziness, breathlessness)", "source": "lantern_claude_md", "source_note": "Tier not sourced; 'bifascicular', 'trifascicular' and '2:1 block' in the pattern are questionable for this flag.",
          "match": {"all": [{"text_any": ["2:1 block", "3rd degree", "bifascicular", "chb", "complete heart block", "high grade block", "high-grade block", "mobitz 2", "mobitz ii", "mobitz type 2", "mobitz type ii", "third degree", "third-degree", "trifascicular", "type ii second-degree"]}, {"text_any": ["dizzy", "lightheaded", "fainted", "syncope", "passed out", "near faint", "short of breath"]}]}},
         {"id": "ecg_very_slow_symptomatic", "text": "Very slow heart rate with fainting, near-fainting, confusion, low blood pressure, chest pain or breathlessness at rest", "source": "draft", "source_note": "Symptom list follows the ACLS adult bradycardia algorithm (signs of poor perfusion), cited from memory - not checked. No numeric 'very slow' rate in the checked guideline material; the cutoff <40 bpm is a draft number for clinician review.",
-         "match": {"all": [{"any": [{"text_any": ["bradycardia", "slow heart rate", "pause"]}, {"text_regex": "\\b(?:hr|heart rate|pulse|ventricular rate|rates?)\\b\\s*(?:of|was|is|at|around|about|~|:|=|in the|up to|down to|as low as|as high as)?\\s*[1-3]\\d(?!\\d)|\\b[1-3]\\d(?!\\d)\\s*(?:bpm|beats)"}, {"chart_obs": {"fact": "heart_rate", "op": "<", "value": 40, "within_days": 1}}]},
+         "match": {"all": [{"any": [{"text_any": ["bradycardia", "slow heart rate", "pause"]}, {"text_obs": {"fact": "heart_rate", "op": "<", "value": 40}}, {"chart_obs": {"fact": "heart_rate", "op": "<", "value": 40, "within_days": 1}}]},
                            {"any": [{"text_any": ["fainted", "fainting", "syncope", "passed out", "near faint", "near-faint", "nearly fainted", "almost fainted", "presyncope", "pre-syncope", "confused", "confusion", "low blood pressure", "hypotension", "hypotensive", "short of breath at rest", "breathless at rest"]}, {"text_regex": "\\bchest (pain|pressure|tightness|discomfort|heaviness|ache)\\b|\\b(pain|pressure|tightness|discomfort|heaviness|ache)\\b[^.;]{0,25}\\bchest\\b"}]}]}}
       ],
       "urgent_flags": [
-        {"id": "ecg_very_slow", "text": "Heart rate below 40 while awake, or a slow rate (awake or asleep) with dizziness or tiredness (check rate-slowing medicines, thyroid, potassium)", "source": "draft", "source_note": "Draft tier for clinician review. 2018 bradycardia guideline (ACC news summary): slow rates without symptoms usually need no treatment and nocturnal slowing alone is not a pacing indication - fit people and sleep can run below 40.", "match": {"any": [{"all": [{"text_regex": "\\b(?:hr|heart rate|pulse|ventricular rate|rates?)\\b\\s*(?:of|was|is|at|around|about|~|:|=|in the|up to|down to|as low as|as high as)?\\s*[1-3]\\d(?!\\d)|\\b[1-3]\\d(?!\\d)\\s*(?:bpm|beats)"}, {"not": {"text_any": ["asleep", "sleeping", "while sleeping", "during sleep", "in his sleep", "in her sleep", "in their sleep", "overnight", "at night", "nighttime", "night-time", "nocturnal", "sleep study"]}}]}, {"chart_obs": {"fact": "heart_rate", "op": "<", "value": 40, "within_days": 1}}, {"all": [{"any": [{"text_any": ["bradycardia", "slow heart rate", "pause", "pauses"]}, {"text_regex": "\\b(?:hr|heart rate|pulse|ventricular rate|rates?)\\b\\s*(?:of|was|is|at|around|about|~|:|=|in the|up to|down to|as low as|as high as)?\\s*[1-3]\\d(?!\\d)|\\b[1-3]\\d(?!\\d)\\s*(?:bpm|beats)"}]}, {"text_any": ["dizzy", "dizziness", "lightheaded", "light-headed", "tired", "fatigue", "fatigued", "exhausted"]}]}]}},
+        {"id": "ecg_very_slow", "text": "Heart rate below 40 while awake, or a slow rate (awake or asleep) with dizziness or tiredness (check rate-slowing medicines, thyroid, potassium)", "source": "draft", "source_note": "Draft tier for clinician review. 2018 bradycardia guideline (ACC news summary): slow rates without symptoms usually need no treatment and nocturnal slowing alone is not a pacing indication - fit people and sleep can run below 40.", "match": {"any": [{"all": [{"text_obs": {"fact": "heart_rate", "op": "<", "value": 40}}, {"not": {"text_any": ["asleep", "sleeping", "while sleeping", "during sleep", "in his sleep", "in her sleep", "in their sleep", "overnight", "at night", "nighttime", "night-time", "nocturnal", "sleep study"]}}]}, {"chart_obs": {"fact": "heart_rate", "op": "<", "value": 40, "within_days": 1}}, {"all": [{"any": [{"text_any": ["bradycardia", "slow heart rate", "pause", "pauses"]}, {"text_obs": {"fact": "heart_rate", "op": "<", "value": 40}}]}, {"text_any": ["dizzy", "dizziness", "lightheaded", "light-headed", "tired", "fatigue", "fatigued", "exhausted"]}]}]}},
         {"id": "ecg_high_grade_block", "text": "Mobitz II, 2:1, high-grade or complete heart block - even without symptoms (pacemaker usually indicated)", "source": "acc_brady_2018", "ref": "ACC summary", "source_note": "Supported: pacing recommended for acquired Mobitz II, high-grade or third-degree AV block not due to a reversible cause, regardless of symptoms. 'Urgent' tier is Lantern's judgment.",
          "match": {"text_any": ["mobitz ii", "mobitz 2", "mobitz type 2", "mobitz type ii", "second degree type 2", "second-degree type ii", "type ii second-degree", "type 2 second degree", "2:1 block", "high grade block", "high-grade block", "complete heart block", "third degree", "third-degree"]}},
         {"id": "ecg_new_lbbb", "text": "New left bundle branch block", "source": "lantern_claude_md",
          "match": {"all": [{"text_any": ["left bundle branch block", "lbbb"]}, {"text_any": ["new"]}]}},
         {"id": "ecg_long_qt", "text": "Long QT (QTc 500 or more is high risk)", "source": "aha_qt_2010", "source_note": "Partly supported (search excerpt only): QTc over 500 ms flags torsade risk, but the 2010 statement is about hospitalized patients.",
-         "match": {"any": [{"text_any": ["long qt", "prolonged qt", "qt prolongation"]}, {"text_regex": "\\bqtc?\\b[^.\\d]{0,30}\\b(5\\d\\d|[6-9]\\d\\d)\\b"}]}}
+         "match": {"any": [{"text_any": ["long qt", "prolonged qt", "qt prolongation"]}, {"text_obs": {"fact": "qtc", "op": ">=", "value": 500, "within_days": 90}}]}}
       ],
       "card_hints": [
-        {"id": "ecg_slow_during_sleep", "text": "Slow heart rate reported during sleep - often normal on its own; consider screening for sleep apnea", "source": "acc_brady_2018", "ref": "ACC news summary", "source_note": "Summary: nocturnal bradycardia alone is not a pacing indication and is an opportunity to screen for sleep apnea. Shown on the card only; never changes the tier.", "match": {"all": [{"any": [{"text_any": ["bradycardia", "slow heart rate", "pause", "pauses"]}, {"text_regex": "\\b(?:hr|heart rate|pulse|ventricular rate|rates?)\\b\\s*(?:of|was|is|at|around|about|~|:|=|in the|up to|down to|as low as|as high as)?\\s*[1-3]\\d(?!\\d)|\\b[1-3]\\d(?!\\d)\\s*(?:bpm|beats)"}]}, {"text_any": ["asleep", "sleeping", "while sleeping", "during sleep", "in his sleep", "in her sleep", "in their sleep", "overnight", "at night", "nighttime", "night-time", "nocturnal", "sleep study"]}]}}
+        {"id": "ecg_slow_during_sleep", "text": "Slow heart rate reported during sleep - often normal on its own; consider screening for sleep apnea", "source": "acc_brady_2018", "ref": "ACC news summary", "source_note": "Summary: nocturnal bradycardia alone is not a pacing indication and is an opportunity to screen for sleep apnea. Shown on the card only; never changes the tier.", "match": {"all": [{"any": [{"text_any": ["bradycardia", "slow heart rate", "pause", "pauses"]}, {"text_obs": {"fact": "heart_rate", "op": "<", "value": 40}}]}, {"text_any": ["asleep", "sleeping", "while sleeping", "during sleep", "in his sleep", "in her sleep", "in their sleep", "overnight", "at night", "nighttime", "night-time", "nocturnal", "sleep study"]}]}}
       ],
       "decision_facts": [
         {"group": "Earlier ECGs", "why": "The first question is whether the finding is new or old", "source": "lantern_claude_md",
@@ -464,16 +465,16 @@
       "red_flags": [
         {"id": "bp_emergency", "text": "BP over 180/120 with signs of organ damage: chest pain, confusion, vision change, severe headache, weakness, breathlessness (hypertensive emergency - ER)", "source": "aha_bp_2025", "ref": "6.2, Fig 9",
          "match": {"all": [
-           {"any": [{"text_regex": "\\b(18[1-9]|19\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
-                    {"text_regex": "\\b\\d{2,3}\\s*/\\s*(12[1-9]|1[3-9]\\d)\\b"},
+           {"any": [{"text_obs": {"fact": "systolic_bp", "op": ">", "value": 180, "within_days": 14}},
+                    {"text_obs": {"fact": "diastolic_bp", "op": ">", "value": 120, "within_days": 14}},
                     {"chart_obs": {"fact": "systolic_bp", "op": ">", "value": 180, "within_days": 14}},
                     {"chart_obs": {"fact": "diastolic_bp", "op": ">", "value": 120, "within_days": 14}}]},
            {"text_any": ["chest pain", "confusion", "confused", "vision change", "blurred vision", "vision loss", "severe headache", "weakness", "slurred", "short of breath", "shortness of breath"]}]}}
       ],
       "urgent_flags": [
         {"id": "bp_severe_no_symptoms", "text": "BP over 180/120 without signs of organ damage (severe hypertension - not an ER visit; outpatient medicine adjustment)", "source": "lantern_claude_md", "source_note": "Severe hypertension is defined in 2025 BP guideline 6.2 / Fig 9, which says treat in the outpatient setting with close follow-up within 4 weeks and no ED referral. The guideline gives no specialist-referral urgency, so the 'urgent' tier here is not guideline-backed (it came from the CLAUDE.md table and the old term 'hypertensive urgency').",
-         "match": {"any": [{"text_regex": "\\b(18[1-9]|19\\d|2\\d\\d)\\s*/\\s*\\d{2,3}\\b"},
-                           {"text_regex": "\\b\\d{2,3}\\s*/\\s*(12[1-9]|1[3-9]\\d)\\b"},
+         "match": {"any": [{"text_obs": {"fact": "systolic_bp", "op": ">", "value": 180, "within_days": 14}},
+                           {"text_obs": {"fact": "diastolic_bp", "op": ">", "value": 120, "within_days": 14}},
                            {"chart_obs": {"fact": "systolic_bp", "op": ">", "value": 180, "within_days": 14}},
                            {"chart_obs": {"fact": "diastolic_bp", "op": ">", "value": 120, "within_days": 14}}]}}
       ],

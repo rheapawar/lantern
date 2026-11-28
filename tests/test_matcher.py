@@ -167,6 +167,69 @@ class HeartRateRules(unittest.TestCase):
         self.assertEqual([], card_hints(PATHWAY, "abnormal_ecg", "HR 38 on routine ECG.", None))
 
 
+class TimingAndResolution(unittest.TestCase):
+    """Grammar: dated history, resolution later in the sentence, month words, and numbers."""
+
+    def test_month_names_are_whole_words(self):
+        self.assertIn("ecg_high_grade_block", fired("Third degree block, junctional rhythm on the strip."))
+        self.assertNotIn("hf_syncope", fired("Fainted on a hike in June, well since."))
+
+    def test_dated_more_than_90_days_back_is_history(self):
+        for note in ["Passed out at a wedding in 2018.", "Fainted as a teenager.", "Fainted twice last summer.",
+                     "Fainted 2 years ago."]:
+            self.assertNotIn("hf_syncope", fired(note), note)
+        for note in ["Fainted 2 weeks ago.", "Fainted yesterday.", "Has fainted three times since last month."]:
+            self.assertIn("hf_syncope", fired(note), note)
+
+    def test_resolved_later_in_the_sentence(self):
+        self.assertNotIn("hf_syncope", fired("Fainted after a long run, none since."))
+        self.assertNotIn("cp_ecg_ischemia", fired("ST depression during sepsis, follow-up ECG normal."))
+        # resolution of something else, after "but", does not cancel it
+        self.assertIn("cp_ecg_ischemia", fired("Chest pain resolved, but ECG shows ST depression."))
+
+    def test_number_forms(self):
+        from lantern.matcher import latest_reading
+        self.assertEqual(latest_reading("bp 200 over 115 today.", "systolic_bp"), 200)
+        self.assertEqual(latest_reading("sbp 190 sitting, diastolic 100.", "diastolic_bp"), 100)
+        self.assertEqual(latest_reading("readings in the 180s/100s.", "systolic_bp"), 185)
+        self.assertEqual(latest_reading("bp 200/115 two months ago, today 132/80.", "systolic_bp"), 132)
+        self.assertEqual(latest_reading("pulse in the low 40s.", "heart_rate"), 42)
+        self.assertEqual(latest_reading("qtc 0.51 s.", "qtc"), 510)
+        self.assertIsNone(latest_reading("on rate control for 30 years.", "heart_rate"))
+        self.assertIsNone(latest_reading("pain 8/10 since 11/02.", "systolic_bp"))
+        # "pulse ox" is oxygen saturation, not heart rate
+        self.assertIsNone(latest_reading("pulse ox 91 on room air.", "heart_rate"))
+        self.assertEqual(latest_reading("pulse 44, pulse oximetry 97%.", "heart_rate"), 44)
+
+
+
+class ExplainedByOtherCause(unittest.TestCase):
+    """'X from <other cause>' in the same clause: ignored for urgent/soon flags only, never red flags."""
+    F = "palp_heart_failure_signs"
+
+    def test_other_cause_quiets_urgent_flag(self):
+        self.assertNotIn(self.F, fired("Palpitations for two weeks. Ankle swelling due to a sprain."))
+        self.assertNotIn(self.F, fired("Palpitations. Breathless on hills from long-standing COPD."))
+
+    def test_heart_cause_still_counts(self):
+        self.assertIn(self.F, fired("Palpitations. Leg swelling from heart failure."))
+        self.assertIn(self.F, fired("Palpitations. Leg swelling from AF per cardiology letter."))
+
+    def test_hedged_cause_still_counts(self):
+        self.assertIn(self.F, fired("Palpitations. Ankle swelling likely from a sprain."))
+        self.assertIn(self.F, fired("Palpitations. Ankle swelling ? from a sprain."))
+        self.assertIn(self.F, fired("Palpitations. Breathless thought to be from COPD."))
+
+    def test_cause_does_not_reach_across_and(self):
+        self.assertIn(self.F, fired("Palpitations. Leg swelling and cough from a cold."))
+
+    def test_red_flags_ignore_the_cue(self):
+        self.assertEqual(floor("Palpitations; fainted from dehydration at the gym."), "emergent")
+
+    def test_cue_tiers_never_include_top_tier(self):
+        self.assertNotIn(PATHWAY["tier_order"][0], PATHWAY["explained_cue"]["tiers"])
+
+
 class ChartRules(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
