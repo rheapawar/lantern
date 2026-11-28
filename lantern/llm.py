@@ -142,6 +142,24 @@ def prepare(pathway, fmap, case, cfg):
 
 # --- Providers ---------------------------------------------------------------------------------------
 
+class QuotaExhausted(RuntimeError):
+    """The account is out of quota (daily cap, no credit). Retrying won't help: stop the run, resume later."""
+
+
+def strict_schema(schema):
+    """Copy of a JSON Schema with additionalProperties:false and every property required on each object
+    (OpenAI strict structured outputs need both; our schema already requires every property)."""
+    if isinstance(schema, dict):
+        out = {k: strict_schema(v) for k, v in schema.items()}
+        if out.get("type") == "object":
+            out["additionalProperties"] = False
+            out["required"] = sorted(out.get("properties", {}))
+        return out
+    if isinstance(schema, list):
+        return [strict_schema(v) for v in schema]
+    return schema
+
+
 class GeminiProvider:
     def __init__(self, cfg):
         from dotenv import load_dotenv
@@ -166,6 +184,8 @@ class GeminiProvider:
             try:
                 resp = self.client.models.generate_content(model=self.cfg["model"], contents=contents, config=config)
             except (errors.ClientError, errors.ServerError) as e:
+                if getattr(e, "code", None) == 429 and "per day" in str(e).lower():
+                    raise QuotaExhausted(f"Gemini daily quota for {self.cfg['model']} used up: {str(e)[:300]}") from e
                 retryable = getattr(e, "code", None) == 429 or isinstance(e, errors.ServerError)
                 if not retryable or attempt == self.cfg.get("max_retries", 5):
                     raise
@@ -177,7 +197,57 @@ class GeminiProvider:
                               "thinking": u.thoughts_token_count} if u else None}
 
 
-PROVIDERS = {"gemini": GeminiProvider}
+class OpenAIProvider:
+    """OpenAI Responses API with strict JSON-schema output. Data sent is synthetic (Synthea); store=False."""
+
+    def __init__(self, cfg, client=None):
+        self.cfg = cfg
+        if client is None:
+            from dotenv import load_dotenv
+            from openai import OpenAI
+            load_dotenv(os.path.join(ROOT, ".env"))
+            if not os.environ.get("OPENAI_API_KEY"):
+                raise RuntimeError("No OPENAI_API_KEY - add it to .env (see .env.example)")
+            client = OpenAI(max_retries=0, timeout=cfg.get("timeout_seconds", 600))   # retries are ours, below
+        self.client = client
+
+    def call(self, request, feedback=None):
+        import openai
+        messages = [{"role": "user", "content": request["user"]}]
+        if feedback:
+            messages.append({"role": "user", "content": feedback})   # previous answer + the verifier's errors
+        kwargs = {"model": self.cfg["model"], "instructions": request["system"], "input": messages, "store": False,
+                  "max_output_tokens": self.cfg.get("max_output_tokens"),
+                  "text": {"format": {"type": "json_schema", "name": "referral_card",
+                                      "schema": strict_schema(request["schema"]), "strict": True}}}
+        if self.cfg.get("reasoning_effort"):
+            kwargs["reasoning"] = {"effort": self.cfg["reasoning_effort"]}
+        if self.cfg.get("temperature") is not None:
+            kwargs["temperature"] = self.cfg["temperature"]
+        retries = self.cfg.get("max_retries", 5)
+        for attempt in range(retries + 1):
+            t0 = time.time()
+            try:
+                resp = self.client.responses.create(**kwargs)
+            except openai.RateLimitError as e:
+                if "insufficient_quota" in str(e):
+                    raise QuotaExhausted(f"OpenAI account out of quota/credit: {str(e)[:300]}") from e
+                if attempt == retries:
+                    raise
+            except (openai.InternalServerError, openai.APIConnectionError, openai.APITimeoutError):
+                if attempt == retries:
+                    raise
+            else:
+                u = resp.usage
+                reasoning = (getattr(u.output_tokens_details, "reasoning_tokens", 0) or 0) if u else 0
+                return {"text": resp.output_text, "model_version": resp.model, "seconds": round(time.time() - t0, 1),
+                        "usage": {"input": u.input_tokens, "output": u.output_tokens - reasoning,
+                                  "thinking": reasoning} if u else None,
+                        "incomplete": getattr(resp.incomplete_details, "reason", None) if resp.status == "incomplete" else None}
+            time.sleep(min(60, 5 * 2 ** attempt))
+
+
+PROVIDERS = {"gemini": GeminiProvider, "openai": OpenAIProvider}
 
 
 def make_provider(cfg):
