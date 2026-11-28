@@ -90,7 +90,7 @@ def main():
             raise SystemExit(f"plan.csv: bad planned_tier for {bad}")
         shutil.copy(plan_src, os.path.join(heldout, "plan.csv"))
     print(f"notes imported: {len(notes)}; plan rows: {len(rows) if os.path.exists(plan_src) else 0}")
-    print("next: python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir ../lantern-heldout")
+    print("next: python3 build_cases.py --shortlist ../lantern-heldout/heldout_v2.csv --cases-dir ../lantern-heldout")
 
 
 if __name__ == "__main__":

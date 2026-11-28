@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pick a FRESH held-out set (h001-h010) from charts not already used in selection/shortlist.csv.
 
-    python3 tools/pick_new_heldout.py              # writes selection/heldout_v2.csv
+    python3 tools/pick_new_heldout.py              # writes ../lantern-heldout/heldout_v2.csv (outside the repo: it holds later diagnoses)
     python3 tools/pick_new_heldout.py --seed 11
 
 Why: the first 10 held-out notes were visible while the red-flag phrases were tuned, so their
@@ -34,7 +34,7 @@ COLS = ["case_id", "reason", "heldout", "hooks", "later_dx", "later_dx_date", "a
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=2027)
-    ap.add_argument("--out", default=os.path.join(ROOT, "selection", "heldout_v2.csv"))
+    ap.add_argument("--out", default=os.path.join(os.path.dirname(ROOT), "lantern-heldout", "heldout_v2.csv"))
     args = ap.parse_args()
     rng = random.Random(args.seed)
 
@@ -72,7 +72,7 @@ def main():
             w.writerow(dict(c, case_id=f"h{i:03d}", heldout=True, hooks=";".join(c["hooks"]),
                             later_dx="", later_dx_date=""))
     print(f"wrote {args.out}: {len(picked)} cases ({', '.join(sorted({c['reason'] for c in picked}))})")
-    print("next: python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir ../lantern-heldout")
+    print("next: python3 build_cases.py --shortlist ../lantern-heldout/heldout_v2.csv --cases-dir ../lantern-heldout")
 
 
 if __name__ == "__main__":

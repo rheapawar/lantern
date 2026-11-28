@@ -20,3 +20,6 @@ cases/heldout/
 
 # raw LLM requests/responses per run (scorecards are saved separately)
 runs/
+
+# held-out selection lists hold later diagnoses (answer key) - keep them in ../lantern-heldout
+selection/heldout*.csv

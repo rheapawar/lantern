@@ -11,8 +11,8 @@ Held-out material stays outside the repo because a deny rule only blocks Claude 
 a `grep -r` or `cat` run through the shell would still read it. Outside the repo, routine searches
 never touch it. Back it up somewhere private (a separate private repo, or cloud storage) - not here.
 
-1. `python3 tools/pick_new_heldout.py` - picks h001-h010 from unused charts -> `selection/heldout_v2.csv`
-2. `python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir ../lantern-heldout` (needs `output/fhir/`)
+1. `python3 tools/pick_new_heldout.py` - picks h001-h010 from unused charts -> `../lantern-heldout/heldout_v2.csv`
+2. `python3 build_cases.py --shortlist ../lantern-heldout/heldout_v2.csv --cases-dir ../lantern-heldout` (needs `output/fhir/`)
 3. `python3 tools/make_writer_packet.py` - builds `../lantern-writer/`
 4. Open `../lantern-writer/` in a NEW VS Code window, new Claude Code chat: "Follow WRITER_PROMPT.md"
 5. `python3 tools/import_writer_output.py`, then step 2 again so the bundles carry the notes

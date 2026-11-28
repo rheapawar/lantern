@@ -2,7 +2,7 @@
 
     python3 build_cases.py            # all 40
     python3 build_cases.py c001 c007  # some
-    python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir ../lantern-heldout   # fresh held-out set (kept outside the repo)
+    python3 build_cases.py --shortlist ../lantern-heldout/heldout_v2.csv --cases-dir ../lantern-heldout   # fresh held-out set (kept outside the repo)
 
 Writes per case (re-runnable; never overwrites referral.txt or label.json):
   bundle.json        Synthea chart cut at the referral date + a ServiceRequest to cardiology
