@@ -243,8 +243,9 @@ def verify(answer, request, context, pathway, reason, floor, note, meds=None, fi
     for fid in [f for f in fired_flags if f not in answer["urgency_flags"]]:
         warnings.append(f"checklist flag '{fid}' fired but is not in urgency_flags (the card shows it anyway)")
     status = {t["id"]: t["status"] for t in context["tests"]}
-    for t in answer["tests"]:
-        if not t["include"] and status.get(t["test"]) in ("not_done", "out_of_date"):
+    prechecked = {t["id"] for t in context["tests"] if t.get("prechecked")}
+    for t in answer["tests"]:                  # only tests the pathway pre-ticks (not e.g. 'cardiology picks one')
+        if not t["include"] and t["test"] in prechecked and status.get(t["test"]) in ("not_done", "out_of_date"):
             warnings.append(f"test '{t['test']}' is {status[t['test']].replace('_', ' ')} but left unticked")
 
     if len(answer["summary"].split()) > SUMMARY_MAX_WORDS:

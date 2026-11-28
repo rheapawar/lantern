@@ -206,10 +206,19 @@ class Warnings(unittest.TestCase):
 
     def test_unticked_test_that_is_not_done(self):
         a = good()
-        not_done = next(t["id"] for t in PREP["context"]["tests"] if t["status"] == "not_done")
+        not_done = next(t["id"] for t in PREP["context"]["tests"] if t["status"] == "not_done" and t["prechecked"])
         next(t for t in a["tests"] if t["test"] == not_done)["include"] = False
         self.assertTrue([w for w in check(a)["warnings"] if "left unticked" in w])
         self.assertTrue(check(a)["ok"])                         # a warning, not an error
+
+    def test_no_warning_for_tests_the_pathway_leaves_unticked(self):
+        a = good()
+        not_pre = [t["id"] for t in PREP["context"]["tests"] if not t["prechecked"]]
+        self.assertTrue(not_pre)                                # chest pain: stress test / CCTA
+        for t in a["tests"]:
+            if t["test"] in not_pre:
+                t["include"] = False
+        self.assertEqual([w for w in check(a)["warnings"] if "left unticked" in w], [])
 
 
 class Urgency(unittest.TestCase):
