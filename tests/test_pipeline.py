@@ -155,3 +155,26 @@ class CardContract(unittest.TestCase):
         self.assertEqual(c.urgency.final, PREP["floor"])
         self.assertTrue(all(t.include is None for t in c.tests))
         self.assertEqual([f.id for f in c.urgency.checklist_flags], [h["id"] for h in PREP["flags"]])
+
+
+class QuotaStop(unittest.TestCase):
+    """Out of quota: stop the run at once, leave the rest unattempted, resume picks them up."""
+
+    def test_quota_stops_the_run_and_resume_continues(self):
+        from lantern.llm import QuotaExhausted
+
+        class OutOfQuota(FakeModel):
+            def call(self, request, feedback=None):
+                with self.lock:
+                    self.calls.append(request)
+                raise QuotaExhausted("daily cap")
+
+        with tempfile.TemporaryDirectory() as d:
+            kw = dict(loader=loader, state_fn=lambda: dict(CLEAN), log=lambda *a: None, root=d, min_seconds=0)
+            dead = OutOfQuota()
+            out = pipeline.run(["f1", "f2", "f3"], "q1", provider=dead, **kw)
+            self.assertEqual(len(dead.calls), 1)                       # no hopeless retries on the other cases
+            self.assertEqual(out["f1"], "error")
+            self.assertEqual((out["f2"], out["f3"]), (None, None))     # not attempted
+            out = pipeline.run(["f1", "f2", "f3"], "q1", provider=FakeModel(), **kw)
+            self.assertEqual(set(out.values()), {"verified"})
