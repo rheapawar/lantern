@@ -111,6 +111,60 @@ class TextRules(unittest.TestCase):
         self.assertEqual(floor("NT-proBNP 2,500."), "urgent")
 
 
+def hr_chart(bpm, when=REF_DATE):
+    """A chart with one heart-rate reading."""
+    rs = [{"resourceType": "Patient", "birthDate": "1960-01-01", "gender": "male"},
+          {"resourceType": "Observation", "effectiveDateTime": when, "code": {"coding": [{"code": "8867-4"}]},
+           "valueQuantity": {"value": bpm, "unit": "/min"}}]
+    bundle = {"resourceType": "Bundle", "entry": [{"fullUrl": f"urn:uuid:{i}", "resource": dict(r, id=str(i))}
+                                                  for i, r in enumerate(rs)]}
+    return Chart(bundle, FMAP, REF_DATE)
+
+
+class HeartRateRules(unittest.TestCase):
+    """Fast AFib (> 110) and very slow rate (< 40) with fainting: numbers in the note or the chart."""
+
+    def test_fast_af_from_note_numbers(self):
+        for note in ["New AFib, HR 140 at the visit.", "Atrial fibrillation with rates in the 130s.",
+                     "Afib, heart rate of 118.", "New afib, 150 bpm on the monitor."]:
+            self.assertIn("palp_new_af_rvr", fired(note), note)
+        for note in ["AFib, HR 72 and well controlled.", "Afib, heart rate 110 at rest.", "Afib, HR 1."]:
+            self.assertNotIn("palp_new_af_rvr", fired(note), note)
+
+    def test_fast_af_from_chart(self):
+        self.assertIn("palp_new_af_rvr", fired("New atrial fibrillation on ECG.", hr_chart(128)))
+        self.assertNotIn("palp_new_af_rvr", fired("New atrial fibrillation on ECG.", hr_chart(84)))
+        self.assertNotIn("palp_new_af_rvr", fired("New atrial fibrillation on ECG.", hr_chart(128, "2026-04-01")))
+
+    def test_slow_with_fainting(self):
+        for note in ["HR 38 and fainted at home.", "Passed out twice, pulse down to 35.", "Syncope, 32 bpm on ECG."]:
+            self.assertIn("ecg_very_slow_symptomatic", fired(note), note)
+        for note in ["HR 38, no fainting.", "Fainted once, HR 64.", "On rate control for 30 years, fainted once."]:
+            self.assertNotIn("ecg_very_slow_symptomatic", fired(note), note)
+        self.assertIn("ecg_very_slow_symptomatic", fired("Fainted at home yesterday.", hr_chart(36)))
+
+    def test_slow_with_other_serious_signs_is_emergent(self):
+        for note in ["HR 36 and confused this morning.", "Bradycardia to 35 with chest pain.",
+                     "Pulse 34, nearly fainted in the shower.", "Heart rate 38 with low blood pressure."]:
+            self.assertEqual(floor(note), "emergent", note)
+
+    def test_slow_without_serious_signs_is_urgent(self):
+        self.assertEqual(floor("HR 38 on routine ECG, feels fine."), "urgent")
+        self.assertEqual(floor("Sinus bradycardia with pauses, more tired and dizzy lately."), "urgent")
+        self.assertEqual(floor("Routine physical.", hr_chart(37)), "urgent")
+        for note in ["Sinus bradycardia, rate 52, asymptomatic.", "HR 64, feels fine."]:
+            self.assertEqual(floor(note), "routine", note)
+
+    def test_sleep_readings_need_more_context(self):
+        self.assertEqual(floor("Watch showed HR 38 overnight while asleep, feels fine."), "routine")
+        self.assertEqual(floor("Holter: rate down to 36 during sleep. Dizzy during the day."), "urgent")
+        self.assertEqual(floor("HR 37 at night, passed out on waking."), "emergent")
+        self.assertEqual(floor("HR 38 overnight.", hr_chart(36)), "urgent")  # awake clinic reading still counts
+        hints = {h["id"] for h in card_hints(PATHWAY, "abnormal_ecg", "Watch showed HR 38 overnight while asleep.", None)}
+        self.assertIn("ecg_slow_during_sleep", hints)
+        self.assertEqual([], card_hints(PATHWAY, "abnormal_ecg", "HR 38 on routine ECG.", None))
+
+
 class ChartRules(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
