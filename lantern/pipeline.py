@@ -170,8 +170,16 @@ def run(case_ids, run_id=None, workers=1, final=False, allow_dirty=False, provid
                           cfg.get("min_seconds_between_calls", 0) if min_seconds is None else min_seconds)
     lock = threading.Lock()
 
+    quota_hit = threading.Event()
+
     def one(cid):
+        if quota_hit.is_set():                 # out of quota: leave the rest unattempted for a later resume
+            return cid, None
         rec = run_case(loader(cid, final=final), pathway, fmap, cfg, paced, run_id, state)
+        last_err = (rec["outcome"]["attempts"] or [{}])[-1].get("error") or ""
+        if last_err.startswith("QuotaExhausted"):
+            quota_hit.set()
+            log(f"  {cid}: quota exhausted - stopping the run ({last_err[:160]})")
         _write_json(os.path.join(run_dir, f"{cid}.json"), rec)
         with lock:
             manifest["cases"][cid] = {"status": rec["status"], "request_hash": rec["request_hash"]}
@@ -187,9 +195,11 @@ def run(case_ids, run_id=None, workers=1, final=False, allow_dirty=False, provid
     _write_json(os.path.join(run_dir, "manifest.json"), manifest)
     statuses = {cid: manifest["cases"].get(cid, {}).get("status") for cid in case_ids}
     n_err = sum(1 for s in statuses.values() if s == ERROR)
+    n_skip = sum(1 for s in statuses.values() if s is None)
     log(f"done: {sum(1 for s in statuses.values() if s == 'verified')} verified, "
         f"{sum(1 for s in statuses.values() if s == 'needs_manual_review')} need review, {n_err} API errors"
-        + (f" - rerun with --run-id {run_id} to retry the errors" if n_err else ""))
+        + (f", {n_skip} not attempted (quota)" if n_skip else "")
+        + (f" - rerun with --run-id {run_id} to retry them" if n_err or n_skip else ""))
     return statuses
 
 
@@ -197,7 +207,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cases", nargs="*", help="case ids (default: all training cases, or all held-out with --final)")
     ap.add_argument("--run-id", help="resume this run (must match the current code)")
-    ap.add_argument("--workers", type=int, default=1, help="parallel cases; keep 1 on a free-tier key")
+    ap.add_argument("--workers", type=int, default=1, help="parallel cases (calls stay paced by min_seconds_between_calls)")
     ap.add_argument("--final", action="store_true", help="held-out run; written to $LANTERN_HELDOUT/runs/")
     ap.add_argument("--allow-dirty", action="store_true", help="run with uncommitted changes (not for scoring)")
     a = ap.parse_args()
