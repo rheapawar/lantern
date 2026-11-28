@@ -5,7 +5,9 @@ Held-out cases are never evaluated or printed here (overfitting guard, CLAUDE.md
 import csv
 import json
 import os
+import sys
 import unittest
+import warnings
 
 from lantern.chart import load_map
 from lantern.matcher import Chart, card_hints, evaluate, routing, tests_for, urgency_floor
@@ -211,13 +213,14 @@ class TrainingNotes(unittest.TestCase):
         with open(os.path.join(ROOT, "cases", "plan.csv")) as fh:
             plan = list(csv.DictReader(fh))
         order = PATHWAY["tier_order"]
-        under, over, checked = [], [], 0
+        under, over, checked, missing = [], [], 0, []
         for row in plan:
             cid = row["case_id"]
             if row["heldout"] == "True":
                 continue
             d = os.path.join(ROOT, "cases", cid)
             if not (os.path.exists(os.path.join(d, "referral.txt")) and os.path.exists(os.path.join(d, "bundle.json"))):
+                missing.append(cid)
                 continue
             label = _json(os.path.join(d, "label.json"))
             want = label["urgency"] or row["planned_tier"]
@@ -232,6 +235,16 @@ class TrainingNotes(unittest.TestCase):
                 over.append(f"{cid}: want {want}, floor {got}")
         print(f"\n  training notes checked: {checked}, over-called: {len(over)} {over}", end=" ")
         self.assertEqual([], under)
+        # bundle.json is gitignored (rebuilt from Synthea), so a fresh clone or CI has none and would pass
+        # having checked nothing. Say so loudly instead of passing silently.
+        fix = "regenerate Synthea output, then run: python3 build_cases.py"
+        if checked == 0:
+            msg = f"No training notes were checked: cases/*/bundle.json missing for all {len(missing)} cases; {fix}"
+            print(f"\n\n  Warning: {msg}\n", file=sys.stderr)
+            self.skipTest(msg)
+        if missing:
+            warnings.warn(f"{len(missing)} training notes NOT checked (no referral.txt/bundle.json): "
+                          f"{', '.join(missing)}; {fix}")
 
 
 if __name__ == "__main__":
