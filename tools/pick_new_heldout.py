@@ -72,7 +72,7 @@ def main():
             w.writerow(dict(c, case_id=f"h{i:03d}", heldout=True, hooks=";".join(c["hooks"]),
                             later_dx="", later_dx_date=""))
     print(f"wrote {args.out}: {len(picked)} cases ({', '.join(sorted({c['reason'] for c in picked}))})")
-    print("next: python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir cases/heldout")
+    print("next: python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir ../lantern-heldout")
 
 
 if __name__ == "__main__":

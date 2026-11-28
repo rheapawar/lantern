@@ -11,3 +11,6 @@ writer_packet.zip
 cases/referral_notes_c001-c040/
 cases/referral_notes_c001-c040.zip
 *:Zone.Identifier
+
+# held-out material lives in ../lantern-heldout; never commit it here
+cases/heldout/

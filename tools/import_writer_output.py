@@ -7,10 +7,12 @@
 What it does:
   - phrase_bank.yaml: checks every flag id exists, then splits the sentences ~80/20 with a stable hash.
       80% -> tests/flag_cases.yaml               (the tuning set; tests/test_flag_cases.py runs it)
-      20% -> cases/heldout/flag_cases_hidden.yaml  (never read while tuning; tools/score_hidden_bank.py
-                                                    scores it at checkpoints only)
-  - out/notes/hNNN.txt -> cases/heldout/hNNN/referral.txt
-  - out/plan.csv       -> cases/heldout/plan.csv
+      20% -> ../lantern-heldout/flag_cases_hidden.yaml  (OUTSIDE the repo; tools/score_hidden_bank.py
+                                                         scores it at checkpoints only)
+  - out/notes/hNNN.txt -> ../lantern-heldout/hNNN/referral.txt
+  - out/plan.csv       -> ../lantern-heldout/plan.csv
+Everything held out lives outside the repo so the tuning chat can't grep it by accident.
+Override the location with LANTERN_HELDOUT=/some/dir.
 Prints counts only - never sentence or note text - so running it inside Claude Code doesn't leak them.
 Then re-run build_cases.py for the held-out set so each bundle carries its note.
 """
@@ -25,6 +27,7 @@ import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HIDDEN_PCT = 20
+HELDOUT_DIR = os.environ.get("LANTERN_HELDOUT", os.path.join(os.path.dirname(ROOT), "lantern-heldout"))
 
 
 def hidden(sentence):
@@ -36,7 +39,7 @@ def main():
     ap.add_argument("--packet", default=os.path.join(os.path.dirname(ROOT), "lantern-writer"))
     a = ap.parse_args()
     src = os.path.join(a.packet, "out")
-    heldout = os.path.join(ROOT, "cases", "heldout")
+    heldout = HELDOUT_DIR
     os.makedirs(heldout, exist_ok=True)
 
     with open(os.path.join(ROOT, "pathways", "cardiology.json")) as fh:
@@ -87,7 +90,7 @@ def main():
             raise SystemExit(f"plan.csv: bad planned_tier for {bad}")
         shutil.copy(plan_src, os.path.join(heldout, "plan.csv"))
     print(f"notes imported: {len(notes)}; plan rows: {len(rows) if os.path.exists(plan_src) else 0}")
-    print("next: python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir cases/heldout")
+    print("next: python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir ../lantern-heldout")
 
 
 if __name__ == "__main__":

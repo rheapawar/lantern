@@ -18,12 +18,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from lantern.matcher import urgency_floor  # noqa: E402
 
+HELDOUT_DIR = os.environ.get("LANTERN_HELDOUT", os.path.join(os.path.dirname(ROOT), "lantern-heldout"))
+
 
 def main():
     label = " ".join(sys.argv[1:]) or "(no label)"
     with open(os.path.join(ROOT, "pathways", "cardiology.json")) as fh:
         p = json.load(fh)
-    with open(os.path.join(ROOT, "cases", "heldout", "flag_cases_hidden.yaml")) as fh:
+    with open(os.path.join(HELDOUT_DIR, "flag_cases_hidden.yaml")) as fh:
         bank = yaml.safe_load(fh) or {}
     tot = miss = fa = 0
     for fid, d in bank.items():

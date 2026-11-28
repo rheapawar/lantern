@@ -118,7 +118,7 @@ When done, list anything you weren't sure about in `out/questions.md`.
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(os.path.dirname(ROOT), "lantern-writer"))
-    ap.add_argument("--cases-dir", default=os.path.join(ROOT, "cases", "heldout"))
+    ap.add_argument("--cases-dir", default=os.environ.get("LANTERN_HELDOUT", os.path.join(os.path.dirname(ROOT), "lantern-heldout")))
     a = ap.parse_args()
     out = os.path.abspath(a.out)
     if out.startswith(ROOT + os.sep) or out == ROOT:
@@ -148,7 +148,7 @@ def main():
     assert not leaked, f"match rules leaked into flags.md: {leaked}"
     print(f"packet: {out}")
     print(f"  flags: {sum(len(r.get(k, [])) for r in pathway['reasons'].values() for k, _ in TIER_KEYS)}, "
-          f"charts: {len(charts)}" + ("" if charts else "  <- none yet: run pick_new_heldout.py + build_cases.py first"))
+          f"charts: {len(charts)}" + ("" if charts else "  <- none yet: run pick_new_heldout.py + build_cases.py --cases-dir ../lantern-heldout first"))
     print("next: open that folder in a NEW VS Code window, new Claude Code chat, say: Follow WRITER_PROMPT.md")
 
 
