@@ -1,0 +1,14 @@
+# Which LLM Lantern's single structured call uses. Changing provider/model needs no code change
+# beyond a provider class in lantern/llm.py. The API key is read from .env (never from this file).
+
+version: 0.1
+provider: gemini              # gemini (GEMINI_API_KEY in .env)
+model: gemini-3.8-flash       # pinned (aliases like gemini-flash-latest drift); each run also records model_version
+seed: 42                      # best-effort reproducibility between runs
+temperature: null             # null = the model's default (Google advises keeping the default on recent Gemini models)
+max_output_tokens: 16000      # includes the model's thinking tokens
+prompt: prompts/referral_card.md
+
+# Rate limiting / retries (free tier has a per-minute request cap)
+min_seconds_between_calls: 6
+max_retries: 5                # on 429 rate-limit and 5xx server errors, with backoff
