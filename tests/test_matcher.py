@@ -234,6 +234,8 @@ class TrainingNotes(unittest.TestCase):
             elif order.index(got) < order.index(want):
                 over.append(f"{cid}: want {want}, floor {got}")
         print(f"\n  training notes checked: {checked}, over-called: {len(over)} {over}", end=" ")
+        if checked == 0:
+            self.skipTest("no cases/*/bundle.json (gitignored) - run build_cases.py; NOTHING WAS CHECKED")
         self.assertEqual([], under)
         # bundle.json is gitignored (rebuilt from Synthea), so a fresh clone or CI has none and would pass
         # having checked nothing. Say so loudly instead of passing silently.

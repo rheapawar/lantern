@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./cases/heldout/**)",
+      "Edit(./cases/heldout/**)"
+    ]
+  }
+}

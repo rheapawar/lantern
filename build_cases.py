@@ -2,6 +2,7 @@
 
     python3 build_cases.py            # all 40
     python3 build_cases.py c001 c007  # some
+    python3 build_cases.py --shortlist selection/heldout_v2.csv --cases-dir cases/heldout   # fresh held-out set
 
 Writes per case (re-runnable; never overwrites referral.txt or label.json):
   bundle.json        Synthea chart cut at the referral date + a ServiceRequest to cardiology
@@ -137,9 +138,9 @@ def label_template(row, bundle, fmap, pathway, plan):
     }
 
 
-def build(row, fmap, pathway, plan=None):
+def build(row, fmap, pathway, plan=None, cases_dir=None):
     cid, cutoff = row["case_id"], row["referral_date"]
-    d = os.path.join(ROOT, "cases", cid)
+    d = os.path.join(cases_dir or os.path.join(ROOT, "cases"), cid)
     os.makedirs(d, exist_ok=True)
     full = load_bundle(os.path.join(ROOT, "output", "fhir", row["file"]))
     bundle, report = cut_at(full, cutoff)
@@ -167,21 +168,28 @@ def build(row, fmap, pathway, plan=None):
     return cid, len(full["entry"]), len(bundle["entry"]), meta["referral_note_written"]
 
 
-def main(ids):
+def main(ids, shortlist=None, cases_dir=None):
     fmap = load_map(os.path.join(ROOT, "config", "fhir_map.yaml"))
     with open(os.path.join(ROOT, "pathways", "cardiology.json")) as fh:
         pathway = json.load(fh)
-    with open(os.path.join(ROOT, "selection", "shortlist.csv")) as fh:
+    with open(shortlist or os.path.join(ROOT, "selection", "shortlist.csv")) as fh:
         rows = [r for r in csv.DictReader(fh) if not ids or r["case_id"] in ids]
-    plan_path = os.path.join(ROOT, "cases", "plan.csv")
+    cases_dir = os.path.join(ROOT, cases_dir) if cases_dir else os.path.join(ROOT, "cases")
+    plan_path = os.path.join(cases_dir, "plan.csv")
     plans = {}
     if os.path.exists(plan_path):
         with open(plan_path) as fh:
             plans = {p["case_id"]: p for p in csv.DictReader(fh)}
     for r in rows:
-        cid, n0, n1, has_note = build(r, fmap, pathway, plans.get(r["case_id"]))
+        cid, n0, n1, has_note = build(r, fmap, pathway, plans.get(r["case_id"]), cases_dir)
         print(f"{cid}: {n0} -> {n1} resources, note {'yes' if has_note else 'pending'}")
 
 
 if __name__ == "__main__":
-    main(set(sys.argv[1:]))
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("ids", nargs="*")
+    ap.add_argument("--shortlist", help="default selection/shortlist.csv")
+    ap.add_argument("--cases-dir", help="default cases/ (relative to the repo root)")
+    a = ap.parse_args()
+    main(set(a.ids), a.shortlist, a.cases_dir)
