@@ -206,38 +206,61 @@ def resources(bundle, rtype):
     return [e["resource"] for e in bundle["entry"] if e["resource"]["resourceType"] == rtype]
 
 
-def observations(bundle, loincs):
-    """[(date, value, unit, display)] for matching codes, including panel components (e.g. BP)."""
+def ref_of(r):
+    """'ResourceType/id' - the citation Lantern shows for a fact."""
+    return f"{r['resourceType']}/{r.get('id', '?')}"
+
+
+def observation_records(bundle, loincs):
+    """[{date, value, unit, display, ref}] for matching codes, including panel components (e.g. BP), oldest first."""
     out = []
     for r in resources(bundle, "Observation"):
         d = res_date(r)
-        if _codes(r.get("code")) & set(loincs) and "valueQuantity" in r:
-            q = r["valueQuantity"]; out.append((d, q.get("value"), q.get("unit"), _display(r["code"])))
-        for c in r.get("component", []):
-            if _codes(c.get("code")) & set(loincs) and "valueQuantity" in c:
-                q = c["valueQuantity"]; out.append((d, q.get("value"), q.get("unit"), _display(c["code"])))
-    return sorted(out, key=lambda x: x[0] or "")
+        parts = [r] + r.get("component", [])
+        for p in parts:
+            if _codes(p.get("code")) & set(loincs) and "valueQuantity" in p:
+                q = p["valueQuantity"]
+                out.append({"date": d, "value": q.get("value"), "unit": q.get("unit"),
+                            "display": _display(p["code"]), "ref": ref_of(r)})
+    return sorted(out, key=lambda x: x["date"] or "")
+
+
+def observations(bundle, loincs):
+    """[(date, value, unit, display)] for matching codes, including panel components (e.g. BP)."""
+    return [(o["date"], o["value"], o["unit"], o["display"]) for o in observation_records(bundle, loincs)]
+
+
+def procedure_records(bundle, codes):
+    """[{date, display, ref}] for matching procedure codes, oldest first."""
+    out = [{"date": res_date(r), "display": _display(r.get("code")), "ref": ref_of(r)}
+           for r in resources(bundle, "Procedure") if _codes(r.get("code")) & set(codes)]
+    return sorted(out, key=lambda x: x["date"] or "")
 
 
 def procedures(bundle, codes):
-    return sorted(res_date(r) for r in resources(bundle, "Procedure") if _codes(r.get("code")) & set(codes))
+    return sorted(p["date"] for p in procedure_records(bundle, codes))
 
 
-def active_conditions(bundle, cutoff):
-    """Display names of conditions active on the cutoff date. '(finding)' entries are skipped for matching."""
+def condition_records(bundle, cutoff):
+    """[{date, name, ref}] for conditions active on the cutoff date (not abated by then)."""
     out = []
     for r in resources(bundle, "Condition"):
         ab = (r.get("abatementDateTime") or "")[:10]
         if ab and ab <= cutoff:
             continue
-        out.append((res_date(r), _display(r.get("code"))))
-    return sorted(set(out))
+        out.append({"date": res_date(r), "name": _display(r.get("code")), "ref": ref_of(r)})
+    return sorted(out, key=lambda x: (x["date"] or "", x["name"]))
 
 
-def current_meds(bundle, cutoff, days=365, outpatient_only=True):
-    """Medicines prescribed within `days` before the cutoff. By default, one-off drugs given during a
-    hospital or ER stay (status 'completed' on an inpatient encounter) are skipped; discharge
-    prescriptions from that stay are kept."""
+def active_conditions(bundle, cutoff):
+    """Display names of conditions active on the cutoff date. '(finding)' entries are skipped for matching."""
+    return sorted({(c["date"], c["name"]) for c in condition_records(bundle, cutoff)})
+
+
+def med_records(bundle, cutoff, days=365, outpatient_only=True):
+    """[{name, date, ref}] - one per medicine, its latest prescription within `days` before the cutoff.
+    By default, one-off drugs given during a hospital or ER stay (status 'completed' on an inpatient
+    encounter) are skipped; discharge prescriptions from that stay are kept."""
     c = date.fromisoformat(cutoff)
     out = {}
     by_url = {e.get("fullUrl"): e["resource"] for e in bundle["entry"]}
@@ -247,10 +270,16 @@ def current_meds(bundle, cutoff, days=365, outpatient_only=True):
             enc = by_url.get((r.get("encounter") or {}).get("reference", ""), {})
             if (enc.get("class") or {}).get("code") in INPATIENT_CLASSES and r.get("status") == "completed":
                 continue
-        if d and (c - date.fromisoformat(d)).days <= days:
+        if d and d <= cutoff and (c - date.fromisoformat(d)).days <= days:
             name = med_name(r, by_url)
-            out[name] = max(out.get(name, ""), d)
-    return sorted(out.items())
+            if name not in out or d >= out[name]["date"]:
+                out[name] = {"name": name, "date": d, "ref": ref_of(r)}
+    return [out[n] for n in sorted(out)]
+
+
+def current_meds(bundle, cutoff, days=365, outpatient_only=True):
+    """[(name, latest date)] for medicines prescribed within `days` before the cutoff (see med_records)."""
+    return [(m["name"], m["date"]) for m in med_records(bundle, cutoff, days, outpatient_only)]
 
 
 def med_name(r, by_url):
