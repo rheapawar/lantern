@@ -1,14 +1,21 @@
-# Which LLM Lantern's single structured call uses. Changing provider/model needs no code change
-# beyond a provider class in lantern/llm.py. The API key is read from .env (never from this file).
+# Which LLM Lantern's single structured call uses. Switching provider/model is a config change here plus
+# a provider class in lantern/llm.py. API keys live in .env (never in this file).
 
-version: 0.1
-provider: gemini              # gemini (GEMINI_API_KEY in .env)
-model: gemini-3.8-flash       # pinned (aliases like gemini-flash-latest drift); each run also records model_version
-seed: 42                      # best-effort reproducibility between runs
-temperature: null             # null = the model's default (Google advises keeping the default on recent Gemini models)
-max_output_tokens: 16000      # includes the model's thinking tokens
+version: 0.2
+provider: openai               # openai (OPENAI_API_KEY in .env) | gemini (GEMINI_API_KEY)
+model: gpt-6.2-sol-healthcare  # undated alias - each card records the exact model_version that answered
+reasoning_effort: medium       # openai reasoning models: low | medium | high
+temperature: null              # null = the model's default
+max_output_tokens: 16000       # includes reasoning tokens
+timeout_seconds: 600
 prompt: prompts/referral_card.md
 
-# Rate limiting / retries (free tier has a per-minute request cap)
-min_seconds_between_calls: 6
-max_retries: 5                # on 429 rate-limit and 5xx server errors, with backoff
+# Rate limiting / retries
+min_seconds_between_calls: 2   # shared across workers (lantern/pipeline.py)
+max_retries: 5                 # on rate limits and 5xx, with backoff; out-of-quota stops the run at once
+
+# Previous provider (Gemini free tier capped at 20 requests/day - too few for a 30-case run):
+# provider: gemini
+# model: gemini-3.8-flash
+# seed: 42
+# min_seconds_between_calls: 6
