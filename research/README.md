@@ -13,6 +13,7 @@ BP refs (2025 AHA/ACC BP guideline, Circulation 2025;152:e114-e218) were re-veri
 - selection-rules.md - select_charts.py thresholds, CLAUDE.md hooks, scorecard targets
 - recency-windows.md - how long a prior test result stays "already done", per test, with what makes an older result stale
 - econsult-questions.md - what PCPs ask cardiology in eConsults (Chan, Liddy, Keely et al. 2018): question types used for note style and the label `question_type`
+- vocabulary.md - per flag: synonyms, abbreviations, lay phrasings, ECG/lab wording and look-alikes to exclude (MedlinePlus, AHA, CDC, LITFL, Wikipedia terminology pages); ambiguous terms flagged
 
 ## What each guideline was checked against
 | Guideline / source | Region, year | Checked against | Not yet checked |
