@@ -6,6 +6,9 @@ model side - every check is re-done here.
 Errors reject the answer (one retry with the errors, then "needs manual review"); warnings are shown.
 Whatever the model says, the final urgency is max(floor, model urgency) - red flags can only raise it.
 """
+import re
+from datetime import date
+
 import jsonschema
 
 from lantern.retriever import cited_refs
@@ -13,6 +16,91 @@ from lantern.retriever import cited_refs
 NEEDS_REVIEW = "needs_manual_review"
 VERIFIED = "verified"
 SUMMARY_MAX_WORDS = 20
+
+
+# --- Numbers in a statement must come from what it cites ---------------------------------------------
+ISO_DATE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
+NUMBER = re.compile(r"(?<![\w.])\d{1,3}(?:,\d{3})+(?![\d])|(?<![\w.])\d+(?:\.\d+)?")
+
+
+def _norm(text):
+    return " ".join(text.lower().split())
+
+
+def _numbers(text):
+    """[(value, decimals)] for every number written in `text` (1,750 -> 1750)."""
+    out = []
+    for m in NUMBER.finditer(text):
+        raw = m.group(0).replace(",", "")
+        out.append((float(raw), len(raw.split(".")[1]) if "." in raw else 0))
+    return out
+
+
+def _ref_sources(context):
+    """ref -> list of items carrying it (one BP panel record holds both systolic and diastolic)."""
+    out = {}
+    for f in context["facts"].values():
+        for it in f["items"]:
+            out.setdefault(it["ref"], []).append(it)
+    for t in context["tests"]:
+        if t.get("last"):
+            out.setdefault(t["last"]["ref"], []).append(t["last"])
+    return out
+
+
+def _allowed(items, cutoff):
+    """Numbers a statement may contain when citing these items: values (and numbers inside text values
+    like 'Diabetes mellitus type 2' or 'lisinopril 10 MG'), units, the record date and its age."""
+    vals, dates = set(), set()
+    for it in items:
+        for k in ("value", "unit", "display"):
+            v = it.get(k)
+            if isinstance(v, (int, float)) and not isinstance(v, bool):
+                vals.add(float(v))
+            elif isinstance(v, str):
+                vals |= {n for n, _ in _numbers(v)}
+        d = it.get("date")
+        if d:
+            dates.add(d)
+            y, mth, day = d.split("-")
+            vals |= {float(y), float(mth), float(day)}
+            days = (date.fromisoformat(cutoff) - date.fromisoformat(d)).days
+            months, years = round(days / 30.4), days / 365.25
+            vals |= {float(days), float(round(days / 7)), float(months), float(months - 1), float(months + 1),
+                     float(int(years)), float(round(years))}
+    return vals, dates
+
+
+def _matches(n, decimals, vals):
+    """n equals some allowed value as written to its own precision (129.73 may be written 129.7 or 130)."""
+    tol = 10 ** -decimals
+    return any(abs(n - v) < tol or round(v, decimals) == n for v in vals)
+
+
+def check_statement(fact_item, context, sources, note, cutoff):
+    """Errors for one cited fact: a note citation needs a real quote; every number in the statement must
+    come from the cited record (within rounding), its date, or - for the note - the quote."""
+    errs = []
+    stmt, ref = fact_item["statement"], fact_item["ref"]
+    if ref == context["note_ref"]:
+        q = _norm(fact_item.get("quote") or "")
+        if not q:
+            return [f"cites the referral note but gives no quote - put the note's exact words in quote"]
+        if q not in _norm(note):
+            return [f"quote '{fact_item['quote'][:60]}' is not in the referral note"]
+        vals, dates = {n for n, _ in _numbers(fact_item["quote"])}, set(ISO_DATE.findall(fact_item["quote"]))
+        dates = {"-".join(d) for d in dates}
+    else:
+        vals, dates = _allowed(sources.get(ref, []), cutoff)
+    for m in ISO_DATE.finditer(stmt):
+        if m.group(0) not in dates:
+            errs.append(f"date {m.group(0)} in the statement is not the date of {ref}")
+    for n, dec in _numbers(ISO_DATE.sub(" ", stmt)):
+        if not _matches(n, dec, vals):
+            shown = int(n) if dec == 0 else n
+            errs.append(f"number {shown} in the statement does not match {ref}"
+                        + (" or the quote" if ref == context["note_ref"] else "") + " - copy values exactly")
+    return errs
 
 
 def _flag_tiers(pathway):
@@ -35,7 +123,7 @@ def _exactly_once(got, want, kind):
     return errs
 
 
-def verify(answer, request, context, pathway, reason, floor):
+def verify(answer, request, context, pathway, reason, floor, note):
     """{'ok', 'errors', 'warnings'} for one parsed answer (None = the model's text was not valid JSON)."""
     if not isinstance(answer, dict):
         return {"ok": False, "errors": ["answer is not a JSON object"], "warnings": []}
@@ -48,8 +136,9 @@ def verify(answer, request, context, pathway, reason, floor):
     if errors:                       # shape is wrong; the checks below would only repeat it
         return {"ok": False, "errors": errors, "warnings": warnings}
 
-    # citations: the ref exists, and belongs to the fact it is cited for (the note may back any fact)
-    refs = cited_refs(context)
+    # citations: the ref exists and belongs to the fact (or is the note, with a real quote), and every
+    # number in the statement comes from what it cites
+    refs, sources = cited_refs(context), _ref_sources(context)
     for i, f in enumerate(answer["facts"]):
         if f["ref"] not in refs:
             errors.append(f"facts/{i}: ref '{f['ref']}' does not exist in the chart context")
@@ -57,6 +146,9 @@ def verify(answer, request, context, pathway, reason, floor):
         own = {it["ref"] for it in context["facts"].get(f["fact"], {}).get("items", [])} | {context["note_ref"]}
         if f["ref"] not in own:
             errors.append(f"facts/{i}: ref '{f['ref']}' is not a source of fact '{f['fact']}'")
+            continue
+        errors += [f"facts/{i} ({f['fact']}): {e}"
+                   for e in check_statement(f, context, sources, note, context["referral_date"])]
 
     # every pathway item answered exactly once, nothing extra
     r = pathway["reasons"][reason]
@@ -106,7 +198,7 @@ def call_and_verify(provider, prep, pathway, reason, parse):
             attempts.append({"n": n, "error": f"{type(e).__name__}: {e}"})
             break
         answer = parse(out.get("text"))
-        check = verify(answer, request, context, pathway, reason, floor)
+        check = verify(answer, request, context, pathway, reason, floor, prep["note"])
         attempts.append({"n": n, **{k: out.get(k) for k in ("model_version", "seconds", "usage", "text")},
                          "parsed": answer, "check": check})
         if check["ok"]:

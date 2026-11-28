@@ -105,8 +105,8 @@ def output_schema(pathway, reason, context):
             "summary": s(),
             "facts": {"type": "array", "items": {
                 "type": "object",
-                "properties": {"fact": fact_ids, "ref": refs, "statement": s()},
-                "required": ["fact", "ref", "statement"]}},
+                "properties": {"fact": fact_ids, "ref": refs, "statement": s(), "quote": s()},
+                "required": ["fact", "ref", "statement", "quote"]}},
             "tests": {"type": "array", "items": {
                 "type": "object",
                 "properties": {"test": enum(t["id"] for t in context["tests"]), "include": {"type": "boolean"},
@@ -135,7 +135,8 @@ def prepare(pathway, fmap, case, cfg):
     hints = card_hints(pathway, m["reason"], case["note"], chart)
     routes = routing(pathway, m["reason"], case["note"], chart)
     request = build_request(pathway, case, context, floor, hits, hints, routes, cfg)
-    return {"context": context, "floor": floor, "flags": hits, "hints": hints, "routes": routes, "request": request}
+    return {"context": context, "floor": floor, "flags": hits, "hints": hints, "routes": routes, "request": request,
+            "note": case["note"]}
 
 
 # --- Providers ---------------------------------------------------------------------------------------
