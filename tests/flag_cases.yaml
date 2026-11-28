@@ -1,0 +1,262 @@
+# Written by a clean writer that never saw the matching rules. Tune against this file.
+# Don't add sentences copied from referral notes. New sentences: write general ones.
+bp_emergency:
+  fire:
+  - BP 210/125 on repeat, and she mentions in passing that the vision in both eyes has been blurry since this morning.
+  - BP 190 over 110, severe headache, confused.
+  - BP 186/122 with chest pain.
+  quiet:
+  - Headache from migraine, BP 128/80.
+  - BP 200/120 with headache 2 years ago, controlled since.
+  - BP 172/104, chronic migraines unchanged.
+bp_severe_no_symptoms:
+  fire:
+  - SBP 184 on recheck, diastolic 96, feels well.
+  - BP 186/124, no CP, no headache.
+  - Home readings 190s/110s for a week, no symptoms.
+  quiet:
+  - BP 178/112, no symptoms.
+  - BP 190/115 last month, now 138/84.
+  - BP 150/95, no symptoms.
+  - 182/100 in clinic, home average 128/78.
+cp_dissection_pe:
+  fire:
+  - Sudden ripping pain between the shoulder blades while lifting a sofa, BP high on arrival.
+  - Abrupt breathlessness this morning, day after a 12 hr flight, now coughing up streaks of blood.
+  - Day 10 after hip replacement, suddenly couldn't catch her breath sitting in a chair, sats 89%.
+  quiet:
+  - Hx of PE in 2019 after surgery, completed 6 months of apixaban, breathing normal now.
+  - Upper back ache that built up gradually over weeks after starting gardening, worse with twisting, chest and breathing fine.
+cp_ecg_ischemia:
+  fire:
+  - Pain had settled before she arrived, but the clinic ECG has new T wave inversions across the anterior leads.
+  - Chest heaviness yesterday evening; 12-lead this morning with fresh lateral ST changes compared with his old tracing.
+  - 2 days of exertional chest ache, ECG with new downsloping ST segments in the inferior leads vs last year.
+  quiet:
+  - Nonspecific T wave flattening on ECG, identical to tracings from 2019 and 2022, no chest symptoms.
+  - Chest pain x1 wk, ECG today sinus rhythm with no ST or T wave changes.
+  - ST depression on the ED ECG during pneumonia last fall, repeat ECG 2 wks later normal.
+  - Known LVH with strain on ECG for years; separately complains of heartburn after big meals.
+cp_new_or_worsening_exertional:
+  fire:
+  - Over the past month the tightness he gets walking the dog comes on sooner, now after about one block.
+  - New exertional chest ache since early Oct, settles with a few minutes rest.
+  - Used to get angina only on steep hills; now even carrying groceries up the stairs brings it on.
+  quiet:
+  - Stable angina at the same level of exertion for 5 yrs, unchanged, uses NTG maybe once a month.
+  - Exertional CP last spring, stress test negative and symptoms resolved.
+  - Cramping in both calves after walking 2 blocks, eases with rest, no chest symptoms.
+  - Denies chest pain with exertion, walks 5 km a day.
+cp_rest_or_ongoing:
+  fire:
+  - While sitting watching TV last night she got a tight band across her chest that has not let up since.
+  - 62M with HTN and DM2, in for refills, mentions on the way out that the chest ache started at rest 2 hrs ago and is present now.
+  - Chest discomfort came on at her desk about an hour before arrival, 7/10, not eased by antacid.
+  quiet:
+  - Denies any chest pain at rest or at night; only notices tightness with heavy yard work.
+  - Sharp L-sided chest pain only when pressing on a bruised rib from a fall last wk, otherwise pain free sitting still.
+  - Brief chest tightness going up two flights, gone within a minute of stopping, never comes on at rest.
+cp_with_alarm_symptoms:
+  fire:
+  - CP this AM, wife says he was drenched in sweat and grey while it was going on.
+  - Had to stop walking from the car with chest pressure and couldn't get her breath, clammy on exam.
+  - Pressure behind the sternum that came with cold sweats and feeling winded.
+  quiet:
+  - Atypical chest twinges, no diaphoresis, no syncope, no dyspnea.
+  - Night sweats for months d/t menopause; separately gets reflux burning after spicy food, never at the same time.
+  - Workup in 2018 for CP with SOB was negative and it settled; current chest twinge is mild with no sweating or breathlessness.
+  - Exertional SOB from COPD, unchanged for years, no chest pain with it.
+ecg_active_mi:
+  fire:
+  - 'Came in for a BP check, looked clammy, so we ran an ECG: ST elevation V1-V4.'
+  - Tombstone ST segments in the inferior leads on today's tracing.
+  - New 3 mm STE in II, III, aVF with reciprocal depression in I and aVL.
+  - ECG shows hyperacute T waves anteriorly and the pain is still going.
+  quiet:
+  - Old inferior Q waves, unchanged since 2018.
+  - Early repolarization pattern, young athlete, same on prior ECGs.
+  - STE on the ED ECG last yr during pericarditis, resolved on repeat.
+  - ECG NSR, no ST changes.
+ecg_high_grade_block:
+  fire:
+  - Feels completely well, but the ECG done for his insurance physical shows Mobitz II.
+  - 2:1 AV block on routine pre-op ECG, feels fine.
+  - Complete heart block, junctional escape 50, no symptoms.
+  - Holter for vague fatigue came back with runs of high-grade AV block, 3 dropped beats in a row, nothing she noticed.
+  quiet:
+  - 1st degree AV block.
+  - Wenckebach overnight on Holter, athlete.
+  - RBBB + LAFB, PR normal.
+ecg_high_grade_block_symptomatic:
+  fire:
+  - Complete heart block on ECG, rate 34, fainted twice this week.
+  - 2:1 AV block with dizzy spells.
+  - Holter shows Mobitz II at the same times she pressed the button for nearly blacking out.
+  - Third degree block, breathless walking across the room.
+  quiet:
+  - Mobitz I (Wenckebach) at night on Holter, no symptoms.
+  - Complete heart block 2019, pacemaker placed, no symptoms since.
+  - Dizzy when standing quickly; ECG sinus with normal PR.
+ecg_long_qt:
+  fire:
+  - Pre-op ECG for her cataracts was read as sinus 72, QTc 520 ms, otherwise unremarkable.
+  - QTc of half a second on today's ECG.
+  - Long QT, QTc 540 after starting methadone.
+  - 'ECG: QT prolonged, QTc 505.'
+  quiet:
+  - QTc 440.
+  - QTc 520 on ondansetron in ED last yr, 430 off it.
+  - Long PR, QTc normal.
+ecg_new_lbbb:
+  fire:
+  - ECG at today's annual, which I did mostly for his age and DM, shows LBBB; his 2023 tracing had a narrow QRS.
+  - 'ECG: LBBB, not present last year.'
+  - QRS 150 with LBBB morphology, new compared with 2022.
+  quiet:
+  - LBBB known since 2015, unchanged.
+  - New RBBB.
+  - QRS 104, nonspecific IVCD, unchanged.
+  - Rate-related LBBB during exercise test only, normal QRS at rest.
+ecg_very_slow:
+  fire:
+  - 'Pulse ox read 36 so we did an ECG: sinus brady at 36 while awake and chatting, he says he feels normal.'
+  - Resting pulse in the high 30s during the day.
+  - HR 50s on Holter with tiredness and dizzy spells.
+  - Sinus brady 46 on ECG, c/o fatigue and dizziness.
+  quiet:
+  - HR 44 awake, competitive cyclist, asymptomatic.
+  - HR 40s asleep on Holter, no symptoms.
+  - HR 62, tired from poor sleep with a new baby.
+ecg_very_slow_symptomatic:
+  fire:
+  - HR in the 30s, confused today per daughter.
+  - Bradycardia ~38 bpm, nearly passed out at church.
+  - Slow pulse 35 and chest tightness at rest.
+  quiet:
+  - HR 52 at rest, marathon runner, asymptomatic.
+  - HR 58, chronic dizziness from vestibular neuritis, unchanged.
+hf_breathless_rest:
+  fire:
+  - Can't lie flat, sleeping in the recliner the past week.
+  - SOB just sitting and talking in the exam room, RR 26.
+  - Needs 4 pillows now, was on 1 a month ago.
+  quiet:
+  - Mildly SOB on hills, sleeps flat without trouble.
+  - Orthopnea last winter during pneumonia, resolved, now sleeps on one pillow.
+  - Uses 2 pillows for years because of reflux, no breathlessness.
+  - Denies dyspnea at rest or PND.
+hf_chest_pain:
+  fire:
+  - Known HFrEF on sacubitril/valsartan, doing ok on meds until yesterday when the chest pain started.
+  - EF 30%, c/o pressure in her chest along with the swelling.
+  - Worsening edema and SOB, also complaining of chest tightness.
+  quiet:
+  - HF pt, denies chest pain.
+  - HF, L shoulder pain from a rotator cuff tear, worse reaching overhead, no chest pain.
+  - Chest pain with his MI in 2019, none since.
+hf_ntprobnp_400_2000:
+  fire:
+  - Gets breathless on the hill to the bus stop lately; NT-proBNP 1,240 ng/L, ECG sinus.
+  - Exertional SOB, NTproBNP 620.
+  - Pro-BNP back at 1,750.
+  - Mild ankle edema; NT-proBNP of 880 pg/mL on bloods last week.
+  quiet:
+  - NT-proBNP 310.
+  - Breathless on hills, NT-proBNP normal.
+  - NT-proBNP 900 in 2023 before valve surgery, 140 last month.
+  - BNP not yet checked.
+hf_ntprobnp_over_2000:
+  fire:
+  - 78F, more tired and puffy at the ankles, bloods last wk incl NT-proBNP 4,850 ng/L, A1c ok.
+  - SOB and edema, NT-proBNP came back at 2,600.
+  - Breathless on exertion x1 mo; NT-proBNP over 3000 on Monday's bloods.
+  quiet:
+  - NT-proBNP 1,850 ng/L.
+  - NT-proBNP pending, sent today.
+  - BNP never checked; echo in 2023 showed normal EF.
+hf_rapid_weight_gain:
+  fire:
+  - Weight up 3 kg in a week, shoes tight.
+  - Gained 6 lb since Monday, legs puffier.
+  - Edema worse, now up to the knees, was just ankles last visit.
+  - Home scale 81 kg today vs 77 kg ten days ago.
+  quiet:
+  - Weight up 3 kg over 6 months since quitting smoking, no edema.
+  - R knee swelling from an arthritis flare.
+  - Trace ankle edema unchanged for years.
+  - Weight stable, ankle swelling better than last visit.
+hf_syncope:
+  fire:
+  - HF pt, passed out in the bathroom last night.
+  - EF 25%, brief LOC while walking, came to quickly.
+  - Known cardiomyopathy, blacked out at dinner Tues.
+  - Increasing breathlessness and ankle swelling, plus a faint yesterday standing up from the couch.
+  quiet:
+  - Vasovagal syncope at a funeral in 2016, nothing since.
+  - Denies syncope or near-syncope.
+  - Fell after tripping on a rug, did not lose consciousness.
+palp_chest_pain:
+  fire:
+  - Palpitations this afternoon associated with L-sided chest ache.
+  - Heart racing x30 min yesterday and she felt pressure in the chest the whole time.
+  - Describes spells where the heart goes wild and the chest hurts, last one this morning.
+  quiet:
+  - Palpitations but denies any chest pain or pressure.
+  - CP with palps last year attributed to panic attacks, resolved with CBT, none since.
+  - Fluttering felt in the neck after a lot of coffee, no chest discomfort.
+palp_fast_low_bp:
+  fire:
+  - HR 170s on the monitor with BP 82/50, pale and lightheaded.
+  - Palps since lunch, nearly fainted twice on standing, pulse too fast to count.
+  quiet:
+  - HR 110 after jogging up the clinic stairs, BP 128/76, felt fine a minute later.
+  - BP 95/60 is her baseline for years, HR 68, no palpitations.
+palp_heart_failure_signs:
+  fire:
+  - Palpitations x2 wks, now ankles swelling and gets winded walking to the mailbox.
+  - Fluttering heart plus new pitting edema to mid-shin.
+  - Heart racing on and off and more SOB on the stairs than a month ago.
+  quiet:
+  - Palpitations, no edema, no SOB.
+  - R knee swollen from an arthritis flare; also mentions brief palpitations.
+  - SOB on exertion unchanged for years from asthma, palpitations only after using albuterol.
+  - Leg swelling and palpitations during pregnancy in 2019, resolved after delivery.
+palp_new_af_rvr:
+  fire:
+  - New AFib on ECG today, ventricular rate in the 140s, no prior hx.
+  - Irregularly irregular pulse in the 130s, ECG confirms AF, first time.
+  - First episode of a-fib, picked up by her watch and confirmed on 12-lead, rate 150.
+  quiet:
+  - Long-standing permanent AF, rate 70s on metoprolol.
+  - AF found during surgery in 2022, cardioverted, sinus rhythm since.
+  - Sinus tach 115 with fever and dehydration, regular rhythm on ECG.
+  - New AF on ECG today, rate controlled in the 70s without any medicine.
+palp_preexcitation:
+  fire:
+  - 'ECG: irregular wide-complex tachycardia with delta waves, ?AF with WPW.'
+  - Known Wolff-Parkinson-White, now irregular rapid palpitations, and the strip looks like pre-excited AF.
+  - Fast irregular rhythm on the tracing with a short PR and slurred upstroke of the QRS.
+  - AF on today's ECG with broad, bizarre QRS complexes that change from beat to beat, concern for accessory pathway.
+  quiet:
+  - Short PR on ECG but no delta wave, no palpitations.
+  - Pre-excitation seen on ECG in 2015, EP study called it low risk, never had AF.
+palp_stroke_symptoms:
+  fire:
+  - Palpitations this morning, then wife noticed the L side of his face drooping.
+  - Irregular heartbeat, and his R arm went weak so he dropped his cup, lasted about 20 min.
+  - Flutters at night; this morning couldn't get her words out for ~10 min.
+  quiet:
+  - No facial droop, speech normal, strength equal both sides.
+  - TIA in 2017 with full recovery; now here for new palpitations only.
+  - Bell's palsy L face since 2020, unchanged; palpitations are a separate new issue.
+palp_syncope:
+  fire:
+  - Felt her heart racing, then woke up on the kitchen floor.
+  - Episodes of pounding heartbeat, and one of them ended with him blacking out briefly in church.
+  - Palps x2 wks; on Sunday felt fluttering and lost consciousness for a few seconds.
+  - Coworker says he went down right after complaining that his heart was flipping around.
+  quiet:
+  - Palpitations at night, no syncope or presyncope.
+  - Fainted once giving blood in March; separately notices occasional skipped beats after coffee, never at the same time.
+  - Syncope with palpitations as a teen, dx SVT, ablated 2005, no episodes since.
+  - Gets lightheaded for a second standing up fast, no palpitations, never lost consciousness.
