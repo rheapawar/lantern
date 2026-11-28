@@ -20,6 +20,7 @@ from lantern.cases import ROOT, load_case
 from lantern.chart import load_map
 from lantern.matcher import Chart, card_hints, routing, urgency_floor
 from lantern.retriever import cited_refs, retrieve
+from lantern.verifier import med_words
 
 RUNS = os.path.join(ROOT, "runs")
 
@@ -136,7 +137,7 @@ def prepare(pathway, fmap, case, cfg):
     routes = routing(pathway, m["reason"], case["note"], chart)
     request = build_request(pathway, case, context, floor, hits, hints, routes, cfg)
     return {"context": context, "floor": floor, "flags": hits, "hints": hints, "routes": routes, "request": request,
-            "note": case["note"]}
+            "note": case["note"], "meds": med_words(fmap, pathway)}
 
 
 # --- Providers ---------------------------------------------------------------------------------------
@@ -154,8 +155,7 @@ class GeminiProvider:
         from google.genai import errors, types
         contents = [request["user"]]
         if feedback:
-            contents.append("Your previous answer was rejected by the plain-code checks:\n" + feedback
-                            + "\nReturn a corrected answer.")
+            contents.append(feedback)          # previous answer + the verifier's errors (lantern/verifier.py)
         config = types.GenerateContentConfig(
             system_instruction=request["system"], response_mime_type="application/json",
             response_json_schema=request["schema"], seed=self.cfg.get("seed"),

@@ -15,6 +15,7 @@
     "review_questions": {"$ref": "#/$defs/strings"},
     "tiers": {"type": "object", "additionalProperties": {"type": "string"}},
     "tier_order": {"$ref": "#/$defs/strings"},
+    "plan_check_terms": {"$ref": "#/$defs/strings"},
     "explained_cue": {"type": "object", "additionalProperties": false, "required": ["tiers", "own_cause_terms"],
       "properties": {"tiers": {"$ref": "#/$defs/strings"}, "own_cause_terms": {"$ref": "#/$defs/strings"}, "note": {"type": "string"}}},
     "fits": {"type": "object", "additionalProperties": {"type": "string"}},

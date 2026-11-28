@@ -21,6 +21,7 @@
   },
 
   "tier_order": ["emergent", "urgent", "soon", "routine"],
+  "plan_check_terms": ["anticoagulation", "anticoagulant", "blood thinner", "antiplatelet", "beta blocker", "beta-blocker", "diuretic", "statin", "ace inhibitor", "arb", "calcium channel blocker", "nitrate", "nitroglycerin", "antiarrhythmic", "rate control", "rhythm control", "potassium supplement"],
   "explained_cue": {"tiers": ["urgent", "soon"], "own_cause_terms": ["heart", "cardiac", "chf", "hf", "af", "afib", "a-fib", "atrial fibrillation", "arrhythmia", "cardiomyopathy", "valve", "fluid", "volume overload"], "note": "A symptom the note pins on another cause in the same clause ('knee swollen from an arthritis flare', 'SOB ... from asthma') does not count toward flags in these tiers. Never applies to red flags. Hedged causes ('likely from', '? from', 'thought to be from') and causes naming the heart still count. Draft - needs clinician review."},
   "tiers": {
     "emergent": "Needs the ER now - not a referral. Card says 'advise ER now'.",

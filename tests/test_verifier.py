@@ -53,8 +53,12 @@ class FakeProvider:
         return {"text": t, "model_version": "fake", "seconds": 0, "usage": None}
 
 
+FIRED = [h["id"] for h in PREP["flags"]]
+
+
 def check(answer):
-    return verify(answer, PREP["request"], PREP["context"], PATHWAY, REASON, PREP["floor"], fixtures.NOTE)
+    return verify(answer, PREP["request"], PREP["context"], PATHWAY, REASON, PREP["floor"], fixtures.NOTE,
+                  PREP["meds"], FIRED)
 
 
 def good():
@@ -97,7 +101,7 @@ class Citations(unittest.TestCase):
         # ...and by the citation check itself, if the schema ever lacks the enum
         req = copy.deepcopy(PREP["request"])
         del req["schema"]["properties"]["facts"]["items"]["properties"]["ref"]["enum"]
-        errs = verify(a, req, PREP["context"], PATHWAY, REASON, PREP["floor"], fixtures.NOTE)["errors"]
+        errs = verify(a, req, PREP["context"], PATHWAY, REASON, PREP["floor"], fixtures.NOTE, PREP["meds"])["errors"]
         self.assertTrue([e for e in errs if "does not exist" in e])
 
     def test_ref_from_another_fact(self):
@@ -154,6 +158,60 @@ class NoteQuotes(unittest.TestCase):
         self.assertTrue(errors_with(a, "number 55"))
 
 
+class NoPlansOrDoses(unittest.TestCase):
+    """Facilitate, don't draft: the model may not write doses or treatment instructions anywhere."""
+    CAUGHT = ["Consider starting apixaban.", "Start a statin.", "Increase lisinopril.",
+              "Recommend adding a diuretic.", "Should stop the beta blocker before the visit.",
+              "Plan to switch to losartan.", "Take aspirin daily."]
+    HARMLESS = ["Pain eases when she stops to rest.", "Started on lisinopril in 2023.",
+                "Whether she takes aspirin is not recorded.", "Is she taking a statin?",
+                "Currently taking lisinopril.", "Chest tightness started 3 weeks ago.",
+                "Does she take any blood thinner?", "Increasing frequency of chest tightness."]
+
+    def with_text(self, field, text):
+        a = good()
+        if field == "why":
+            a["options"][0]["why"] = text
+        elif field == "missing":
+            a["missing_info"] = [text]
+        else:
+            a[field] = text
+        return a
+
+    def test_instructions_are_errors_in_every_field(self):
+        for field in ("summary", "urgency_reason", "fit_reason", "why", "missing"):
+            for t in self.CAUGHT:
+                self.assertTrue(errors_with(self.with_text(field, t), "treatment instruction"), (field, t))
+
+    def test_harmless_wording_passes(self):
+        for t in self.HARMLESS:
+            self.assertEqual([], errors_with(self.with_text("missing", t), "treatment instruction"), t)
+
+    def test_new_dose_is_an_error(self):
+        self.assertTrue(errors_with(self.with_text("why", "Lisinopril 20 mg would help."), "dose '20 mg'"))
+        self.assertTrue(errors_with(self.with_text("summary", "Needs 2.5 mg twice daily."), "dose '2.5 mg'"))
+
+    def test_dose_from_chart_or_note_and_lab_units_pass(self):
+        a = good()
+        a["facts"].append(fact("bp_meds", "MedicationRequest/lis", "On lisinopril 10 MG."))
+        a["fit_reason"] = "LDL 129.73 mg/dL and eGFR 13.4 mL/min noted."
+        self.assertEqual(check(a)["errors"], [])
+
+
+class Warnings(unittest.TestCase):
+    def test_dropped_checklist_flag(self):
+        a = good()
+        a["urgency_flags"] = []
+        self.assertTrue([w for w in check(a)["warnings"] if "fired but is not in urgency_flags" in w])
+
+    def test_unticked_test_that_is_not_done(self):
+        a = good()
+        not_done = next(t["id"] for t in PREP["context"]["tests"] if t["status"] == "not_done")
+        next(t for t in a["tests"] if t["test"] == not_done)["include"] = False
+        self.assertTrue([w for w in check(a)["warnings"] if "left unticked" in w])
+        self.assertTrue(check(a)["ok"])                         # a warning, not an error
+
+
 class Urgency(unittest.TestCase):
     def test_below_floor_is_rejected(self):
         a = good()
@@ -190,6 +248,8 @@ class Retry(unittest.TestCase):
         self.assertEqual(out["status"], VERIFIED)
         self.assertEqual(len(out["attempts"]), 2)
         self.assertIn("below the red-flag floor", p.feedback[1])
+        self.assertIn("Your previous answer:", p.feedback[1])          # the model fixes, not restarts
+        self.assertIn('"urgency": "routine"', p.feedback[1])
 
     def test_two_failures_need_review_and_keep_the_floor(self):
         bad = good()

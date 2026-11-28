@@ -103,6 +103,69 @@ def check_statement(fact_item, context, sources, note, cutoff):
     return errs
 
 
+# --- Facilitate, don't draft: no doses or treatment instructions in any free text ---------------------
+# A dose ("20 mg") is allowed only if the same dose is already in the chart or the note. An instruction is a
+# treatment verb (base or -ing form, never past tense) said as advice - at the start of a clause or after a
+# recommending word - with a medicine word within 4 words after it. Questions ("whether...", "...?") are
+# skipped: asking what a patient takes is not a plan. Medicine words: fhir_map med lists, the pathway's
+# plan_check_terms, and the general words below.
+DOSE = re.compile(r"\b(\d+(?:\.\d+)?)\s?(mg|mcg|µg|g|units?|iu|ml|meq|mmol)\b(?!\s*/)", re.I)
+TREATMENT_VERBS = (r"start|starting|initiate|initiating|begin|beginning|increase|increasing|decrease|decreasing"
+                   r"|reduce|reducing|stop|stopping|discontinue|discontinuing|hold|holding|titrate|titrating"
+                   r"|uptitrate|uptitrating|switch|switching|add|adding|prescribe|prescribing|take|resume|resuming")
+ADVICE_CUE = (r"should|must|recommend|recommends|recommended|consider|suggest|suggests|suggested|advise|advised"
+              r"|please|plan to|needs? to|would|could")
+GENERAL_MED_WORDS = ["medication", "medications", "medicine", "medicines", "meds", "dose", "dosage", "drug",
+                     "drugs", "therapy", "tablet", "tablets", "pill", "pills", "prescription"]
+QUESTION_START = re.compile(r"^\s*(whether|if|is|are|does|do|did|has|have|was|were|check whether|"
+                            r"confirm whether|unclear whether|unknown whether)\b", re.I)
+CLAUSE = re.compile(r"[^.;!?\n]+[.;!?\n]?")
+
+
+def med_words(fmap, pathway):
+    words = set(GENERAL_MED_WORDS) | set(pathway.get("plan_check_terms", []))
+    for f in fmap["facts"].values():
+        words |= set(f.get("meds", []))
+    return sorted(words, key=len, reverse=True)
+
+
+def _free_text(answer):
+    """(field, text) for every free-text field the model writes."""
+    out = [("summary", answer.get("summary", "")), ("urgency_reason", answer.get("urgency_reason", "")),
+           ("fit_reason", answer.get("fit_reason", ""))]
+    out += [(f"facts/{i}/statement", f.get("statement", "")) for i, f in enumerate(answer.get("facts", []))]
+    out += [(f"tests/{t.get('test')}/why", t.get("why", "")) for t in answer.get("tests", [])]
+    out += [(f"options/{o.get('option')}/why", o.get("why", "")) for o in answer.get("options", [])]
+    out += [(f"missing_info/{i}", m) for i, m in enumerate(answer.get("missing_info", []))]
+    return out
+
+
+def _known_doses(context, note):
+    texts = [note] + [str(it.get("value", "")) for f in context["facts"].values() for it in f["items"]]
+    return {(float(m.group(1)), m.group(2).lower().rstrip("s")) for t in texts for m in DOSE.finditer(t)}
+
+
+def plan_errors(answer, context, note, meds):
+    """Errors for doses not in the chart/note and for treatment instructions in free text."""
+    errs = []
+    known = _known_doses(context, note)
+    med = r"(?:" + "|".join(re.escape(m) for m in meds) + r")"
+    instr = re.compile(r"(?:^\s*|\b(?:" + ADVICE_CUE + r")\s+(?:\w+\s+){0,2})(?:to\s+)?(" + TREATMENT_VERBS
+                       + r")\b(?:\W+\w+){0,4}?\W+" + med + r"\b", re.I)
+    for field, text in _free_text(answer):
+        for m in DOSE.finditer(text):
+            if (float(m.group(1)), m.group(2).lower().rstrip("s")) not in known:
+                errs.append(f"{field}: dose '{m.group(0)}' is not in the chart or note - Lantern never suggests doses")
+        for c in CLAUSE.findall(text):
+            if c.strip().endswith("?") or QUESTION_START.match(c):
+                continue
+            m = instr.search(c)
+            if m:
+                errs.append(f"{field}: '{c.strip()[:80]}' reads as a treatment instruction - list facts and "
+                            "options only; the specialist writes the plan")
+    return errs
+
+
 def _flag_tiers(pathway):
     tiers = {}
     for r in pathway["reasons"].values():
@@ -123,7 +186,7 @@ def _exactly_once(got, want, kind):
     return errs
 
 
-def verify(answer, request, context, pathway, reason, floor, note):
+def verify(answer, request, context, pathway, reason, floor, note, meds=None, fired_flags=()):
     """{'ok', 'errors', 'warnings'} for one parsed answer (None = the model's text was not valid JSON)."""
     if not isinstance(answer, dict):
         return {"ok": False, "errors": ["answer is not a JSON object"], "warnings": []}
@@ -172,6 +235,17 @@ def verify(answer, request, context, pathway, reason, floor, note):
         if fid in tiers and order.index(u) > order.index(tiers[fid]):
             errors.append(f"urgency '{u}' is below flag '{fid}' ({tiers[fid]}) named in urgency_flags")
 
+    # facilitate, don't draft
+    errors += plan_errors(answer, context, note, meds or GENERAL_MED_WORDS + pathway.get("plan_check_terms", []))
+
+    # warnings: checklist flags the model left out; tests left unticked that are not done / out of date
+    for fid in [f for f in fired_flags if f not in answer["urgency_flags"]]:
+        warnings.append(f"checklist flag '{fid}' fired but is not in urgency_flags (the card shows it anyway)")
+    status = {t["id"]: t["status"] for t in context["tests"]}
+    for t in answer["tests"]:
+        if not t["include"] and status.get(t["test"]) in ("not_done", "out_of_date"):
+            warnings.append(f"test '{t['test']}' is {status[t['test']].replace('_', ' ')} but left unticked")
+
     if len(answer["summary"].split()) > SUMMARY_MAX_WORDS:
         warnings.append(f"summary is {len(answer['summary'].split())} words (max {SUMMARY_MAX_WORDS})")
     return {"ok": not errors, "errors": errors, "warnings": warnings}
@@ -191,6 +265,7 @@ def call_and_verify(provider, prep, pathway, reason, parse):
     status: 'verified' or 'needs_manual_review'; attempts keep every raw answer and its check result."""
     request, context, floor = prep["request"], prep["context"], prep["floor"]
     attempts, feedback = [], None
+    fired = [h["id"] for h in prep.get("flags", [])]
     for n in (1, 2):
         try:
             out = provider.call(request, feedback=feedback)
@@ -198,11 +273,13 @@ def call_and_verify(provider, prep, pathway, reason, parse):
             attempts.append({"n": n, "error": f"{type(e).__name__}: {e}"})
             break
         answer = parse(out.get("text"))
-        check = verify(answer, request, context, pathway, reason, floor, prep["note"])
+        check = verify(answer, request, context, pathway, reason, floor, prep["note"], prep.get("meds"), fired)
         attempts.append({"n": n, **{k: out.get(k) for k in ("model_version", "seconds", "usage", "text")},
                          "parsed": answer, "check": check})
         if check["ok"]:
             return {"status": VERIFIED, "answer": answer, "urgency": final_urgency(pathway, floor, answer),
                     "warnings": check["warnings"], "attempts": attempts}
-        feedback = "\n".join(f"- {e}" for e in check["errors"])
+        feedback = ("Your previous answer:\n" + (out.get("text") or "(empty)")
+                    + "\n\nIt was rejected by the plain-code checks:\n" + "\n".join(f"- {e}" for e in check["errors"])
+                    + "\n\nReturn the corrected answer: keep everything that was right and fix only these problems.")
     return {"status": NEEDS_REVIEW, "answer": None, "urgency": floor, "warnings": [], "attempts": attempts}
