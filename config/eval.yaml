@@ -1,0 +1,25 @@
+# Scorecard settings for eval.py. Targets are CLAUDE.md's starting guesses - revisit with clinicians.
+
+version: 0.1
+
+targets:
+  emergent_missed: {max: 0}
+  urgent_under_called: {max: 0}
+  over_called_rate: {max: 0.20}
+  citations_valid_rate: {min: 1.0}
+  chart_dependent_caught_rate: {min: 0.80}     # CLAUDE.md: "4 of 5+"
+  tests_first_recall: {min: 0.70}
+  decision_facts_recall: {min: 0.80}
+  options_recall: {min: 0.80}
+  fit_correct_rate: {min: 0.70}
+
+# A label's hook (answer_key_only.hooks) is "caught" when the card surfaces at least one of these pathway
+# fact ids (cited facts, or a test/option depends_on). Cardiology-specific, so it lives here, not in code.
+hooks:
+  prior_mi_or_cad: [prior_mi_cad]
+  kidney_disease: [ckd, egfr]
+  abnormal_tsh: [tsh]
+  on_amlodipine: [amlodipine]
+  af_no_anticoagulant: [atrial_fibrillation, current_anticoagulant]
+  low_potassium: [potassium]
+  nsaid_use: [nsaid]
