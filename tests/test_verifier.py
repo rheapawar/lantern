@@ -12,7 +12,7 @@ import fixtures  # noqa: E402
 from lantern.cases import ROOT  # noqa: E402
 from lantern.chart import load_map  # noqa: E402
 from lantern.llm import load_config, parse, prepare  # noqa: E402
-from lantern.verifier import NEEDS_REVIEW, VERIFIED, call_and_verify, final_urgency, verify  # noqa: E402
+from lantern.verifier import ERROR, NEEDS_REVIEW, VERIFIED, call_and_verify, final_urgency, verify  # noqa: E402
 
 with open(os.path.join(ROOT, "pathways", "cardiology.json")) as fh:
     PATHWAY = json.load(fh)
@@ -259,7 +259,14 @@ class Retry(unittest.TestCase):
         self.assertEqual(out["urgency"], PREP["floor"])
         self.assertIsNone(out["answer"])
 
-    def test_provider_error_needs_review(self):
+    def test_api_failure_is_an_error_not_a_model_failure(self):
         out = call_and_verify(FakeProvider(RuntimeError("quota")), PREP, PATHWAY, REASON, parse)
-        self.assertEqual(out["status"], NEEDS_REVIEW)
+        self.assertEqual(out["status"], ERROR)
+        self.assertEqual(out["urgency"], PREP["floor"])
         self.assertIn("quota", out["attempts"][0]["error"])
+
+    def test_api_failure_on_the_retry_is_still_an_error(self):
+        bad = good()
+        bad["urgency"] = "routine"
+        out = call_and_verify(FakeProvider(json.dumps(bad), RuntimeError("timeout")), PREP, PATHWAY, REASON, parse)
+        self.assertEqual(out["status"], ERROR)

@@ -15,6 +15,7 @@ from lantern.retriever import cited_refs
 
 NEEDS_REVIEW = "needs_manual_review"
 VERIFIED = "verified"
+ERROR = "error"          # infrastructure failure (rate limit, timeout): rerun it, never score it as the model
 SUMMARY_MAX_WORDS = 20
 
 
@@ -262,16 +263,17 @@ def final_urgency(pathway, floor, answer):
 
 def call_and_verify(provider, prep, pathway, reason, parse):
     """Call, verify, retry once with the errors. Returns the outcome record for the case.
-    status: 'verified' or 'needs_manual_review'; attempts keep every raw answer and its check result."""
+    status: 'verified', 'needs_manual_review' (the model failed the checks twice) or 'error' (the API failed;
+    rerun, don't score). attempts keep every raw answer and its check result."""
     request, context, floor = prep["request"], prep["context"], prep["floor"]
     attempts, feedback = [], None
     fired = [h["id"] for h in prep.get("flags", [])]
     for n in (1, 2):
         try:
             out = provider.call(request, feedback=feedback)
-        except Exception as e:                       # provider gave up (retries exhausted, refusal, ...)
+        except Exception as e:                       # the API gave up (retries exhausted, timeout, ...)
             attempts.append({"n": n, "error": f"{type(e).__name__}: {e}"})
-            break
+            return {"status": ERROR, "answer": None, "urgency": floor, "warnings": [], "attempts": attempts}
         answer = parse(out.get("text"))
         check = verify(answer, request, context, pathway, reason, floor, prep["note"], prep.get("meds"), fired)
         attempts.append({"n": n, **{k: out.get(k) for k in ("model_version", "seconds", "usage", "text")},
